@@ -1,0 +1,44 @@
+{% load static %}
+<head>
+    <meta charset="utf-8">
+    <meta name="keyword" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block titulo %} {% endblock %}</title>
+    <!-- start: Css -->
+    <link rel="stylesheet" type="text/css" href="{% static 'asset/css/bootstrap.min.css' %}">
+    <!-- plugins -->
+    <link rel="stylesheet" type="text/css" href="{% static 'asset/css/plugins/font-awesome.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'asset/css/plugins/simple-line-icons.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'asset/css/plugins/animate.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'asset/css/plugins/icheck/skins/flat/aero.css' %}"/>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'asset/css/plugins/fullcalendar.min.css' %}" />
+    <link href="{% static 'asset/css/style.css' %}" rel="stylesheet">
+    <!-- end: Css -->
+    <link rel="shortcut icon" href="{% static 'asset/img/logomi.png' %}">
+    {% block extracss %}
+    {% endblock %}
+</head>
+
+{% block cuerpo %}
+{% endblock %}
+
+    <!-- start: Javascript -->
+    <script src="{% static 'asset/js/jquery.min.js' %}"></script>
+    <script src="{% static 'asset/js/jquery.ui.min.js' %}"></script>
+    <script src="{% static 'asset/js/bootstrap.min.js' %}"></script>
+    <!-- plugins -->
+    <script src="{% static 'asset/js/plugins/icheck.min.js' %}"></script>
+    <script src="{% static 'asset/js/plugins/moment.min.js' %}"></script>
+    <script src="{% static 'asset/js/plugins/fullcalendar.min.js' %}"></script>
+    <script src="{% static 'asset/js/plugins/jquery.nicescroll.js' %}"></script>
+    <script src="{% static 'asset/js/plugins/jquery.vmap.min.js' %}"></script>
+    <script src="{% static 'asset/js/plugins/maps/jquery.vmap.world.js' %}"></script>
+    <script src="{% static 'asset/js/plugins/jquery.vmap.sampledata.js' %}"></script>
+    <script src="{% static 'asset/js/plugins/chart.min.js' %}"></script>
+    <!-- custom -->
+    <script src="{% static 'asset/js/main.js' %}"></script>
+    <!-- end: Javascript -->
+
+{% block entrajs %}
+{% endblock %}

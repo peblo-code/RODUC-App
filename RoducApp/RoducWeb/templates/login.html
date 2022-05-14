@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block titulo %}Inicio Sesión{% endblock %}
+
+{% block cuerpo %}
+
+{% load static %}
+<body id="mimin" class="dashboard form-signin-wrapper">
+  <div class="container">
+    <form class="form-signin">
+      <div class="panel periodic-login">
+        <div class="panel-body text-center">
+          <img src="{% static 'asset/img/UC_Logo.png' %}" alt="">
+          <p class="atomic-mass">2022</p>
+          <p class="element-name">Roduc</p>
+          <i class="icons icon-arrow-down"></i>
+          <div class="form-group form-animate-text" style="margin-top:40px !important;">
+            <input type="text" class="form-text" required>
+            <span class="bar"></span>
+            <label>Usuario</label>
+          </div>
+          <div class="form-group form-animate-text" style="margin-top:40px !important;">
+            <input type="password" class="form-text" required>
+            <span class="bar"></span>
+            <label>Contraseña</label>
+          </div>
+          <input type="submit" class="btn col-md-12" value="Iniciar Sesión" />
+        </div>
+      </div>
+    </form>
+  </div>
+</body>
+{% endblock %}
