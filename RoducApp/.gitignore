@@ -1,8 +1,23 @@
+node_modules/
+.expo/
+dist/
+npm-debug.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+.orig.
+web-build/
+
+# macOS
+.DS_Store
+
 # Django #
 *.log
 *.pot
 *.pyc
-__pycache__
+pycache
 db.sqlite3
 media
 
@@ -11,30 +26,30 @@ media
 
 # If you are using PyCharm # 
 # User-specific stuff
-.idea/**/workspace.xml
-.idea/**/tasks.xml
-.idea/**/usage.statistics.xml
-.idea/**/dictionaries
-.idea/**/shelf
+.idea//workspace.xml
+.idea//tasks.xml
+.idea//usage.statistics.xml
+.idea//dictionaries
+.idea//shelf
 
 # AWS User-specific
-.idea/**/aws.xml
+.idea//aws.xml
 
 # Generated files
-.idea/**/contentModel.xml
+.idea//contentModel.xml
 
 # Sensitive or high-churn files
-.idea/**/dataSources/
-.idea/**/dataSources.ids
-.idea/**/dataSources.local.xml
-.idea/**/sqlDataSources.xml
-.idea/**/dynamic.xml
-.idea/**/uiDesigner.xml
-.idea/**/dbnavigator.xml
+.idea//dataSources/
+.idea//dataSources.ids
+.idea//dataSources.local.xml
+.idea//sqlDataSources.xml
+.idea//dynamic.xml
+.idea//uiDesigner.xml
+.idea//dbnavigator.xml
 
 # Gradle
-.idea/**/gradle.xml
-.idea/**/libraries
+.idea//gradle.xml
+.idea//libraries
 
 # File-based project format
 *.iws
@@ -66,7 +81,7 @@ wheels/
 .installed.cfg 
 *.egg 
 *.manifest 
-*.spec 
+.spec 
 
 # Installer logs 
 pip-log.txt 
@@ -76,12 +91,12 @@ pip-delete-this-directory.txt
 htmlcov/ 
 .tox/ 
 .coverage 
-.coverage.* 
+.coverage. 
 .cache 
 .pytest_cache/ 
 nosetests.xml 
 coverage.xml 
-*.cover 
+.cover 
 .hypothesis/ 
 
 # Jupyter Notebook 
@@ -91,7 +106,7 @@ coverage.xml
 .python-version 
 
 # celery 
-celerybeat-schedule.* 
+celerybeat-schedule. 
 
 # SageMath parsed files 
 *.sage.py 
@@ -116,7 +131,7 @@ venv.bak/
 *.tmPreferences.cache 
 *.stTheme.cache 
 *.sublime-workspace 
-*.sublime-project 
+.sublime-project 
 
 # sftp configuration file 
 sftp-config.json 
@@ -129,7 +144,7 @@ Control.system-ca-bundle
 GitHub.sublime-settings 
 
 # Visual Studio Code # 
-.vscode/* 
+.vscode/ 
 !.vscode/settings.json 
 !.vscode/tasks.json 
 !.vscode/launch.json 
