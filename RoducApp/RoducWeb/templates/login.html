@@ -7,7 +7,8 @@
 {% load static %}
 <body id="mimin" class="dashboard form-signin-wrapper">
   <div class="container">
-    <form class="form-signin">
+    <form class="form-signin" method="POST" action="{% url 'login' %}">
+      {% csrf_token %}
       <div class="panel periodic-login">
         <div class="panel-body text-center">
           <img src="{% static 'asset/img/UC_Logo.png' %}" alt="">
@@ -15,12 +16,12 @@
           <p class="element-name">Roduc</p>
           <i class="icons icon-arrow-down"></i>
           <div class="form-group form-animate-text" style="margin-top:40px !important;">
-            <input type="text" class="form-text" required>
+            <input type="text" name="usuario" id="usuario" class="form-text" autocomplete="off" required>
             <span class="bar"></span>
             <label>Usuario</label>
           </div>
           <div class="form-group form-animate-text" style="margin-top:40px !important;">
-            <input type="password" class="form-text" required>
+            <input type="password" name="contraseña" class="form-text" required>
             <span class="bar"></span>
             <label>Contraseña</label>
           </div>
@@ -30,4 +31,27 @@
     </form>
   </div>
 </body>
+
+
+{% endblock %}
+
+{% block extrajs %}
+  {% if mensaje_error %}
+    <script>
+      Swal.fire({
+        position: 'top',
+        icon: 'error',
+        title: '{{mensaje_error}}',
+        showConfirmButton: false,
+        timer: 3000
+      }).then( () => {
+        location.href = '{% url 'login' %}'
+      })
+    </script>
+  {% endif %}
+
+  <script>
+      $("#usuario").focus();
+  </script>
+
 {% endblock %}
