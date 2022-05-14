@@ -1,4 +1,4 @@
-import { StyleSheet, View, Button } from 'react-native';
+import { StyleSheet, View, Button, Image } from 'react-native';
 import { Formik, useField } from 'formik';
 import StyledTextInput from '../components/StyledTextInput.jsx';
 import StyledText from '../components/StyledText.jsx';
@@ -8,6 +8,8 @@ const initialValues = {
     password: ''
 }
 
+const logoSimple = require('../../assets/logo-simple.png');
+
 const styles = StyleSheet.create({
     error: {
         color: 'red',
@@ -16,7 +18,23 @@ const styles = StyleSheet.create({
         marginTop: -5
     },
     form: {
-        margin: 12
+        marginHorizontal: 12,
+        justifyContent: 'center',
+        height: '80%',
+    },
+    loginLogo: {
+        alignSelf: 'center',
+        marginBottom: 20,
+        width: 100,
+        height: 100,
+        resizeMode: 'contain',
+        backgroundColor: '#004494',
+        borderRadius: 5
+    },
+    image: {
+        height: 100,
+        width: 100,
+        resizeMode: 'contain',
     }
 });
 
@@ -59,6 +77,9 @@ export default function LoginInPage() {
         {({ handleChange, handleSubmit, values }) => {
             return (
                 <View style={styles.form}>
+                    <View style={styles.loginLogo}>
+                        <Image style={styles.image} source={ logoSimple }/>
+                    </View>
                     <FormikInputValue
                         name="email"
                         placeholder="E-mail"
