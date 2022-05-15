@@ -38,8 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'RoducWeb',
-    'restapi'
-    'rest_framework'
+    'restapi',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
