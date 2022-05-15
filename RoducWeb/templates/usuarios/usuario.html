@@ -1,0 +1,87 @@
+{% extends "panel.html" %}
+{% block titulo %}Usuarios - Roduc{% endblock %}
+{% block formulario %}
+{% load static %}
+
+<div class="toolbar py-5 py-lg-15" id="kt_toolbar">
+    <!--begin::Container-->
+    <div id="kt_toolbar_container" class="container-xxl d-flex flex-stack flex-wrap">
+    </div>
+</div>
+
+<div id="kt_content_container" class="container-xxl">
+    <!--begin::Post-->
+    <div class="content flex-row-fluid" id="kt_content">
+        <div class="row gy-5.g-x1-8">
+            <div class="col-lg-12">
+                <div class="card mb-5 mb-xl-10" id="kt_profile_details_view">
+                    <!--begin::Card header-->
+                    <div class="card-header">
+                        <!--begin::Card title-->
+                        <div class="card-title m-0">
+                            <h3 class="fw-bolder m-0">Lista de Usuarios</h3>
+                        </div>
+                        <a href="#" class="btn btn-primary align-self-center">Registrar Nuevo Usuario</a>
+                        <!--end::Card title-->
+                    </div>
+                    <div class="card-body p-9">
+                        <!--begin::Row-->
+                        <div class="table-responsive">
+                            <table id="datos" class="table table-striped gy-7 gs-7">
+                                <thead>
+                                    <tr class="fw-bold fs-6 text-gray-800 border-bottom-2 border-gray-200">
+                                        <th class="min-w-200px">Username</th>
+                                        <th class="min-w-400px">Nombres y Apellidos</th>
+                                        <th class="min-w-100px">Direccion Email</th>
+                                        <th class="min-w-200px">Contraseña</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for usuario in lista_usuarios %}
+                                        <tr class="cursor-pointer">
+                                            <td>{{usuario.nombre_usuario}}</td>
+                                            <td>{{usuario.apellidos_del_usuario}}, {{usuario.nombres_del_usuario}}</td>
+                                            <td>{{usuario.direccion_email}}</td>
+                                            <td>{{usuario.contraseña}}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!--end::Card body-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>  
+{% endblock %}
+
+{% block extrajs %}
+<script>
+    $(document).ready(function() {
+        $('#datos').DataTable( {
+            "language": {
+                "emptyTable":     "No existen registros a exponer.",
+                "info":           "",
+                "infoEmpty":      "",
+                "infoFiltered":   "",
+                "infoPostFix":    "",
+                "thousands":      ".",
+                "lengthMenu":     "Registros a mostrar _MENU_",
+                "loadingRecords": "Cargando...",
+                "processing":     "Procesando...",
+                "search":         "Buscar:",
+                "zeroRecords":    "No se obtuvo ninguna coincidencia",
+                oPaginate: {
+                    sNext: '<i class="fa fa-forward"></i>',
+                    sPrevious: '<i class="fa fa-backward"></i>',
+                    sFirst: '<i class="fa fa-step-backward"></i>',
+                    sLast: '<i class="fa fa-step-forward"></i>'
+                    }
+            },
+            "lengthMenu": [[5 ,10, 25, 50, -1], [5, 10, 25, 50, "Todo"]],
+        });
+    });
+  </script>
+{% endblock %}
