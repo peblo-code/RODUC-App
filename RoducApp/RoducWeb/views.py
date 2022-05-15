@@ -1,5 +1,18 @@
 from django.shortcuts import render, redirect
 from RoducWeb.models import *
+import time #sacar hora
+###########################################################################################
+#funciones varias
+def generar_saludo():
+    hora_actual = int((time.strftime('%H', time.localtime())))
+    if (hora_actual >= 0 and hora_actual < 12):
+        mensaje_bienvenida = 'Buenos Dias'
+    elif (hora_actual >= 12 and hora_actual < 19):
+        mensaje_bienvenida = 'Buenas Tardes'
+    else:
+        mensaje_bienvenida = 'Buenas Noches'
+    return mensaje_bienvenida
+###########################################################################################
 
 # Create your views here.
 
@@ -20,6 +33,7 @@ def login(request):
                 if (datos_usuario.contraseña == contraseña_usuario):
                     request.session["usuario_conectado"] = datos_usuario.cod_usuario
                     request.session["nombre_del_usuario"] = datos_usuario.nombres_del_usuario 
+                    request.session["correo_usuario"] = datos_usuario.direccion_email
                     return redirect("inicio")
                 else:
                     return render(request, "login.html", {"mensaje_error": "La contraseña ingresada es incorrecta."})
@@ -28,5 +42,24 @@ def login(request):
         else:
             return render(request, "login.html", {"mensaje_error": "El usuario ingresado no existe."})
 
+def cerrar_sesion(request):
+    request.session.flush()
+    return redirect("login")
+
 def inicio(request):
-    return render(request, "inicio.html")
+    mensaje_bienvenida = generar_saludo()
+    return render(request, "inicio.html", {"usuario_conectado": request.session.get("usuario_conectado"),
+                                           "nombre_usuario": request.session.get("nombre_del_usuario"),
+                                           "direccion_email": request.session.get("correo_usuario"),
+                                           "mensaje_bienvenida": mensaje_bienvenida})
+
+
+def usuario(request, usuario_actual = 0):
+    mensaje_bienvenida = generar_saludo()
+    lista_usuarios = Usuario.objects.filter(estado = 1)
+    return render(request, "usuarios/usuario.html", {"usuario_conectado": request.session.get("usuario_conectado"),
+                                                     "nombre_usuario": request.session.get("nombre_del_usuario"),
+                                                     "direccion_email":request.session.get("correo_usuario"),
+                                                     "mensaje_bienvenida": mensaje_bienvenida,
+                                                     "lista_usuarios":lista_usuarios,
+                                                     "usuario_actual": usuario_actual})

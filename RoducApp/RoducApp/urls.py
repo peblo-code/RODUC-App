@@ -20,5 +20,5 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('RoducWeb', include('RoducWeb.urls'))
+    path('RoducWeb/', include('RoducWeb.urls'))
 ]

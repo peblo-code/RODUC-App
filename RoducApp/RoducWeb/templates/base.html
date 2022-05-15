@@ -1,45 +1,119 @@
 {% load static %}
-<head>
-    <meta charset="utf-8">
-    <meta name="keyword" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block titulo %} {% endblock %}</title>
-    <!-- start: Css -->
-    <link rel="stylesheet" type="text/css" href="{% static 'asset/css/bootstrap.min.css' %}">
-    <!-- plugins -->
-    <link rel="stylesheet" type="text/css" href="{% static 'asset/css/plugins/font-awesome.min.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'asset/css/plugins/simple-line-icons.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'asset/css/plugins/animate.min.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'asset/css/plugins/icheck/skins/flat/aero.css' %}"/>
 
-    <link rel="stylesheet" type="text/css" href="{% static 'asset/css/plugins/fullcalendar.min.css' %}" />
-    <link href="{% static 'asset/css/style.css' %}" rel="stylesheet">
-    <!-- end: Css -->
-    <link rel="shortcut icon" href="{% static 'asset/img/logomi.png' %}">
-    {% block extracss %}
-    {% endblock %}
+<!DOCTYPE html>
+<html>
+
+<head>
+ 
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Dashboard de la LAPF.">
+  <meta name="author" content="Alex Diesel.">
+  <title>Liga Alto Paraná de Futbol</title>
+  <!-- Favicon -->
+  <link rel="icon" href="{% static 'assets/img/lapf.png' %}" type="image/png">
+  <!-- Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
+  <!-- Icons -->
+  <link rel="stylesheet" href="{% static 'assets/vendor/nucleo/css/nucleo.css' %}" type="text/css">
+  <link rel="stylesheet" href="{% static 'assets/vendor/@fortawesome/fontawesome-free/css/all.min.css' %}" type="text/css">
+  <!-- Argon CSS -->
+  <link rel="stylesheet" href="{% static 'assets/css/argon.css' %}" type="text/css">
+  <link rel="stylesheet" href="{% static 'assets/css/Animate.css' %}">
+  {% block extracss %}
+  {% endblock %}
 </head>
+
+
 
 {% block cuerpo %}
 {% endblock %}
 
-    <!-- start: Javascript -->
-    <script src="{% static 'asset/js/jquery.min.js' %}"></script>
-    <script src="{% static 'asset/js/jquery.ui.min.js' %}"></script>
-    <script src="{% static 'asset/js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'asset/js/sweetalert2.all.min.js' %}"></script>
-    <!-- plugins -->
-    <script src="{% static 'asset/js/plugins/icheck.min.js' %}"></script>
-    <script src="{% static 'asset/js/plugins/moment.min.js' %}"></script>
-    <script src="{% static 'asset/js/plugins/fullcalendar.min.js' %}"></script>
-    <script src="{% static 'asset/js/plugins/jquery.nicescroll.js' %}"></script>
-    <script src="{% static 'asset/js/plugins/jquery.vmap.min.js' %}"></script>
-    <script src="{% static 'asset/js/plugins/maps/jquery.vmap.world.js' %}"></script>
-    <script src="{% static 'asset/js/plugins/jquery.vmap.sampledata.js' %}"></script>
-    <script src="{% static 'asset/js/plugins/chart.min.js' %}"></script>
-    <!-- custom -->
-    <script src="{% static 'asset/js/main.js' %}"></script>
-    <!-- end: Javascript -->
 
-{% block extrajs %}
-{% endblock %}
+  <!-- Argon Scripts -->  
+  <!-- Core -->
+  <script src="{% static 'assets/vendor/jquery/dist/jquery.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/js-cookie/js.cookie.js' %}"></script>
+  <script src="{% static 'assets/vendor/jquery.scrollbar/jquery.scrollbar.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/jquery-scroll-lock/dist/jquery-scrollLock.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/chart.js/dist/Chart.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/chart.js/dist/Chart.extension.js' %}"></script>
+  <script src="{% static 'assets/vendor/list.js/dist/list.min.js' %}"></script> 
+  
+  <!--dataTable-->
+  <script src="{% static 'assets/vendor/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/datatables.net-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/datatables.net-buttons/js/dataTables.buttons.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/datatables.net-buttons/js/buttons.html5.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/datatables.net-buttons/js/buttons.flash.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/datatables.net-buttons/js/buttons.print.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/datatables.net-select/js/dataTables.select.min.js' %}"></script>
+
+  <!-- Argon JS -->
+  <script src="{% static 'assets/js/argon.js' %}"></script>
+
+  <!-- SweetAlert JS-->
+  <script src="{% static 'assets/js/sweetalert2.all.min.js' %}"></script>
+
+  {% block extrajs %}
+  
+  {% endblock %}
+  
+
+  
+  <script>
+    $(document).ready(function() {
+        $('#datos').DataTable( {
+            "language": {
+                "emptyTable":     "No existen registros a exponer.",
+                "info":           "",
+                "infoEmpty":      "",
+                "infoFiltered":   "",
+                "infoPostFix":    "",
+                "thousands":      ".",
+                "lengthMenu":     "Registros a mostrar _MENU_",
+                "loadingRecords": "Cargando...",
+                "processing":     "Procesando...",
+                "search":         "Buscar:",
+                "zeroRecords":    "No se obtuvo ninguna coincidencia",
+                oPaginate: {
+                    sNext: '<i class="fa fa-forward"></i>',
+                    sPrevious: '<i class="fa fa-backward"></i>',
+                    sFirst: '<i class="fa fa-step-backward"></i>',
+                    sLast: '<i class="fa fa-step-forward"></i>'
+                    }
+            },
+            "lengthMenu": [[5 ,10, 25, 50, -1], [5, 10, 25, 50, "Todo"]],
+        });
+    });
+  </script>
+
+  <script>
+    function enviar(mensaje){
+        event.preventDefault();
+            Swal.fire({
+            title: 'Aviso',
+            text: mensaje,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Confirmar',
+            cancelButtonText: "Cancelar",
+            confirmButtonColor: '#2dce89',
+            cancelButtonColor: '#d33',
+        }).then((result) => {
+            if (result.value) {
+                document.update.submit();
+            }
+            return false;
+        })
+    }
+  </script>
+
+
+
+
+
+
+</html>
