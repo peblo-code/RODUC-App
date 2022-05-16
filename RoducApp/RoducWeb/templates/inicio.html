@@ -1,16 +1,13 @@
 {% extends "panel.html" %}
+{% block titulo %}Inicio - Roduc{% endblock %}
+
 {% block formularios %}
 {% load static %}
-    <div id="div2" class="" style="background-position: center; background-size: cover; background-image: url('{% static 'assets/img/uc_fondo.jpg' %}');">
+    <div id="div2" class="">
         
     </div>
 {% endblock %}
 
 {% block extrajs %}
-    <script type="text/javascript">
-        $(document).ready(function(){
-            var height = $(window).height();
-            $('#div2').height(height);
-        });
-    </script>
+
 {% endblock %}
