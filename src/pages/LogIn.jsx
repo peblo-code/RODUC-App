@@ -3,6 +3,7 @@ import { Formik, useField } from 'formik';
 import StyledTextInput from '../components/StyledTextInput.jsx';
 import StyledText from '../components/StyledText.jsx';
 import { loginValidationSchema } from '../validationSchemas/login.js';
+import axios from 'axios';
 
 const initialValues = {
     email: '',
@@ -58,9 +59,22 @@ const FormikInputValue = ({ name, ...props }) => {
     )
 }
 
+const authLogin = ({ email, password }) => {
+    axios.get(`http://26.247.235.244:8000/restapi/lista_usuarios/${email}`)
+    .then(response => {
+        if(response.data.nombre_usuario.length > 0) {
+            response.data.nombre_usuario === email && response.data.contraseña === password ?
+                console.log('Login correcto') : console.log('Login incorrecto')
+        }
+    })
+    .catch(error => {
+        console.log(error);
+    });
+}
+
 export default function LoginInPage() {
     return <Formik validationSchema={loginValidationSchema} initialValues={initialValues} onSubmit=
-        {values => console.log(values)}>
+        {values => authLogin(values)}>
         {({ handleChange, handleSubmit, values }) => {
             return (
                 <View style={styles.form}>
