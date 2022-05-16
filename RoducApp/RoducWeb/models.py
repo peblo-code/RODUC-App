@@ -1,7 +1,6 @@
 from django.db import models
 
 # Create your models here.
-
 class Usuario(models.Model):
     cod_usuario           = models.AutoField(primary_key = True)
     nombre_usuario        = models.CharField(max_length  = 45)
@@ -33,3 +32,18 @@ class Usuario_Rol(models.Model):
     alta_fecha            = models.DateTimeField(auto_now_add = True)
     modif_usuario         = models.CharField(max_length = 45)
     modif_fecha           = models.DateTimeField(auto_now = True)
+
+class Auditoria(models.Model):
+    cod_auditoria         = models.AutoField(primary_key = True)
+    tabla                 = models.CharField(max_length = 100)
+    accion                = models.CharField(max_length = 1)
+    datos_viejos          = models.CharField(max_length = 5000)
+    datos_nuevos          = models.CharField(max_length = 5000)
+    usuario               = models.CharField(max_length = 45)
+    fecha                 = models.DateField(auto_now = True)
+
+class Auditoria_Sesiones(models.Model):
+    cod_aud_sesiones      = models.AutoField(primary_key  = True)
+    nombre_usuario        = models.CharField(max_length   = 45)
+    fecha                 = models.DateTimeField(auto_now = False)
+    informacion           = models.CharField(max_length   = 500)
