@@ -21,7 +21,8 @@ class UsuarioListAPIView(generics.ListAPIView):
     queryset = Usuario.objects.all()
     
     serializer_class = UsuarioListSerializer
-class PizzeriaRetrieveAPIView(generics.RetrieveAPIView):
+class UsuarioRetrieveAPIView(generics.RetrieveAPIView):
     lookup_field = "nombre_usuario"
+    print(lookup_field)
     queryset = Usuario.objects.all()
     serializer_class = UsuarioDetailSerializer
