@@ -8,3 +8,8 @@ from RoducWeb.models import *
 class UsuarioListAPIView(generics.ListAPIView):
     queryset = Usuario.objects.all()
     serializer_class = UsuarioListSerializer
+
+class PizzeriaRetrieveAPIView(generics.RetrieveAPIView):
+    lookup_field = "nombre_usuario"
+    queryset = Usuario.objects.all()
+    serializer_class = UsuarioDetailSerializer
