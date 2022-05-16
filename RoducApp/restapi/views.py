@@ -26,3 +26,7 @@ class UsuarioRetrieveAPIView(generics.RetrieveAPIView):
     print(lookup_field)
     queryset = Usuario.objects.all()
     serializer_class = UsuarioDetailSerializer
+
+class AuditoriaSesionesCreateAPIView(generics.CreateAPIView):
+    queryset = Auditoria_Sesiones.objects.all()
+    serializer_class = Auditoria_SesionesSerializer
