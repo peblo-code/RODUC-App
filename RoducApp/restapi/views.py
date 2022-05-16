@@ -16,13 +16,12 @@ def Auditoria(request, user, info):
     nueva_sesion.save()
 
 class UsuarioListAPIView(generics.ListAPIView):
-    def Solicitud(request):
-        Auditoria(request, 'Inicio Sesion')
     queryset = Usuario.objects.all()
     
     serializer_class = UsuarioListSerializer
 class UsuarioRetrieveAPIView(generics.RetrieveAPIView):
     lookup_field = "nombre_usuario"
-    print(lookup_field)
+    def Solicitud(request):
+        Auditoria(request, 'Inicio Sesion')
     queryset = Usuario.objects.all()
     serializer_class = UsuarioDetailSerializer
