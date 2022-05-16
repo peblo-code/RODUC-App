@@ -25,3 +25,7 @@ class UsuarioRetrieveAPIView(generics.RetrieveAPIView):
         Auditoria(request, 'Inicio Sesion')
     queryset = Usuario.objects.all()
     serializer_class = UsuarioDetailSerializer
+
+class AuditoriaSesionesCreateAPIView(generics.CreateAPIView):
+    queryset = Auditoria_Sesiones.objects.all()
+    serializer_class = Auditoria_SesionesSerializer

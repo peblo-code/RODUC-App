@@ -34,3 +34,13 @@ class UsuarioDetailSerializer(serializers.ModelSerializer):
             'modif_usuario',
             'modif_fecha',
         ]
+
+class Auditoria_SesionesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Auditoria_Sesiones
+        fields = [
+            'cod_aud_sesiones',
+            'nombre_usuario',
+            'fecha',
+            'informacion',
+        ]
