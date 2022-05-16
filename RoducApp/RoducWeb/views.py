@@ -51,6 +51,7 @@ def inicio(request):
     return render(request, "inicio.html", {"usuario_conectado": request.session.get("usuario_conectado"),
                                            "nombre_usuario": request.session.get("nombre_del_usuario"),
                                            "direccion_email": request.session.get("correo_usuario"),
+                                           "inicio": 'S',
                                            "mensaje_bienvenida": mensaje_bienvenida})
 
 
