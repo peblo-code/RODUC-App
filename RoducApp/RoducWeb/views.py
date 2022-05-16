@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from RoducWeb.models import *
 import time #sacar hora
+from restapi.views import Auditoria
 ###########################################################################################
 #funciones varias
 def generar_saludo():
@@ -31,9 +32,10 @@ def login(request):
             datos_usuario = Usuario.objects.get(nombre_usuario = nom_usuario)
             if rol_usuario:
                 if (datos_usuario.contraseña == contraseña_usuario):
-                    request.session["usuario_conectado"] = datos_usuario.cod_usuario
+                    request.session["usuario_conectado"] = datos_usuario.nombre_usuario
                     request.session["nombre_del_usuario"] = datos_usuario.nombres_del_usuario 
                     request.session["correo_usuario"] = datos_usuario.direccion_email
+                    Auditoria(request,"usuario_conectado", 'Inicia Sesion')
                     return redirect("inicio")
                 else:
                     return render(request, "login.html", {"mensaje_error": "La contraseña ingresada es incorrecta."})
