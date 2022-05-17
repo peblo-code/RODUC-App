@@ -19,7 +19,7 @@
     <link rel="shortcut icon" href="{% static 'asset/img/logomi.png' %}">
 </head>
 
-<body id="mimin" class="dashboard form-signin-wrapper">
+<body id="mimin" class="dashboard form-signin-wrapper" style="display:flex; align-items: center;">
   <div class="container">
     <form class="form-signin" method="POST" action="{% url 'login' %}">
       {% csrf_token %}
