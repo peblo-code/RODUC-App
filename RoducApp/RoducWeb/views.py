@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from RoducWeb.models import *
 import time #sacar hora
@@ -74,3 +75,13 @@ def facultad(request):
                                                      "nombre_usuario": request.session.get("nombre_del_usuario"),
                                                      "direccion_email":request.session.get("correo_usuario"),
                                                      "mensaje_bienvenida": mensaje_bienvenida})
+def agregar_facultad(request):
+    if request.method == 'POST':
+        facultad_nueva = Facultad(
+            descripcion = request.POST.get('descripcion'),
+            fecha_fundacion = request.POST.get('fecha'),
+            estado = 1
+        )
+        facultad_nueva.save()
+        respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
+        return respuesta

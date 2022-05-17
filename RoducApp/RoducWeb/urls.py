@@ -12,5 +12,6 @@ urlpatterns = [
     path('usuario/<int:usuario_actual>', views.usuario, name='usuario'),
 
     #FACULTAD
-    path('facultad', views.facultad, name='facultad')
+    path('facultad', views.facultad, name='facultad'),
+    path('agregar_facultad', views.agregar_facultad, name='agregar_facultad'),
 ]
