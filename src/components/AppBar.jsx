@@ -1,4 +1,4 @@
-import { StyleSheet, View, ScrollView, TouchableWithoutFeedback } from 'react-native'
+import { StyleSheet, View, ScrollView, TouchableWithoutFeedback, Touchable } from 'react-native'
 import StyledText from './StyledText.jsx'
 import Constants from 'expo-constants'
 import theme from '../theme.js'
@@ -44,6 +44,7 @@ const AppBar = () => {
         <View style={styles.container}>
             <ScrollView horizontal style={styles.scroll}>
                 <AppBarTab to='/'>Inicio</AppBarTab>
+                <AppBarTab to='/signin'>Cerrar Sesión</AppBarTab>
             </ScrollView>
         </View>
     )

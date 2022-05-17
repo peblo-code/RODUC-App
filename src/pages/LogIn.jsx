@@ -4,7 +4,7 @@ import StyledTextInput from '../components/StyledTextInput.jsx';
 import StyledText from '../components/StyledText.jsx';
 import { loginValidationSchema } from '../validationSchemas/login.js';
 import useUserContext from '../hooks/useUserContext.js';
-
+import { useEffect } from 'react';
 
 const initialValues = {
     email: '',
@@ -62,7 +62,12 @@ const FormikInputValue = ({ name, ...props }) => {
 
 
 export default function LoginInPage() {
-    const { Auth } = useUserContext();
+    const { Auth, closeSession } = useUserContext();
+
+    useEffect(() => {
+        closeSession();
+    }, []);
+
     return <Formik validationSchema={loginValidationSchema} initialValues={initialValues} onSubmit=
         {values => Auth(values) }>
         {({ handleChange, handleSubmit, values }) => {
