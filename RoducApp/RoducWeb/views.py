@@ -90,3 +90,12 @@ def agregar_facultad(request):
 
 def carrera(request):
     return render(request, "carrera/carrera.html")
+    
+def plan_estudio(request):
+    return render(request, "plan_estudio/plan_estudio.html")
+
+def semestre(request):
+    return render(request, "semestre/semestre.html")
+
+def asignatura(request):
+    return render(request, "asignatura/asignatura.html")
