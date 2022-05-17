@@ -83,9 +83,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'roducdb',
-        'USER' : 'root',
-        'PASSWORD': 'olimpiacampeon02',
-        'HOST' : 'localhost',
+        'USER' : 'juan',
+        'PASSWORD': '123456',
+        'HOST' : '26.247.235.244',
         'PORT' : '3306',
     }
 }
