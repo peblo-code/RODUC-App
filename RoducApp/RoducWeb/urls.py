@@ -15,5 +15,14 @@ urlpatterns = [
     path('facultad', views.facultad, name='facultad'),
 
     #CARRERA
-    path('carrera', views.carrera, name='carrera')
+    path('carrera', views.carrera, name='carrera'),
+
+    #PLAN DE ESTUDIOS
+    path('plan_estudio', views.plan_estudio, name='plan_estudio'),
+
+    #SEMESTRES
+    path('semestre', views.semestre, name='semestre'),
+
+    #ASIGNATURAS
+    path('asignatura', views.asignatura, name='asignatura')
 ]
