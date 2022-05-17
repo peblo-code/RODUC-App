@@ -1,0 +1,83 @@
+{% load static %}
+<head>
+    <meta charset="utf-8">
+    <meta name="keyword" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="{% static 'assets/img/roduc_ico.png' %}"/>
+    <title>Inicio Sesión - Roduc</title>
+    <!-- start: Css -->
+    <link rel="stylesheet" type="text/css" href="{% static 'asset/css/bootstrap.min.css' %}">
+    <!-- plugins -->
+    <link rel="stylesheet" type="text/css" href="{% static 'asset/css/plugins/font-awesome.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'asset/css/plugins/simple-line-icons.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'asset/css/plugins/animate.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'asset/css/plugins/icheck/skins/flat/aero.css' %}"/>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'asset/css/plugins/fullcalendar.min.css' %}" />
+    <link href="{% static 'asset/css/style.css' %}" rel="stylesheet">
+    <!-- end: Css -->
+    <link rel="shortcut icon" href="{% static 'asset/img/logomi.png' %}">
+</head>
+
+<body id="mimin" class="dashboard form-signin-wrapper" style="display:flex; align-items: center;">
+  <div class="container">
+    <form class="form-signin" method="POST" action="{% url 'login' %}">
+      {% csrf_token %}
+      <div class="panel periodic-login">
+        <div class="panel-body text-center">
+          <img src="{% static 'asset/img/UC_Logo.png' %}" alt="">
+          <p class="atomic-mass">2022</p>
+          <p class="element-name">Roduc</p>
+          <i class="icons icon-arrow-down"></i>
+          <div class="form-group form-animate-text" style="margin-top:40px !important;">
+            <input type="text" name="usuario" id="usuario" class="form-text" autocomplete="off" required>
+            <span class="bar"></span>
+            <label>Usuario</label>
+          </div>
+          <div class="form-group form-animate-text" style="margin-top:40px !important;">
+            <input type="password" name="contraseña" class="form-text" required>
+            <span class="bar"></span>
+            <label>Contraseña</label>
+          </div>
+          <input type="submit" class="btn col-md-12" value="Iniciar Sesión" />
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- start: Javascript -->
+  <script src="{% static 'asset/js/jquery.min.js' %}"></script>
+  <script src="{% static 'asset/js/jquery.ui.min.js' %}"></script>
+  <script src="{% static 'asset/js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'asset/js/sweetalert2.all.min.js' %}"></script>
+  <!-- plugins -->
+  <script src="{% static 'asset/js/plugins/icheck.min.js' %}"></script>
+  <script src="{% static 'asset/js/plugins/moment.min.js' %}"></script>
+  <script src="{% static 'asset/js/plugins/fullcalendar.min.js' %}"></script>
+  <script src="{% static 'asset/js/plugins/jquery.nicescroll.js' %}"></script>
+  <script src="{% static 'asset/js/plugins/jquery.vmap.min.js' %}"></script>
+  <script src="{% static 'asset/js/plugins/maps/jquery.vmap.world.js' %}"></script>
+  <script src="{% static 'asset/js/plugins/jquery.vmap.sampledata.js' %}"></script>
+  <script src="{% static 'asset/js/plugins/chart.min.js' %}"></script>
+  <!-- custom -->
+  <script src="{% static 'asset/js/main.js' %}"></script>
+  <!-- end: Javascript -->
+
+{% if mensaje_error %}
+  <script>
+    Swal.fire({
+      position: 'top',
+      icon: 'error',
+      title: '{{mensaje_error}}',
+      showConfirmButton: false,
+      timer: 3000
+    }).then( () => {
+      location.href = '{% url 'login' %}'
+    })
+  </script>
+{% endif %}
+
+  <script>
+    $("#usuario").focus();
+  </script>
+</body>

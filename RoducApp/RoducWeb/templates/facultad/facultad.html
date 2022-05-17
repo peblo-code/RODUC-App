@@ -1,0 +1,82 @@
+{% extends "panel.html" %}
+{% block formularios %}
+{% load static %}
+<div class="header pb-9 d-flex align-items-center" style="min-height: 350px; background-image: url('{% static 'assets/img/header-bg.png' %}'); ">
+    <!-- Mask -->
+    <span></span>
+    <!-- Header container -->
+    <div class="container-fluid d-flex align-items-justify">
+        <div class=".col-12 .col-md-8">
+          <h1 class="display-2 text-white">Registro de Facultades</h1>
+          <p class="text-white mt-0 mb-5">El formulario actual sirve para el Registro de los Facultades que tienen acceso al sistema.</p>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid mt--9">
+    <div class="row">
+        <div class="col-xl-12 order-xl-1">
+            <div class="card">
+                <div class="card-body">
+                    <form role="form" id='form' method="POST">
+                        {% csrf_token %}
+                        <h6 class="heading-small text-muted mb-4">Datos de la Departamento</h6>
+                        <div class="pl-lg-0">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-username">Descripcion</label>
+                                        <input required type="text" autocomplete="off" id="input-username" class="form-control" placeholder="Ingrese el nombre de la facultad..." name = "descripcion" autofocus>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-username">Fecha de Fundacion</label>
+                                        <input required type="date" autocomplete="off" id="input-username" class="form-control"  name = "fecha" autofocus>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <span><button type="submit" class="btn btn-success">Guardar</button></span>
+                        <span><a type="button" class="btn btn-warning" href=''>Listar</a></span>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+    $('#form').on('submit', function(){
+        var formulario = new FormData(this);
+        event.preventDefault();
+        $.ajax({
+        url: "{% url 'agregar_facultad' %}",
+        type: 'POST',
+        data: formulario,
+        processData:false,
+        contentType:false,
+        success: 
+            function(data){
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                })
+                Toast.fire({
+                icon: 'success',
+                title: data.mensaje
+                })  
+            }
+        })
+    })
+</script>
+{% endblock %}
