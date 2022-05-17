@@ -69,7 +69,15 @@ def usuario(request, usuario_actual = 0):
 
 
 def facultad(request):
+<<<<<<< HEAD
     return render(request, "facultad/facultad.html")
 
 def carrera(request):
     return render(request, "carrera/carrera.html")
+=======
+    mensaje_bienvenida = generar_saludo()
+    return render(request, "facultad/facultad.html", {"usuario_conectado": request.session.get("usuario_conectado"),
+                                                     "nombre_usuario": request.session.get("nombre_del_usuario"),
+                                                     "direccion_email":request.session.get("correo_usuario"),
+                                                     "mensaje_bienvenida": mensaje_bienvenida})
+>>>>>>> origin/proyecto-web
