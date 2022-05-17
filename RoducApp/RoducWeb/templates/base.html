@@ -7,8 +7,6 @@
  
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="Dashboard de la LAPF.">
-  <meta name="author" content="Alex Diesel.">
   <title>{% block titulo %}{% endblock %}</title>
   <!-- Favicon -->
   <link rel="icon" href="{% static 'assets/img/roduc_ico.png' %}" type="image/png">
@@ -61,59 +59,4 @@
   
   {% endblock %}
   
-
-  
-  <script>
-    $(document).ready(function() {
-        $('#datos').DataTable( {
-            "language": {
-                "emptyTable":     "No existen registros a exponer.",
-                "info":           "",
-                "infoEmpty":      "",
-                "infoFiltered":   "",
-                "infoPostFix":    "",
-                "thousands":      ".",
-                "lengthMenu":     "Registros a mostrar _MENU_",
-                "loadingRecords": "Cargando...",
-                "processing":     "Procesando...",
-                "search":         "Buscar:",
-                "zeroRecords":    "No se obtuvo ninguna coincidencia",
-                oPaginate: {
-                    sNext: '<i class="fa fa-forward"></i>',
-                    sPrevious: '<i class="fa fa-backward"></i>',
-                    sFirst: '<i class="fa fa-step-backward"></i>',
-                    sLast: '<i class="fa fa-step-forward"></i>'
-                    }
-            },
-            "lengthMenu": [[5 ,10, 25, 50, -1], [5, 10, 25, 50, "Todo"]],
-        });
-    });
-  </script>
-
-  <script>
-    function enviar(mensaje){
-        event.preventDefault();
-            Swal.fire({
-            title: 'Aviso',
-            text: mensaje,
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Confirmar',
-            cancelButtonText: "Cancelar",
-            confirmButtonColor: '#2dce89',
-            cancelButtonColor: '#d33',
-        }).then((result) => {
-            if (result.value) {
-                document.update.submit();
-            }
-            return false;
-        })
-    }
-  </script>
-
-
-
-
-
-
 </html>
