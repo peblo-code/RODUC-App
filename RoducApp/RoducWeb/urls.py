@@ -12,5 +12,8 @@ urlpatterns = [
     path('usuario/<int:usuario_actual>', views.usuario, name='usuario'),
 
     #FACULTAD
-    path('facultad', views.facultad, name='facultad')
+    path('facultad', views.facultad, name='facultad'),
+
+    #CARRERA
+    path('carrera', views.carrera, name='carrera')
 ]

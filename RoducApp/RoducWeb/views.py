@@ -70,3 +70,6 @@ def usuario(request, usuario_actual = 0):
 
 def facultad(request):
     return render(request, "facultad/facultad.html")
+
+def carrera(request):
+    return render(request, "carrera/carrera.html")
