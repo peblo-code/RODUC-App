@@ -8,11 +8,11 @@ import useUserContext from '../hooks/useUserContext.js';
 
 const Main = () => {
 
-    const { user } = useUserContext()
-    let navigate = useNavigate();
+    const { user } = useUserContext();  //recuperar datos del contexto
+    let navigate = useNavigate(); //funcion para navegar entre paginas
 
     useEffect(() => {
-        user.cod_usuario == 0 ? navigate('/signin') : navigate('/')
+        user.cod_usuario == 0 ? navigate('/signin') : navigate('/') //si el usuario no esta logueado, redireccionar a la pagina de login
     }, [user.cod_usuario]);
 
     return(

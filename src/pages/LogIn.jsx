@@ -1,22 +1,21 @@
-import { StyleSheet, View, Button, Image } from 'react-native';
+import { StyleSheet, View, Button, Image, Alert, ActivityIndicator } from 'react-native';
 import { Formik, useField } from 'formik';
 import StyledTextInput from '../components/StyledTextInput.jsx';
 import StyledText from '../components/StyledText.jsx';
 import { loginValidationSchema } from '../validationSchemas/login.js';
 import useUserContext from '../hooks/useUserContext.js';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import ModalStyled from '../components/ModalStyled.jsx';
 
-const initialValues = {
+const initialValues = { //valores iniciales
     email: '',
     password: ''
 }
 
-const logoSimple = require('../../assets/logo-simple.png');
+const logoSimple = require('../../assets/logo-simple.png'); //importar imagen
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create({ //estilos
     error: {
-        color: 'red',
-        fontSize: 12,
         marginBottom: 20,
         marginTop: -5
     },
@@ -41,8 +40,8 @@ const styles = StyleSheet.create({
     }
 });
 
-const FormikInputValue = ({ name, ...props }) => {
-    const [field, meta, helpers] = useField(name)
+const FormikInputValue = ({ name, ...props }) => { //funcion para obtener el valor del input
+    const [field, meta, helpers] = useField(name) //obtener el valor del input
     return (
         <>
             <StyledTextInput
@@ -51,8 +50,11 @@ const FormikInputValue = ({ name, ...props }) => {
                 onChangeText={value => helpers.setValue(value)}
                 {...props}
             />
-            {meta.error && 
-                <StyledText style={styles.error}>
+            {meta.error &&
+                <StyledText
+                    color="red"
+                    fontSize="minimal"
+                    style={styles.error}>
                     {meta.error}
                 </StyledText>
             }
@@ -60,21 +62,45 @@ const FormikInputValue = ({ name, ...props }) => {
     )
 }
 
-
 export default function LoginInPage() {
-    const { Auth, closeSession } = useUserContext();
+    const { Auth, closeSession, error, setError } = useUserContext(); //obtener el contexto
+    const [isLoading, setIsLoading] = useState(false); //estado del loading
 
-    useEffect(() => {
+    useEffect(() => { //funcion para cerrar sesion
         closeSession();
     }, []);
 
+    useEffect(() => { //funcion para mostrar error
+        if(error) {
+            Alert.alert(
+                'Ups!',
+                'No es posible establecer conexion con la base de datos.',
+                [
+                    { text: 'OK', onPress: () => setIsLoading(false) },
+                ],
+                { cancelable: false },
+            );
+        }
+        setError(false);
+    }, [error]);
+
     return <Formik validationSchema={loginValidationSchema} initialValues={initialValues} onSubmit=
-        {values => Auth(values) }>
+        {values => {
+            Auth(values);
+            setIsLoading(true);
+        }}>
         {({ handleChange, handleSubmit, values }) => {
             return (
                 <View style={styles.form}>
+                    <ModalStyled isVisible={isLoading}>
+                        <StyledText
+                            align='center'
+                            color='primary'
+                            fontSize='subheading'>Iniciando Sesión</StyledText>
+                        <ActivityIndicator style={{ marginTop: 10 }} size="large" color="#004494" />
+                    </ModalStyled>
                     <View style={styles.loginLogo}>
-                        <Image style={styles.image} source={ logoSimple }/>
+                        <Image style={styles.image} source={logoSimple} />
                     </View>
                     <FormikInputValue
                         name="email"

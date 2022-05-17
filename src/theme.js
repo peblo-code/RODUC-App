@@ -12,8 +12,10 @@ const theme = {
         primary: '#8366d6',
         secondary: '#586069',
         white: '#fefefe',
+        red: '#ff0000',
     },
     fontSizes: {
+        minimal: 12,
         body: 14,
         subheading: 16,
         heading: 20,

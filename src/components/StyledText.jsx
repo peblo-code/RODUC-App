@@ -17,15 +17,25 @@ const styles = StyleSheet.create({
     colorWhite: {
         color: theme.colors.white,
     },
+    colorRed: {
+        color: theme.colors.red,
+    },
     bold: {
         fontWeight: theme.fontWeights.bold,
+    },
+    minimal: {
+        fontSize: theme.fontSizes.minimal,
     },
     subheading: {
         fontSize: theme.fontSizes.subheading,
     },
+    large: {
+        fontSize: theme.fontSizes.large,
+    },
     textAlignCenter: {
         textAlign: 'center',
-    }
+    },
+    
 })
 
 export default function StyledText ({children, align, color, fontSize, fontWeight, 
@@ -36,8 +46,10 @@ export default function StyledText ({children, align, color, fontSize, fontWeigh
         color === 'primary' && styles.colorPrimary,
         color === 'secondary' && styles.colorSecondary,
         color === 'white' && styles.colorWhite,
+        color === 'red' && styles.colorRed,
+        fontSize && 'minimal' && styles.minimal,
         fontSize === 'subheading' && styles.subheading,
-        fontSize === 'large' && styles.subheading,
+        fontSize === 'large' && styles.large,
         fontWeight === 'bold' && styles.bold,
         style
     ]
