@@ -44,7 +44,6 @@ const AppBar = () => {
         <View style={styles.container}>
             <ScrollView horizontal style={styles.scroll}>
                 <AppBarTab to='/'>Inicio</AppBarTab>
-                <AppBarTab to='/signin'>Iniciar Sesión</AppBarTab>
             </ScrollView>
         </View>
     )

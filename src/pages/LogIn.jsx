@@ -3,7 +3,8 @@ import { Formik, useField } from 'formik';
 import StyledTextInput from '../components/StyledTextInput.jsx';
 import StyledText from '../components/StyledText.jsx';
 import { loginValidationSchema } from '../validationSchemas/login.js';
-import axios from 'axios';
+import useUserContext from '../hooks/useUserContext.js';
+
 
 const initialValues = {
     email: '',
@@ -22,11 +23,11 @@ const styles = StyleSheet.create({
     form: {
         marginHorizontal: 12,
         justifyContent: 'center',
-        height: '80%',
+        height: '100%',
     },
     loginLogo: {
         alignSelf: 'center',
-        marginBottom: 20,
+        marginBottom: 80,
         width: 100,
         height: 100,
         resizeMode: 'contain',
@@ -59,22 +60,11 @@ const FormikInputValue = ({ name, ...props }) => {
     )
 }
 
-const authLogin = ({ email, password }) => {
-    axios.get(`http://26.247.235.244:8000/restapi/lista_usuarios/${email}`)
-    .then(response => {
-        if(response.data.nombre_usuario.length > 0) {
-            response.data.nombre_usuario === email && response.data.contraseña === password ?
-                console.log('Login correcto') : console.log('Login incorrecto')
-        }
-    })
-    .catch(error => {
-        console.log(error);
-    });
-}
 
 export default function LoginInPage() {
+    const { Auth } = useUserContext();
     return <Formik validationSchema={loginValidationSchema} initialValues={initialValues} onSubmit=
-        {values => authLogin(values)}>
+        {values => Auth(values) }>
         {({ handleChange, handleSubmit, values }) => {
             return (
                 <View style={styles.form}>
