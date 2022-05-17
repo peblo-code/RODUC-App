@@ -31,7 +31,15 @@ const styles = StyleSheet.create({ //estilos
         height: 100,
         resizeMode: 'contain',
         backgroundColor: '#004494',
-        borderRadius: 5
+        borderRadius: 5,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 6,
+        },
+        shadowOpacity: 0.37,
+        shadowRadius: 7.49,
+        elevation: 12,
     },
     image: {
         height: 100,
