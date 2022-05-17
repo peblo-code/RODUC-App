@@ -85,3 +85,7 @@ def agregar_facultad(request):
         facultad_nueva.save()
         respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
         return respuesta
+    return render(request, "facultad/facultad.html")
+
+def carrera(request):
+    return render(request, "carrera/carrera.html")
