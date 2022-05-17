@@ -1,13 +1,13 @@
 {% extends "panel.html" %}
 {% block formularios %}
 {% load static %}
-<div class="header d-flex align-items-center" style="min-height: 350px; background-image: url('{% static 'assets/img/header-bg.png' %}'); ">
+<div class="header pb-9 d-flex align-items-center" style="min-height: 350px; background-image: url('{% static 'assets/img/header-bg.png' %}'); ">
     <!-- Mask -->
     <span></span>
     <!-- Header container -->
     <div class="container-fluid d-flex align-items-justify">
       <div class="row">
-        <div class="col-lg-9">
+        <div class=".col-12 .col-md-8">
           <h1 class="display-2 text-white">Registro de Carreras</h1>
           <p class="text-white mt-0 mb-5">El formulario actual sirve para el Registro de las Carreras que tienen acceso al sistema.</p>
         </div>
@@ -16,31 +16,59 @@
 </div>
 
 <div class="container-fluid mt--9">
-    <div class="row">
+      <div class="row">
         <div class="col-xl-8 order-xl-1">
-            <div class="card">
-                <div class="card-body">
-                    <form role="form" action='' method="POST">
-                        {% csrf_token %}
-                        <h6 class="heading-small text-muted mb-4">Datos de la Departamento</h6>
-                        <div class="pl-lg-0">
-                            <div class="row">
-                                <div class="col-lg-10">
-                                    <div class="form-group">
-                                        <label class="form-control-label" for="input-username">Nombre</label>
-                                        <input required type="text" autocomplete="off" id="input-username" class="form-control" placeholder="Ingrese nombre del departamento o provincia..." name = "nombre" autofocus>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <span><button type="submit" class="btn btn-success">Guardar</button></span>
-                        <span><a type="button" class="btn btn-warning" href=''>Listar</a></span>
-                    </form>
-                </div>
+          <div class="card">
+            <div class="card-header">
+            {% if tipo_usuario == 1%}
+              <a type="button" class="btn btn-outline-info btn-sm" href =''>
+                <i class="far fa-address-card"></i>
+                Solicitudes de Registros en Equipos  
+              </a>
+            {% endif %}
             </div>
+            <div class="card-body">
+              <form role="form" action='#' method="POST" enctype = "multipart/form-data">
+              {% csrf_token %}
+                <h6 class="heading-small text-muted mb-4">Datos de la Carrera</h6>
+                <div class="pl-lg-4">
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <div class="form-group">
+                        <label class="form-control-label" for="input-username">Descripción</label>
+                        <input required autocomplete="off" type="text" id="input-username" class="form-control" placeholder="Ingrese la descripción de la carrera..." name = "nombres" autofocus>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-6">
+                      <div class="form-group">
+                            <label for="exampleFormControlSelect1" class="form-control-label">Duración</label>
+                            <select class="form-control" id="exampleFormControlSelect1" id="input-first-name" class="form-control">
+                              <option>Seleccione la duración de la carrera...</option>
+                              <option>1 año</option>
+                              <option>2 años</option>
+                              <option>3 años</option>
+                              <option>4 años</option>
+                              <option>5 años</option>
+                            </select>
+                      </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="form-control-label" for="input-username"><Table>Título Obtenido</Table></label>
+                            <input required autocomplete="off" type="text" id="input-username" class="form-control" placeholder="Ingrese el título que obtiene el egresado..." name = "nombres" autofocus>
+                          </div>
+                  </div>
+                </div>
+                <span><button type="submit" class="btn btn-success">Guardar</button></span>
+                <span><a type="button" class="btn btn-warning" href =''>Listar</a></span>
+              </form>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
-</div>
 
 
 
