@@ -10,4 +10,7 @@ urlpatterns = [
 
     #USUARIOS
     path('usuario/<int:usuario_actual>', views.usuario, name='usuario'),
+
+    #FACULTAD
+    path('facultad', views.facultad, name='facultad')
 ]

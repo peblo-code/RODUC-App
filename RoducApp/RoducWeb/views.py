@@ -66,3 +66,7 @@ def usuario(request, usuario_actual = 0):
                                                      "mensaje_bienvenida": mensaje_bienvenida,
                                                      "lista_usuarios":lista_usuarios,
                                                      "usuario_actual": usuario_actual})
+
+
+def facultad(request):
+    return render(request, "facultad/facultad.html")
