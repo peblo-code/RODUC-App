@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from RoducWeb.models import *
 import time #sacar hora
 from restapi.views import Auditoria
+from datetime import datetime
 ###########################################################################################
 #funciones varias
 def generar_saludo():
