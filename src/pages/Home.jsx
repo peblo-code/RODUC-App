@@ -22,12 +22,11 @@ const Home = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
         backgroundColor: '#F5FCFF',
     },
     card: {
         backgroundColor: '#0d3498',
-        height: 200,
+        height: 50,
         padding: 10,
         margin: 10,
         borderRadius: 10,
@@ -38,6 +37,8 @@ const styles = StyleSheet.create({
             height: 2,
         
         },
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 })
 
