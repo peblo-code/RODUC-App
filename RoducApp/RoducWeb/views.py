@@ -69,4 +69,8 @@ def usuario(request, usuario_actual = 0):
 
 
 def facultad(request):
-    return render(request, "facultad/facultad.html")
+    mensaje_bienvenida = generar_saludo()
+    return render(request, "facultad/facultad.html", {"usuario_conectado": request.session.get("usuario_conectado"),
+                                                     "nombre_usuario": request.session.get("nombre_del_usuario"),
+                                                     "direccion_email":request.session.get("correo_usuario"),
+                                                     "mensaje_bienvenida": mensaje_bienvenida})
