@@ -21,3 +21,6 @@ media
 
 # AWS User-specific
 .idea//aws.xml
+
+node_modules
+.expo
