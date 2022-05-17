@@ -297,9 +297,9 @@ p.quote{
 /*end: product grid*/
 
 /*start: Login*/
- .form-signin-wrapper{background: #2196f3 !important;}
+ .form-signin-wrapper{background: #ffffff !important;}
  .form-signin{
-         max-width: 330px;
+         max-width: 430px;
          padding: 15px;
          margin: 0 auto;
     }
