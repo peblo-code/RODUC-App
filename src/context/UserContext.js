@@ -45,6 +45,7 @@ export const UserProvider = ({ children }) => {
         getData().then(data => {    //recuperar datos
             if(data != null){
                 setUser(data);
+                console.log(data)
             }
         })
     }, [])

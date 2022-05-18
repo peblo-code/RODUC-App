@@ -2,8 +2,14 @@ import { View, StyleSheet } from 'react-native';
 import useUserContext from '../hooks/useUserContext';
 import StyledText from '../components/StyledText';
 
+const extraerPrimerNombre = (nombres_del_usuario) => {
+    const nombres = nombres_del_usuario.split(' ');
+    return nombres[0];
+}
+
 const Home = () => {
     const { user } = useUserContext();
+
     return (
         <View style={styles.container}>
             <View style={styles.card}>
@@ -11,8 +17,8 @@ const Home = () => {
                 fontWeight="bold"
                 color="white"
                 align="center"
-                fontSize="large">
-                    Bienvenido {user.nombres_del_usuario} {user.apellidos_del_usuario}!
+                fontSize="subheading">
+                    Bienvenido {extraerPrimerNombre(user.nombres_del_usuario)} {extraerPrimerNombre(user.apellidos_del_usuario)}!
                 </StyledText>
             </View>
         </View>

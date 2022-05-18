@@ -29,6 +29,9 @@ const styles = StyleSheet.create({
     subheading: {
         fontSize: theme.fontSizes.subheading,
     },
+    heading: {
+        fontSize: theme.fontSizes.heading,
+    },
     large: {
         fontSize: theme.fontSizes.large,
     },
@@ -49,6 +52,7 @@ export default function StyledText ({children, align, color, fontSize, fontWeigh
         color === 'red' && styles.colorRed,
         fontSize && 'minimal' && styles.minimal,
         fontSize === 'subheading' && styles.subheading,
+        fontSize === 'heading' && styles.heading,
         fontSize === 'large' && styles.large,
         fontWeight === 'bold' && styles.bold,
         style
