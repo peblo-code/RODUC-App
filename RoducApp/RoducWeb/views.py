@@ -1,9 +1,14 @@
-from django.http import JsonResponse
+import json
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
+from django.core import serializers
 from RoducWeb.models import *
 import time #sacar hora
 from restapi.views import Auditoria
-from datetime import datetime
+
+#NOTAS
+#1-Serializers solo se puede con metodo Filter, con get no funciona
+
 ###########################################################################################
 #funciones varias
 def generar_saludo():
@@ -72,10 +77,12 @@ def usuario(request, usuario_actual = 0):
 
 def facultad(request):
     mensaje_bienvenida = generar_saludo()
+    lista_facultad = Facultad.objects.filter(estado = 1)
     return render(request, "facultad/facultad.html", {"usuario_conectado": request.session.get("usuario_conectado"),
                                                      "nombre_usuario": request.session.get("nombre_del_usuario"),
                                                      "direccion_email":request.session.get("correo_usuario"),
-                                                     "mensaje_bienvenida": mensaje_bienvenida})
+                                                     "mensaje_bienvenida": mensaje_bienvenida,
+                                                     "lista_facultad": lista_facultad})
 def agregar_facultad(request):
     if request.method == 'POST':
         facultad_nueva = Facultad(
@@ -87,6 +94,12 @@ def agregar_facultad(request):
         respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
         return respuesta
     return render(request, "facultad/facultad.html")
+def detalle_facultad(request):
+    if request.method == 'GET':
+        detalle = Facultad.objects.filter(cod_facultad = request.GET.get("codigo"))
+        detalle = serializers.serialize("json", detalle)
+        print(detalle)
+        return JsonResponse({"detalle": detalle})
 
 def carrera(request):
     return render(request, "carrera/carrera.html")

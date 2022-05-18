@@ -20,7 +20,7 @@
                 <div class="card-body">
                     <form role="form" id='form' method="POST">
                         {% csrf_token %}
-                        <h6 class="heading-small text-muted mb-4">Datos de la Departamento</h6>
+                        <h6 class="heading-small text-muted mb-4">Datos de la Facultad</h6>
                         <div class="pl-lg-0">
                             <div class="row">
                                 <div class="col-lg-6">
@@ -38,8 +38,59 @@
                             </div>
                         </div>
                         <span><button type="submit" class="btn btn-success">Guardar</button></span>
-                        <span><a type="button" class="btn btn-warning" href=''>Listar</a></span>
+                        <span><button type="button" id="BT_Listar" class="btn btn-warning" onclick="mostrarFacultades()">Listar</button></span>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="display: none;" id="listafacultades">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="heading-small text-muted mb-4">Facultades Registradas</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive py-2">
+                        <div class="dataTables_wrapper dt-bootrstrap4">
+                            <table class="table table-flush dataTable align-items-center table-hover" id="datos">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th scope="col" class="sort" data-sort="id">ID</th>
+                                        <th scope="col" class="sort" data-sort="nombre">Descripcion</th>
+                                        <th scope="col" class="sort" data-sort="nombre">Fecha de Fundación</th>
+                                        <th scope="col">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tfoot class="thead-light">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Descripción</th>
+                                        <th>Fecha de Fundaciónn</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </tfoot>
+                                <tbody class="list">
+                                    {% for facultad in lista_facultad %}
+                                    <tr>
+                                        <td class="id">{{facultad.cod_facultad}}</td>
+                                        <td class="nombre">{{facultad.descripcion}}</td>
+                                        <td class="nombre">{{facultad.fecha_fundacion}}</td>
+                                        <!---BOTONES-->
+                                        <td>
+                                            <button type="button" class="btn btn-outline-success" onclick='obtenerFacultad("{{facultad.cod_facultad}}")'>
+                                                <i class="far fa-edit"></i>
+                                            </button>
+                                            <a class="btn btn-outline-danger" href=''>
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -78,5 +129,33 @@
             }
         })
     })
+</script>
+
+
+<script>
+    function obtenerFacultad(codigo){
+        $.ajax({
+        url: "{% url 'detalle_facultad' %}",
+        type: 'GET',
+        data: {"codigo": codigo},
+        success: 
+            function(data){
+                console.log("Hay conexion");
+                console.log(data);
+            }
+        })
+    }
+</script>
+
+<script>
+    function mostrarFacultades(){
+        if($("#listafacultades").is(":visible")){
+            $('#listafacultades').hide(500);
+            document.querySelector('#BT_Listar').innerHTML = 'Listar';
+        } else {
+            $('#listafacultades').show(500);
+            document.querySelector('#BT_Listar').innerHTML = 'Ocultar';
+        }
+    }
 </script>
 {% endblock %}
