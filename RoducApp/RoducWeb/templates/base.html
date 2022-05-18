@@ -55,6 +55,34 @@
   <!-- SweetAlert JS-->
   <script src="{% static 'assets/js/sweetalert2.all.min.js' %}"></script>
 
+  <script>
+    $(document).ready(function() {
+        $('#datos').DataTable( {
+            "language": {
+                "emptyTable":     "No existen registros a exponer.",
+                "info":           "",
+                "infoEmpty":      "",
+                "infoFiltered":   "",
+                "infoPostFix":    "",
+                "thousands":      ".",
+                "lengthMenu":     "Registros a mostrar _MENU_",
+                "loadingRecords": "Cargando...",
+                "processing":     "Procesando...",
+                "search":         "Buscar:",
+                "zeroRecords":    "No se obtuvo ninguna coincidencia",
+                oPaginate: {
+                    sNext: '<i class="fa fa-forward"></i>',
+                    sPrevious: '<i class="fa fa-backward"></i>',
+                    sFirst: '<i class="fa fa-step-backward"></i>',
+                    sLast: '<i class="fa fa-step-forward"></i>'
+                    }
+            },
+            "lengthMenu": [[5 ,10, 25, 50, -1], [5, 10, 25, 50, "Todo"]],
+        });
+    });
+  </script>
+
+
   {% block extrajs %}
   
   {% endblock %}
