@@ -35,6 +35,20 @@ class UsuarioDetailSerializer(serializers.ModelSerializer):
             'modif_fecha',
         ]
 
+class Usuario_RolDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Usuario_Rol
+        fields = [
+            'cod_usuario_rol',
+            'cod_usuario',
+            'cod_rol_usuario',
+            'estado',
+            'alta_usuario',
+            'alta_fecha',
+            'modif_usuario',
+            'modif_fecha',
+        ]
+
 class Auditoria_SesionesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Auditoria_Sesiones
