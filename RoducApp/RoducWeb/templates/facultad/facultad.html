@@ -1,4 +1,5 @@
 {% extends "panel.html" %}
+{% block titulo %}Facultad - Roduc{% endblock %}
 {% block formularios %}
 {% load static %}
 <div class="header pb-9 d-flex align-items-center" style="min-height: 350px; background-image: url('{% static 'assets/img/header-bg.png' %}'); ">
@@ -18,28 +19,239 @@
         <div class="col-xl-12 order-xl-1">
             <div class="card">
                 <div class="card-body">
-                    <form role="form" action='' method="POST">
+                    <form role="form" id='form' method="POST">
                         {% csrf_token %}
-                        <h6 class="heading-small text-muted mb-4">Datos de la Departamento</h6>
+                        <h6 class="heading-small text-muted mb-4">Datos de la Facultad</h6>
                         <div class="pl-lg-0">
                             <div class="row">
-                                <div class="col-lg-10">
+                                <div class="col-lg-6">
                                     <div class="form-group">
-                                        <label class="form-control-label" for="input-username">Nombre</label>
-                                        <input required type="text" autocomplete="off" id="input-username" class="form-control" placeholder="Ingrese nombre del departamento o provincia..." name = "nombre" autofocus>
+                                        <label class="form-control-label" for="input-username">Descripcion</label>
+                                        <input required type="text" autocomplete="off" id="input-username" class="form-control" placeholder="Ingrese el nombre de la facultad..." name = "descripcion" autofocus>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-username">Fecha de Fundacion</label>
+                                        <input required type="date" autocomplete="off" id="input-username" class="form-control"  name = "fecha" autofocus>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <span><button type="submit" class="btn btn-success">Guardar</button></span>
-                        <span><a type="button" class="btn btn-warning" href=''>Listar</a></span>
+                        <span><button type="button" id="BT_Listar" class="btn btn-warning" onclick="mostrarFacultades()">Listar</button></span>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="display: none;" id="listafacultades">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="heading-small text-muted mb-4">Facultades Registradas</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive py-2">
+                        <div class="dataTables_wrapper dt-bootrstrap4">
+                            <table class="table table-flush dataTable align-items-center table-hover" id="datos">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th scope="col" class="sort" data-sort="id">ID</th>
+                                        <th scope="col" class="sort" data-sort="nombre">Descripcion</th>
+                                        <th scope="col" class="sort" data-sort="nombre">Fecha de Fundación</th>
+                                        <th scope="col">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tfoot class="thead-light">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Descripción</th>
+                                        <th>Fecha de Fundaciónn</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </tfoot>
+                                <tbody class="list">
+                                    {% for facultad in lista_facultad %}
+                                    <tr>
+                                        <td class="id">{{facultad.cod_facultad}}</td>
+                                        <td class="nombre">{{facultad.descripcion}}</td>
+                                        <td class="nombre">{{facultad.fecha_fundacion}}</td>
+                                        <!---BOTONES-->
+                                        <td>
+                                            <button type="button" class="btn btn-outline-success" onclick='obtenerFacultad("{{facultad.cod_facultad}}")'>
+                                                <i class="far fa-edit"></i>
+                                            </button>
+                                            <a class="btn btn-outline-danger" href=''>
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<!---Modal-->
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="tituloModal"></h5>
+                <button type="button" class="close" href="" aria-label="Close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form role="form" action='' id="updateForm" onsubmit="updateFacultad(this)" name = "update">
+                    {% csrf_token %}
+                    <h6 class="heading-small text-muted mb-4">Datos de la Facultad</h6>
+                    <div class="pl-lg-1">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-username">Nombre</label>
+                                    <input required type="text" id="updateNombre" class="form-control" value= "" name = "nombre" autofocus required>
+                                    <input required type="text" id="updateCodigo" class="form-control" value= "" name = "codigo" style="display: none;">
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-username">Fecha de Fundacion</label>
+                                    <input required type="date" id="updateFecha" class="form-control" value= "" name = "fecha" autofocus required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <span><button type="submit" class="btn btn-success">Guardar</button></span>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extrajs %}
+<script>
+    $('#form').on('submit', function(){
+        var formulario = new FormData(this);
+        event.preventDefault();
+        $.ajax({
+        url: "{% url 'agregar_facultad' %}",
+        type: 'POST',
+        data: formulario,
+        processData:false,
+        contentType:false,
+        success: 
+            function(data){
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                })
+                Toast.fire({
+                icon: 'success',
+                title: data.mensaje
+                })  
+            }
+        })
+    })
+</script>
 
 
+<script>
+    function obtenerFacultad(codigo){
+        $.ajax({
+        url: "{% url 'detalle_facultad' %}",
+        type: 'GET',
+        data: {"codigo": codigo},
+        success: 
+            function(data){
+                console.log("Hay conexion");
+                console.log(data);
+                detalle = data.detalle;
+                $('#updateModal').modal('show');
+                detalle = JSON.parse(detalle);
+                document.querySelector('#tituloModal').innerHTML = 'Modificar Facultad: ' + detalle[0].fields.descripcion;
+                document.getElementById("updateCodigo").value = detalle[0].pk;
+                document.getElementById("updateNombre").value = detalle[0].fields.descripcion;
+                document.getElementById("updateFecha").value = detalle[0].fields.fecha_fundacion;
+            }
+        })
+    }
+</script>
+
+<script>
+    function updateFacultad(form){
+        event.preventDefault();
+        var formulario = new FormData(form)
+        Swal.fire({
+            title: 'Actualización de Facultad',
+            text: 'Esta seguro de actualizar el registro?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Confirmar',
+            cancelButtonText: "Cancelar",
+            confirmButtonColor: '#2dce89',
+            cancelButtonColor: '#d33',
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: "{% url 'actualizar_facultad' %}",
+                    type: 'POST',
+                    data: formulario,
+                    processData:false,
+                    contentType:false,
+                    success: 
+                    function(data){
+                        $('#updateModal').modal('hide');
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            }
+                        })
+                        Toast.fire({
+                            icon: 'success',
+                            title: data.mensaje
+                        }).then( () => {
+                            location.href = '{% url 'facultad' %}'
+                        })
+                    }
+                })
+            }
+        })
+    }
+</script>
+
+
+<script>
+    function mostrarFacultades(){
+        if($("#listafacultades").is(":visible")){
+            $('#listafacultades').hide(500);
+            document.querySelector('#BT_Listar').innerHTML = 'Listar';
+        } else {
+            $('#listafacultades').show(500);
+            document.querySelector('#BT_Listar').innerHTML = 'Ocultar';
+        }
+    }
+</script>
 {% endblock %}

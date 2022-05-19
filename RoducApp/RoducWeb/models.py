@@ -33,6 +33,18 @@ class Usuario_Rol(models.Model):
     modif_usuario         = models.CharField(max_length = 45)
     modif_fecha           = models.DateTimeField(auto_now = True)
 
+class Facultad(models.Model):
+    cod_facultad         = models.AutoField(primary_key = True)
+    descripcion          = models.CharField(max_length = 100)
+    fecha_fundacion      = models.DateField(auto_now = False)
+    estado                = models.IntegerField()
+    alta_usuario          = models.CharField(max_length = 45)
+    alta_fecha            = models.DateTimeField(auto_now_add = True)
+    modif_usuario         = models.CharField(max_length = 45)
+    modif_fecha           = models.DateTimeField(auto_now = True)
+
+
+
 class Auditoria(models.Model):
     cod_auditoria         = models.AutoField(primary_key = True)
     tabla                 = models.CharField(max_length = 100)
@@ -47,3 +59,5 @@ class Auditoria_Sesiones(models.Model):
     nombre_usuario        = models.CharField(max_length   = 45)
     fecha                 = models.DateTimeField(auto_now = False)
     informacion           = models.CharField(max_length   = 500)
+
+

@@ -1,7 +1,15 @@
+from datetime import datetime
+import json
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
+from django.core import serializers
 from RoducWeb.models import *
 import time #sacar hora
-from restapi.views import Auditoria
+
+
+#NOTAS
+#1-Serializers solo se puede con metodo Filter, con get no funciona
+
 ###########################################################################################
 #funciones varias
 def generar_saludo():
@@ -13,6 +21,15 @@ def generar_saludo():
     else:
         mensaje_bienvenida = 'Buenas Noches'
     return mensaje_bienvenida
+
+#auditar sesiones
+def auditar_sesion(request, info):
+    nueva_sesion = Auditoria_Sesiones(
+        nombre_usuario = request.session.get("usuario_conectado"),
+        fecha = datetime.now(),
+        informacion = info
+    )
+    nueva_sesion.save()
 ###########################################################################################
 
 # Create your views here.
@@ -69,7 +86,39 @@ def usuario(request, usuario_actual = 0):
 
 
 def facultad(request):
-    return render(request, "facultad/facultad.html")
+    mensaje_bienvenida = generar_saludo()
+    lista_facultad = Facultad.objects.filter(estado = 1)
+    return render(request, "facultad/facultad.html", {"usuario_conectado": request.session.get("usuario_conectado"),
+                                                     "nombre_usuario": request.session.get("nombre_del_usuario"),
+                                                     "direccion_email":request.session.get("correo_usuario"),
+                                                     "mensaje_bienvenida": mensaje_bienvenida,
+                                                     "lista_facultad": lista_facultad})
+def agregar_facultad(request):
+    if request.method == 'POST':
+        facultad_nueva = Facultad(
+            descripcion = request.POST.get('descripcion'),
+            fecha_fundacion = request.POST.get('fecha'),
+            estado = 1
+        )
+        facultad_nueva.save()
+        respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
+        return respuesta
+
+def detalle_facultad(request):
+    if request.method == 'GET':
+        detalle = Facultad.objects.filter(cod_facultad = request.GET.get("codigo"))
+        detalle = serializers.serialize("json", detalle)
+        return JsonResponse({"detalle": detalle})
+def actualizar_facultad(request):
+    if request.method == 'POST':
+        facultad_actualizar = Facultad.objects.get(cod_facultad = request.POST.get("codigo"))
+        facultad_actualizar.descripcion = request.POST.get("nombre")
+        facultad_actualizar.fecha_fundacion = request.POST.get("fecha")
+        facultad_actualizar.estado = 1
+        facultad_actualizar.modif_usuario = request.session.get("usuario_conectado")
+        facultad_actualizar.save()
+        respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
+        return respuesta
 
 def carrera(request):
     return render(request, "carrera/carrera.html")

@@ -26,6 +26,11 @@ class UsuarioRetrieveAPIView(generics.RetrieveAPIView):
     queryset = Usuario.objects.all()
     serializer_class = UsuarioDetailSerializer
 
+class Usuario_RolRetrieveAPIView(generics.RetrieveAPIView):
+    lookup_field = "cod_usuario_id"
+    queryset = Usuario_Rol.objects.all()
+    serializer_class = Usuario_RolDetailSerializer
+
 class AuditoriaSesionesCreateAPIView(generics.CreateAPIView):
     queryset = Auditoria_Sesiones.objects.all()
     serializer_class = Auditoria_SesionesSerializer
