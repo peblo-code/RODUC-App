@@ -34,6 +34,11 @@ class FacultadListAPIView(generics.ListAPIView):
     queryset = Facultad.objects.all()
     serializer_class = FacultadListSerializer
 
+class FacultadRetrieveAPIView(generics.RetrieveAPIView):
+    lookup_field = "cod_facultad"
+    queryset = Facultad.objects.all()
+    serializer_class = FacultadListSerializer
+
 class AuditoriaSesionesCreateAPIView(generics.CreateAPIView):
     queryset = Auditoria_Sesiones.objects.all()
     serializer_class = Auditoria_SesionesSerializer
