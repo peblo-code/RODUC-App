@@ -109,8 +109,8 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form role="form" action='' id="updateForm" method="POST" name = "update">
-                {% csrf_token %}
+                <form role="form" action='' id="updateForm" onsubmit="updateFacultad(this)" name = "update">
+                    {% csrf_token %}
                     <h6 class="heading-small text-muted mb-4">Datos de la Facultad</h6>
                     <div class="pl-lg-1">
                         <div class="row">
@@ -195,7 +195,51 @@
 </script>
 
 <script>
-    //function update
+    function updateFacultad(form){
+        event.preventDefault();
+        var formulario = new FormData(form)
+        Swal.fire({
+            title: 'Actualización de Facultad',
+            text: 'Esta seguro de actualizar el registro?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Confirmar',
+            cancelButtonText: "Cancelar",
+            confirmButtonColor: '#2dce89',
+            cancelButtonColor: '#d33',
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: "{% url 'actualizar_facultad' %}",
+                    type: 'POST',
+                    data: formulario,
+                    processData:false,
+                    contentType:false,
+                    success: 
+                    function(data){
+                        $('#updateModal').modal('hide');
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            }
+                        })
+                        Toast.fire({
+                            icon: 'success',
+                            title: data.mensaje
+                        }).then( () => {
+                            location.href = '{% url 'facultad' %}'
+                        })
+                    }
+                })
+            }
+        })
+    }
 </script>
 
 

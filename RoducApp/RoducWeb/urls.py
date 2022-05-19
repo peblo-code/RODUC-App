@@ -15,6 +15,7 @@ urlpatterns = [
     path('facultad', views.facultad, name='facultad'),
     path('agregar_facultad', views.agregar_facultad, name='agregar_facultad'),
     path('detalle_facultad', views.detalle_facultad, name='detalle_facultad'),
+    path('actualizar_facultad', views.actualizar_facultad, name='actualizar_facultad'),
 
     #CARRERA
     path('carrera', views.carrera, name='carrera'),

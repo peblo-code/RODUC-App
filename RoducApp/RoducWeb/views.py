@@ -103,7 +103,7 @@ def agregar_facultad(request):
         facultad_nueva.save()
         respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
         return respuesta
-    return render(request, "facultad/facultad.html")
+
 def detalle_facultad(request):
     if request.method == 'GET':
         detalle = Facultad.objects.filter(cod_facultad = request.GET.get("codigo"))
@@ -115,7 +115,10 @@ def actualizar_facultad(request):
         facultad_actualizar.descripcion = request.POST.get("nombre")
         facultad_actualizar.fecha_fundacion = request.POST.get("fecha")
         facultad_actualizar.estado = 1
+        facultad_actualizar.modif_usuario = request.session.get("usuario_conectado")
         facultad_actualizar.save()
+        respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
+        return respuesta
 
 def carrera(request):
     return render(request, "carrera/carrera.html")
