@@ -17,7 +17,6 @@ def Auditoria(request, user, info):
 
 class UsuarioListAPIView(generics.ListAPIView):
     queryset = Usuario.objects.all()
-    
     serializer_class = UsuarioListSerializer
 class UsuarioRetrieveAPIView(generics.RetrieveAPIView):
     lookup_field = "nombre_usuario"
@@ -30,6 +29,10 @@ class Usuario_RolRetrieveAPIView(generics.RetrieveAPIView):
     lookup_field = "cod_usuario_id"
     queryset = Usuario_Rol.objects.all()
     serializer_class = Usuario_RolDetailSerializer
+
+class FacultadListAPIView(generics.ListAPIView):
+    queryset = Facultad.objects.all()
+    serializer_class = FacultadListSerializer
 
 class AuditoriaSesionesCreateAPIView(generics.CreateAPIView):
     queryset = Auditoria_Sesiones.objects.all()

@@ -49,6 +49,20 @@ class Usuario_RolDetailSerializer(serializers.ModelSerializer):
             'modif_fecha',
         ]
 
+class FacultadListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Facultad
+        fields = [
+            'cod_facultad',
+            'descripcion',
+            'fecha_fundacion',
+            'estado',
+            'alta_usuario',
+            'alta_fecha',
+            'modif_usuario',
+            'modif_fecha',
+        ]
+
 class Auditoria_SesionesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Auditoria_Sesiones
