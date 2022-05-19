@@ -1,9 +1,11 @@
 import { StyleSheet, View, ScrollView, TouchableWithoutFeedback } from 'react-native'
+import { useState } from 'react'
 import StyledText from './StyledText.jsx'
 import Constants from 'expo-constants'
 import theme from '../theme.js'
 import { Link, useLocation } from 'react-router-native'
 import Ionicons from '@expo/vector-icons/Ionicons';
+import CustomAlert from './CustomAlert.jsx'
 
 const styles = StyleSheet.create({
     container: {
@@ -45,16 +47,25 @@ const AppBarTab = ({ children, to }) => {
     )
 }
 
-const AppBar = () => {    
+const AppBar = () => {
+    const [showLogout, setShowLogout] = useState(false)
     return (
         <View style={styles.container}>
+            <CustomAlert isShowed={showLogout} title="Cerrar Sesión" message="Estas seguro/a de cerrar tu sesión?">
+                <View style={{flexDirection:'row', justifyContent:'space-between'}}>
+                    <StyledText color='red' onPress={() => setShowLogout(false)}>Cancelar</StyledText>
+                    <AppBarTab to='/signin' onPress={() => setShowLogout(false)}>
+                        Cerrar Sesión
+                    </AppBarTab>
+                </View>
+            </CustomAlert>
             <ScrollView horizontal style={styles.scroll}>
                 <AppBarTab to='/'>Inicio</AppBarTab>
             </ScrollView>
             <View style={styles.logout}>
-                <AppBarTab to='/signin'>
+                <StyledText fontWeight='bold' style={styles.text} onPress={() => setShowLogout(true)}>
                     Cerrar Sesión <Ionicons name="log-out" size={16} style={{marginLeft:10}}/> 
-                </AppBarTab>
+                </StyledText>
             </View>
         </View>
     )
