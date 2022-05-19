@@ -1,7 +1,7 @@
 import * as yup from 'yup'
 
 export const loginValidationSchema = yup.object().shape({
-    email: yup
+    username: yup
         .string()
         .required('El nombre de usuario es requerido'),
     password: yup

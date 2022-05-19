@@ -33,8 +33,7 @@ const getData = async () => {   //funcion para recuperar datos
 export const UserProvider = ({ children }) => {
 
     const [user, setUser] = useState(initialState); //estado del usuario
-    const [error, setError] = useState(false); //estado del error
-    const [isLoading, setIsLoading] = useState(false); //estado del loading
+    const [error, setError] = useState(''); //estado del error
 
     const closeSession = () => {    //funcion para cerrar sesion
         storeData(initialState);
@@ -45,35 +44,50 @@ export const UserProvider = ({ children }) => {
         getData().then(data => {    //recuperar datos
             if(data != null){
                 setUser(data);
-                console.log(data)
             }
         })
     }, [])
 
-    function Auth(values) {
-        axios.get(`http://26.247.235.244:8000/restapi/lista_usuarios/${values.email}`)
+    function Auth({ username, password }) {
+        const URL = 'http://26.247.235.244:8000/restapi'; //url del servidor
+
+        axios.get(`${URL}/lista_usuarios/${username}`)
         .then(response => {
             if(response.data.nombre_usuario.length > 0) {
-                if(response.data.nombre_usuario === values.email && response.data.contraseña === values.password) { 
-                    setUser(response.data) //si el usuario existe, guardar datos en el contexto
-                    storeData(response.data) //persistir datos
+                if(response.data.nombre_usuario === username && response.data.contraseña === password) {
+
+                    const codUser = response.data.cod_usuario;  //recuperar codigo del usuario
+                    axios.get(`http://26.247.235.244:8000/restapi/usuario_rol/${codUser}`)
+                    .then(responseCod => {
+                        if(responseCod.data.cod_rol_usuario == 2) {   //si es profesor
+                            setUser(response.data) //si el usuario existe y es profesor, guardar datos en el contexto
+                            storeData(response.data) //persistir datos
+                        } else {
+                            setError('El usuario no es un profesor.') //si el usuario no es profesor, mostrar error
+                        }
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
+
                 } else {
-                    console.log('Login Incorrecto')
+                    setError('Nombre de usuario o contraseña incorrectas.') //si los datos son incorrectos, mostrar error
                 }
             }
         })
         .catch(error => {
-            console.log(error);
-            setError(true);
+            if(error.response.status == 404) {
+                setError('El usuario no existe.') //si el usuario no existe, mostrar error
+            } else {
+                setError('Error al conectar con el servidor.') //si hay error, mostrar error
+            }
         });
-        setIsLoading(false);
     }
     
 
     return (
         <UserContext.Provider value={{
             user,
-            isLoading,
             error,
             setError,
             setUser,

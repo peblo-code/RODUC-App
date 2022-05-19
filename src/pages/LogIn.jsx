@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import ModalStyled from '../components/ModalStyled.jsx';
 
 const initialValues = { //valores iniciales
-    email: '',
+    username: '',
     password: ''
 }
 
@@ -79,10 +79,10 @@ export default function LoginInPage() {
     }, []);
 
     useEffect(() => { //funcion para mostrar error
-        if(error) {
+        if(error != '') {
             Alert.alert(
                 'Ups!',
-                'No es posible establecer conexion con la base de datos.',
+                error,
                 [
                     { text: 'OK', onPress: () => setIsLoading(false) },
                 ],
@@ -111,8 +111,8 @@ export default function LoginInPage() {
                         <Image style={styles.image} source={logoSimple} />
                     </View>
                     <FormikInputValue
-                        name="email"
-                        placeholder="E-mail"
+                        name="username"
+                        placeholder="Usuario"
                     />
                     <FormikInputValue
                         name="password"
