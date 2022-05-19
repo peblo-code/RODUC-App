@@ -27,13 +27,13 @@
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-username">Descripcion</label>
-                                        <input required type="text" autocomplete="off" id="input-username" class="form-control" placeholder="Ingrese el nombre de la facultad..." name = "descripcion" autofocus>
+                                        <input required type="text" autocomplete="off" id="descripcion" class="form-control" placeholder="Ingrese el nombre de la facultad..." name = "descripcion" autofocus>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-username">Fecha de Fundacion</label>
-                                        <input required type="date" autocomplete="off" id="input-username" class="form-control"  name = "fecha" autofocus>
+                                        <input required type="date" autocomplete="off" id="fecha" class="form-control"  name = "fecha" autofocus>
                                     </div>
                                 </div>
                             </div>
@@ -151,11 +151,13 @@
         contentType:false,
         success: 
             function(data){
+                document.getElementById('descripcion').value = ''
+                document.getElementById('fecha').value = ''
                 const Toast = Swal.mixin({
                     toast: true,
                     position: 'top',
                     showConfirmButton: false,
-                    timer: 2000,
+                    timer: 1000,
                     timerProgressBar: true,
                     didOpen: (toast) => {
                         toast.addEventListener('mouseenter', Swal.stopTimer)
@@ -165,7 +167,9 @@
                 Toast.fire({
                 icon: 'success',
                 title: data.mensaje
-                })  
+                }).then( () => {
+                            location.href = '{% url 'facultad' %}'
+                        })
             }
         })
     })
