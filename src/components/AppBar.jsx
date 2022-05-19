@@ -1,8 +1,9 @@
-import { StyleSheet, View, ScrollView, TouchableWithoutFeedback, Touchable } from 'react-native'
+import { StyleSheet, View, ScrollView, TouchableWithoutFeedback } from 'react-native'
 import StyledText from './StyledText.jsx'
 import Constants from 'expo-constants'
 import theme from '../theme.js'
 import { Link, useLocation } from 'react-router-native'
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 const styles = StyleSheet.create({
     container: {
@@ -19,6 +20,11 @@ const styles = StyleSheet.create({
     },
     active: {
         color: theme.appBar.textPrimary,
+    },
+    logout: {
+        paddingBottom: 15,
+        flexDirection:'row',
+        alignContent:'flex-end',
     }
 })
 
@@ -44,8 +50,12 @@ const AppBar = () => {
         <View style={styles.container}>
             <ScrollView horizontal style={styles.scroll}>
                 <AppBarTab to='/'>Inicio</AppBarTab>
-                <AppBarTab to='/signin'>Cerrar Sesión</AppBarTab>
             </ScrollView>
+            <View style={styles.logout}>
+                <AppBarTab to='/signin'>
+                    Cerrar Sesión <Ionicons name="log-out" size={16} style={{marginLeft:10}}/> 
+                </AppBarTab>
+            </View>
         </View>
     )
 }

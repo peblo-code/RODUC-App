@@ -4,7 +4,8 @@ const theme = {
     appBar: {
         primary: '#0d3498',
         textSecondary: '#999',
-        textPrimary: '#fff'
+        textPrimary: '#fff',
+        logOut: '#092979'
     },
     colors: {
         textPrimary: '#24292e',

@@ -67,7 +67,7 @@ export const UserProvider = ({ children }) => {
                         }
                     })
                     .catch(error => {
-                        console.log(error);
+                        setError('Este usuario aún no tiene un rol asignado.') //si el usuario no es profesor, mostrar error
                     })
 
                 } else {
