@@ -4,16 +4,29 @@
 {% block formularios %}
 {% load static %}
 <div class="col-md-12 mb-2 mb-xl-3">
-    <h1><strong>Página</strong> de Inicio - <strong> EncarPC</strong></h1>
+    <h1><strong>Página</strong> de Inicio - <strong> RODUC</strong></h1>
     <div class="tab-content">
         <div class="row py-4">
             
             <div class="col-sm-4 mb-3 mb-md-0">
                 <div class="card text-center h-100">
+                    <a class="card-body d-flex flex-column btn btn-lg btn-outline-primary" href="">
+                        <div>
+                            
+                            <span class="display-4">Usuarios</span>
+                        </div>
+                        <img class="img-responsive mt-2" width="150" height="150" src="{%static 'assets/img/nuevo_usuario.png'%}" style="align-content: center; display: flex; margin: auto;"></img>
+                        <h6>Nuevo Usuario</h6>
+                    </a>
+                    
+                </div>
+            </div>
+            <div class="col-sm-4 mb-3 mb-md-0">
+                <div class="card text-center h-100">
                     <a class="card-body d-flex flex-column btn btn-lg btn-outline-primary" href="{%url 'facultad' %}">
                         <div>
                             
-                            <span class="display-4">Facultad</span>
+                            <span class="display-4">Facultades</span>
                         </div>
                         <img class="img-responsive mt-2" width="150" height="150" src="{%static 'assets/img/facultad.png'%}" style="align-content: center; display: flex; margin: auto;"></img>
                         <h6>Nueva Facultad</h6>
@@ -25,22 +38,10 @@
                     <a class="card-body d-flex flex-column btn btn-lg btn-outline-primary" href="{%url 'carrera' %}">
                         <div>
                         
-                            <span class="display-4">Carrera</span>
+                            <span class="display-4">Carreras</span>
                         </div>
                         <img class="img-responsive mt-2" width="150" height="150" src="{%static 'assets/img/carrera.png'%}" style="align-content: center; display: flex; margin: auto;"></img>
                         <h6>Nueva Carrera</h6>
-                    </a>
-                </div>
-            </div>
-            <div class="col-sm-4 mb-3 mb-md-0">
-                <div class="card text-center h-100">
-                    <a class="card-body d-flex flex-column btn btn-lg btn-outline-primary" href="{%url 'plan_estudio' %}">
-                        <div>
-                        
-                            <span class="display-4">Plan de Estudio</span>
-                        </div>
-                        <img class="img-responsive mt-2" width="150" height="150" src="{%static 'assets/img/plan_estudio.png'%}" style="align-content: center; display: flex; margin: auto;"></img>
-                        <h6>Nuevo Plan de Estudio</h6>
                     </a>
                 </div>
             </div>
@@ -51,6 +52,18 @@
     <div class="tab-content">
         <div class="row py-4">
             
+            <div class="col-sm-4 mb-3 mb-md-0">
+                <div class="card text-center h-100">
+                    <a class="card-body d-flex flex-column btn btn-lg btn-outline-primary" href="{%url 'plan_estudio' %}">
+                        <div>
+                        
+                            <span class="display-4">Planes de Estudio</span>
+                        </div>
+                        <img class="img-responsive mt-2" width="150" height="150" src="{%static 'assets/img/plan_estudio.png'%}" style="align-content: center; display: flex; margin: auto;"></img>
+                        <h6>Nuevo Plan de Estudio</h6>
+                    </a>
+                </div>
+            </div>
             <div class="col-sm-4 mb-3 mb-md-0">
                 <div class="card text-center h-100">
                     <a class="card-body d-flex flex-column btn btn-lg btn-outline-primary" href="{%url 'semestre' %}">
@@ -75,33 +88,9 @@
                     </a>
                 </div>
             </div>
-                <div class="col-sm-4 mb-3 mb-md-0">
-                    <div class="card text-center h-100">
-                        <a class="card-body d-flex flex-column btn btn-lg btn-outline-primary" href="{%url 'asignatura'%}">
-                            <div>
-                                
-                                <span class="display-4">Ventas</span>
-                            </div>
-                            <img class="img-responsive mt-2" width="150" height="150" src="{%static 'assets/img/asignatura.png'%}" style="align-content: center; display: flex; margin: auto;"></img>
-                            <h6>Nueva Venta</h6>
-                        </a>
-                        
-                    </div>
-                </div>
             </div>
         </div>
-    </div>
-    <div class="tab-content">
-        <div class="row py-4">
-            <div class="col-sm-4 mb-3 mb-md-0">
-                <div class="card text-center h-100">
-                    <a class="card-body d-flex flex-column btn btn-lg btn-outline-primary" href="">
-                        <div>
-                        </div>
-                </div>
-            </div>
-        </div>  
-    </div>  
+    </div> 
 </div>
 {% endblock %}
 
