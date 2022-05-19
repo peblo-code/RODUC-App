@@ -4,6 +4,7 @@ import { View } from 'react-native';
 import AppBar from './AppBar.jsx';
 import Home from '../pages/Home.jsx';
 import LoginInPage from '../pages/LogIn.jsx';
+import NewForm from './NewForm.jsx';
 import useUserContext from '../hooks/useUserContext.js';
 
 const Main = () => {
@@ -21,6 +22,7 @@ const Main = () => {
             <Routes>
                 <Route path='/' element={<Home />} />
                 <Route path='/signin' element={<LoginInPage />} />
+                <Route path='/new_form' element={<NewForm />}/>
             </Routes>
         </View>
     )

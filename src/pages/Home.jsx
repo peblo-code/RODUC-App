@@ -1,6 +1,7 @@
 import { View, StyleSheet, Button } from 'react-native';
 import useUserContext from '../hooks/useUserContext';
 import RepositoryList from '../components/RepositoryList';
+import { useNavigate } from 'react-router-native';
 import theme from '../theme';
 
 const extraerPrimerNombre = (nombres_del_usuario) => {
@@ -11,12 +12,16 @@ const extraerPrimerNombre = (nombres_del_usuario) => {
 
 const Home = () => {
     const { user } = useUserContext();
+    const navigate = useNavigate();
 
     return (
         <View style={styles.container}>
             <RepositoryList />
             <View style={styles.btnNewForm}>
-                <Button color={theme.appBar.primary} title="Registrar nuevo formulario" />
+                <Button 
+                    color={theme.appBar.primary} 
+                    title="Registrar nuevo formulario" 
+                    onPress={() => navigate('/new_form')}/>
             </View>
         </View>
 
