@@ -12,6 +12,9 @@ urlpatterns = [
     path('usuario', views.usuario, name='usuario'),
     path('agregar_usuario', views.agregar_usuario, name='agregar_usuario'),
 
+    #PERFIL
+    path('perfil', views.perfil, name='perfil'),
+
     #FACULTAD
     path('facultad', views.facultad, name='facultad'),
     path('agregar_facultad', views.agregar_facultad, name='agregar_facultad'),

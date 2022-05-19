@@ -3,112 +3,149 @@
 {% block formularios %}
 {% load static %}
 <div class="header pb-9 d-flex align-items-center"
-  style="min-height: 350px; background-image: url('{% static 'assets/img/header-bg.png' %}'); ">
-  <!-- Mask -->
-  <span></span>
-  <!-- Header container -->
-  <div class="container-fluid d-flex align-items-justify">
-    <div class="row">
-      <div class=".col-12 .col-md-8">
-        <h1 class="display-2 text-white">Registro de Usuarios</h1>
-        <p class="text-white mt-0 mb-5">El formulario actual sirve para el registro de los usuarios en el sistema.
-        </p>
-      </div>
+    style="min-height: 350px; background-image: url('{% static 'assets/img/header-bg.png' %}'); ">
+    <!-- Mask -->
+    <span></span>
+    <!-- Header container -->
+    <div class="container-fluid d-flex align-items-justify">
+        <div class="row">
+            <div class=".col-12 .col-md-8">
+                <h1 class="display-2 text-white">Registro de Usuarios</h1>
+                <p class="text-white mt-0 mb-5">El formulario actual sirve para el registro de los usuarios en el
+                    sistema.
+                </p>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 <div class="container-fluid mt--9">
-  <div class="row">
-    <div class="col-xl-12 order-xl-1">
-      <div class="card">
-        <div class="card-body">
-          <form role="form" action='#' method="POST" id="form" enctype="multipart/form-data">
-            {% csrf_token %}
-            <h6 class="heading-small text-muted mb-4">Datos del Usuario</h6>
-            <div class="pl-lg-0">
-              <div class="row">
-                <div class="col-lg-6">
-                  <div class="form-group">
-                    <label class="form-control-label" for="input-username">Nombre de Usuario</label>
-                    <input required autocomplete="off" type="text" id="username" class="form-control" placeholder="Ingrese el nombre para el nuevo usuario..." name="username" autofocus>
-                  </div>
+    <div class="row">
+        <div class="col-xl-12 order-xl-1">
+            <div class="card">
+                <div class="card-body">
+                    <form role="form" action='#' method="POST" id="form" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <h6 class="heading-small text-muted mb-4">Datos del Usuario</h6>
+                        <div class="pl-lg-0">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-username">Nombre de Usuario</label>
+                                        <input required autocomplete="off" type="text" id="username"
+                                            class="form-control"
+                                            placeholder="Ingrese el nombre para el nuevo usuario..." name="username"
+                                            autofocus>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-username">Contraseña</label>
+                                        <input required type="password" autocomplete="off" id="password"
+                                            class="form-control" placeholder="Ingrese una contraseña para el usuario..."
+                                            name="password" autofocus>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-username">Nombres Completos</label>
+                                        <input required type="text" autocomplete="off" id="nombres" class="form-control"
+                                            placeholder="Ingrese los nombres del usuario a registrar..." name="nombres"
+                                            autofocus>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-username">Apellidos
+                                            Completos</label>
+                                        <input required type="text" autocomplete="off" id="apellidos"
+                                            class="form-control"
+                                            placeholder="Ingrese los apellidos del usuario a registrar..."
+                                            name="apellidos" autofocus>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-username">Correo
+                                            Electronico</label>
+                                        <input required type="email" autocomplete="off" id="correo" class="form-control"
+                                            placeholder="Ingrese el correo electronico del usuario..." name="correo"
+                                            autofocus>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <span><button type="submit" class="btn btn-success">Guardar</button></span>
+                        <span><a type="button" class="btn btn-warning" href=''>Listar</a></span>
+                    </form>
                 </div>
-                <div class="col-lg-6">
-                  <div class="form-group">
-                    <label class="form-control-label" for="input-username">Contraseña</label>
-                    <input required type="password" autocomplete="off" id="password" class="form-control" placeholder="Ingrese una contraseña para el usuario..." name="password" autofocus>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                  <div class="col-lg-6">
-                    <div class="form-group">
-                        <label class="form-control-label" for="input-username">Nombres Completos</label>
-                        <input required type="text" autocomplete="off" id="nombres" class="form-control" placeholder="Ingrese los nombres del usuario a registrar..." name="nombres" autofocus>
-                    </div>
-                  </div>
-                  <div class="col-lg-6">
-                    <div class="form-group">
-                        <label class="form-control-label" for="input-username">Apellidos Completos</label>
-                        <input required type="text" autocomplete="off" id="apellidos" class="form-control" placeholder="Ingrese los apellidos del usuario a registrar..." name="apellidos" autofocus>
-                    </div>
-                  </div>
-              </div>
-              <div class="row">
-                  <div class="col-lg-6">
-                    <div class="form-group">
-                        <label class="form-control-label" for="input-username">Correo Electronico</label>
-                        <input required type="email" autocomplete="off" id="correo" class="form-control" placeholder="Ingrese el correo electronico del usuario..." name="correo" autofocus>
-                    </div>
-                  </div>
-              </div>
             </div>
-            <span><button type="submit" class="btn btn-success">Guardar</button></span>
-            <span><a type="button" class="btn btn-warning" href=''>Listar</a></span>
-          </form>
         </div>
-      </div>
     </div>
-  </div>
 </div>
+
+<!---Modal-->
+
+<div class="modal fade" id="modalPerfil" tabindex="-1" role="dialog" aria-labelledby="modal-default" aria-hidden="true">
+    <div class="modal-dialog modal- modal-dialog-centered modal-" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="modal-title-default">Ver perfil</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form action="{% url 'perfil' %}" method="GET">
+                <div class="modal-body">
+                    <input type="text" name="codigoPerfil" id="codigoPerfil" style="display: none;">
+                    <p>Desea visitar el perfil del usuario para la asignación de los roles dentro de la facultad?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Ir!</a>
+                    <button type="button" class="btn btn-link  ml-auto" data-dismiss="modal">Mas tarde</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 
 {% endblock %}
 
 {% block extrajs %}
 <script>
-    $('#form').on('submit', function(){
+    $('#form').on('submit', function () {
         var formulario = new FormData(this);
         event.preventDefault();
         $.ajax({
-        url: "{% url 'agregar_usuario' %}",
-        type: 'POST',
-        data: formulario,
-        processData:false,
-        contentType:false,
-        success: 
-            function(data){
-                document.getElementById('username').value = ''
-                document.getElementById('password').value = ''
-                document.getElementById('nombres').value = ''
-                document.getElementById('apellidos').value = ''
-                document.getElementById('correo').value = ''
-                const Toast = Swal.mixin({
-                    toast: true,
-                    position: 'top',
-                    showConfirmButton: false,
-                    timer: 2000,
-                    timerProgressBar: true,
-                    didOpen: (toast) => {
-                        toast.addEventListener('mouseenter', Swal.stopTimer)
-                        toast.addEventListener('mouseleave', Swal.resumeTimer)
-                    }
-                })
-                Toast.fire({
-                icon: 'success',
-                title: data.mensaje
-                })  
-            }
+            url: "{% url 'agregar_usuario' %}",
+            type: 'POST',
+            data: formulario,
+            processData: false,
+            contentType: false,
+            success:
+                function (data) {
+                    document.getElementById('username').value = ''
+                    document.getElementById('password').value = ''
+                    document.getElementById('nombres').value = ''
+                    document.getElementById('apellidos').value = ''
+                    document.getElementById('correo').value = ''
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Aviso',
+                        text: 'Registro guardado existosamente.',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => {
+                        user = JSON.parse(data.usuario);
+                        document.getElementById("codigoPerfil").value = user[0].pk;
+                        $('#modalPerfil').modal('show');
+                    })
+                }
         })
     })
 </script>

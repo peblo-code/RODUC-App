@@ -77,11 +77,15 @@ def inicio(request):
 def usuario(request):
     mensaje_bienvenida = generar_saludo()
     lista_usuarios = Usuario.objects.filter(estado = 1)
+    lista_roles = Rol_Usuario.objects.filter(estado = 1)
+    lista_facultades = Facultad.objects.filter(estado = 1)
     return render(request, "usuarios/usuario.html", {"usuario_conectado": request.session.get("usuario_conectado"),
                                                      "nombre_usuario": request.session.get("nombre_del_usuario"),
                                                      "direccion_email":request.session.get("correo_usuario"),
                                                      "mensaje_bienvenida": mensaje_bienvenida,
-                                                     "lista_usuarios":lista_usuarios})
+                                                     "lista_usuarios":lista_usuarios,
+                                                     "lista_roles": lista_roles,
+                                                     "lista_facultades": lista_facultades})
 def agregar_usuario(request):
     if request.method == 'POST':
         usuario_nuevo = Usuario(
@@ -94,7 +98,10 @@ def agregar_usuario(request):
             alta_usuario = request.session.get('usuario_conectado')
         )
         usuario_nuevo.save()
-        respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
+        usuario_nuevo = Usuario.objects.filter(nombre_usuario = usuario_nuevo.nombre_usuario)
+        usuario_nuevo = serializers.serialize("json", usuario_nuevo)
+        respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito",
+                                  "usuario": usuario_nuevo})
         return respuesta
 
 
@@ -145,3 +152,6 @@ def semestre(request):
 
 def asignatura(request):
     return render(request, "asignatura/asignatura.html")
+
+def perfil(request):
+    return render(request, "perfil.html")
