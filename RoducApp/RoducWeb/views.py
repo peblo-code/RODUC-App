@@ -171,3 +171,26 @@ def perfil(request):
                                            "mensaje_bienvenida": generar_saludo(),
                                            "usuario_conectado": request.session.get("usuario_conectado"),
                                            "nombre_usuario": request.session.get("nombre_del_usuario")})
+def asignar_rol(request):
+    if request.method == "POST":
+        respuesta = ''
+        if Usuario_Rol.objects.filter(estado = 1, cod_rol_usuario_id = request.POST.get("rol"), cod_carrera_id = request.POST.get("carrera"), cod_usuario_id = request.POST.get("codigo")).exists():
+            respuesta = JsonResponse({"bandera": 0, 
+                                      "mensaje": "El usuario ya cuenta con el rol seleccionado dentro de la carrera"})
+            return respuesta
+        else:
+            nuevo_rol = Usuario_Rol(
+                estado = 1,
+                alta_usuario = request.session.get("usuario_conectado"),
+                cod_rol_usuario_id = request.POST.get("rol"),
+                cod_usuario_id = request.POST.get("codigo"),
+                cod_carrera_id = request.POST.get("carrera")
+            )
+            nuevo_rol.save()
+            lista_roles = Usuario_Rol.objects.filter(estado = 1, cod_usuario = nuevo_rol.cod_usuario)
+            lista_roles = serializers.serialize("json", lista_roles)
+            respuesta = JsonResponse({"bandera": 1, 
+                                      "mensaje": "Rol asignado correctamente.",
+                                      "lista_roles": lista_roles})
+            return respuesta
+

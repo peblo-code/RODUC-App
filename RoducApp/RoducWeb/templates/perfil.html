@@ -93,7 +93,7 @@
                     <th>Acciones</th>
                   </tr>
                 </tfoot>
-                <tbody class="list">
+                <tbody class="list" id="cuerpoTabla">
                   {% for usuario_rol in lista_usuario_rol %}
                   <tr>
                     <td class="id">{{usuario_rol.cod_usuario_rol}}</td>
@@ -148,8 +148,10 @@
             <div class="row">
               <div class="col-lg-6">
                 <div class="form-group">
+                  <input type="text" value="{{datos_usuario.cod_usuario}}" name="codigo" style="display: none;">
                   <label class="form-control-label" for="input-username">Seleccione un rol para el usuario</label>
-                  <select class="form-control" name="rol">
+                  <select class="form-control" name="rol" id="rol">
+                    <option value="">Seleccione una opcion...</option>
                     {% for rol in lista_roles %}
                     <option value="{{rol.cod_rol_usuario}}">{{rol.descripcion}}</option>
                     {% endfor %}
@@ -159,7 +161,8 @@
               <div class="col-lg-6">
                 <div class="form-group">
                   <label class="form-control-label" for="input-username">Seleccione la carrera</label>
-                  <select class="form-control" name="carrera">
+                  <select class="form-control" name="carrera" id="carrera">
+                    <option value="">Seleccione una opcion...</option>
                     {% for carrera in lista_carreras %}
                     <option value="{{carrera.cod_carrera}}">{{carrera.descripcion}}</option>
                     {% endfor %}
@@ -195,11 +198,71 @@
         contentType:false,
         success: 
             function(data){
-                document.getElementById('descripcion').value = ''
-                document.getElementById('fecha').value = ''
-                
-            }
+                document.getElementById('rol').value = ''
+                document.getElementById('carrera').value = ''
+                $('#rolModal').modal('hide');
+                if (data.bandera == 0){
+                  Swal.fire({
+                          icon: 'error',
+                          title: 'Aviso',
+                          text: data.mensaje,
+                          showConfirmButton: true
+                      })
+                } else {
+                  Swal.fire({
+                          icon: 'success',
+                          title: 'Aviso',
+                          text: data.mensaje,
+                          showConfirmButton: false,
+                          timer: 1500
+                      })
+                  roles_user = data.lista_roles
+                  roles_user = JSON.parse(roles_user)
+                  actualizarRoles(roles_user)
+                  }
+              }
         })
     })
+
+
+    function actualizarRoles(roles_user){
+      var rol = ''
+      var carrera = ''
+      var aux = ''
+      document.querySelector("#cuerpoTabla").innerHTML = "";
+      for(var x = 0; x < Object.keys(roles_user).length; x++){
+        //ROLES
+        {% for roles in lista_roles %}
+          aux = {{roles.cod_rol_usuario}}
+          if(roles_user[x].fields.cod_rol_usuario == aux){
+            rol = '{{roles.descripcion}}'
+          }
+        {% endfor %}
+        //CARRERAS
+        {% for carreras in lista_carreras %}
+          aux = {{carreras.cod_carrera}};
+          if(roles_user[x].fields.cod_carrera == aux){
+            carrera = '{{carreras.descripcion}}';
+          }
+        {% endfor %}
+        //CARGA DE TABLA
+        document.getElementById("cuerpoTabla").insertRow(-1).innerHTML = 
+              `<td>
+                  ${roles_user[x].pk}
+              </td>
+              <td>
+                  ${rol}
+              </td>
+              <td>
+                  ${carrera}
+              </td>
+              <td>
+                <button class = "btn btn-icon btn-outline-danger" type = "button">
+                      <span><i class = "fas fa-trash"></i></span>
+                  </button>
+              </td>`;
+      }
+    }
+
   </script>
 {% endblock %}

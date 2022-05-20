@@ -1,9 +1,14 @@
-from urllib import request
+from curses.ascii import HT
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from rest_framework import generics
 from .serializers import *
 from RoducWeb.models import *
 from datetime import datetime
+
+#################################################################
+from django.views.decorators.csrf import csrf_protect, csrf_exempt
+from django.utils.decorators import method_decorator
 
 # Create your views here.
 
@@ -41,5 +46,4 @@ class FacultadRetrieveAPIView(generics.RetrieveAPIView):
 
 class AuditoriaSesionesCreateAPIView(generics.CreateAPIView):
     queryset = Auditoria_Sesiones.objects.all()
-    print(request.post.get('nombre_usuario'))
     serializer_class = Auditoria_SesionesSerializer

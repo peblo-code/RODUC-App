@@ -15,7 +15,8 @@ urlpatterns = [
 
     #PERFIL
     path('perfil', views.perfil, name='perfil'),
-
+    path('asignar_rol', views.asignar_rol, name='asignar_rol'),
+    
     #FACULTAD
     path('facultad', views.facultad, name='facultad'),
     path('agregar_facultad', views.agregar_facultad, name='agregar_facultad'),
