@@ -32,10 +32,7 @@
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-username">Nombre de Usuario</label>
-                                        <input required autocomplete="off" type="text" id="username"
-                                            class="form-control"
-                                            placeholder="Ingrese el nombre para el nuevo usuario..." name="username"
-                                            autofocus>
+                                        <input required autocomplete="off" type="text" id="username" class="form-control" placeholder="Ingrese el nombre para el nuevo usuario..." name="username" autofocus>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
@@ -80,7 +77,7 @@
                             </div>
                         </div>
                         <span><button type="submit" class="btn btn-success">Guardar</button></span>
-                        <span><button type="button" class="btn btn-warning" onclick="mostrarUsuarios()">Listar</button></span>
+                        <span><button type="button" id="BT_Listar" class="btn btn-warning" onclick="mostrarUsuarios()">Listar</button></span>
                     </form>
                 </div>
             </div>
@@ -100,9 +97,7 @@
                                     <tr>
                                         <th scope="col" class="sort" data-sort="id">ID</th>
                                         <th scope="col" class="sort" data-sort="nombre">Nombre de Usuario</th>
-                                        <th scope="col" class="sort" data-sort="nombre">Contraseña</th>
                                         <th scope="col" class="sort" data-sort="nombre">Nombres y apellidos</th>
-                                        <th scope="col" class="sort" data-sort="nombre">Correo Electronico</th>
                                         <th scope="col">Acciones</th>
                                     </tr>
                                 </thead>
@@ -110,9 +105,7 @@
                                     <tr>
                                         <th>ID</th>
                                         <th>Nombre de Usuario</th>
-                                        <th>Contraseña</th>
                                         <th>Nombres y apellidos</th>
-                                        <th>Correo Electronico</th>
                                         <th>Acciones</th>
                                     </tr>
                                 </tfoot>
@@ -121,9 +114,7 @@
                                     <tr>
                                         <td class="id">{{usuario.cod_usuario}}</td>
                                         <td class="user">{{usuario.nombre_usuario}}</td>
-                                        <td class="pass">{{usuario.contraseña}}</td>
                                         <td class="nombres">{{usuario.apellidos_del_usuario}},{{usuario.nombres_del_usuario}}</td>
-                                        <td class="correo">{{usuario.direccion_email}}</td>
                                         <!---BOTONES-->
                                         <td>
                                             <button type="button" class="btn btn-outline-success">
@@ -132,6 +123,9 @@
                                             <a class="btn btn-outline-danger" href=''>
                                                 <i class="fas fa-trash-alt"></i>
                                             </a>
+                                            <button class="btn btn-outline-warning" onclick="obtenerUsuario('{{usuario.cod_usuario}}')">
+                                                <i class="fas fa-address-card"></i>
+                                            </button>
                                         </td>
                                     </tr>
                                     {% endfor %}
@@ -163,6 +157,63 @@
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Ir!</a>
+                    <button type="button" class="btn btn-link  ml-auto" data-dismiss="modal">Mas tarde</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!---Modal-->
+<div class="modal fade" id="modalPreview" tabindex="-1" role="dialog" aria-labelledby="modal-default" aria-hidden="true">
+    <div class="modal-dialog modal- modal-dialog-centered modal-" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="modal-title-default">Vista Previa</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form action="{% url 'perfil' %}" method="GET">
+                <div class="modal-body">
+                    <input type="text" name="codigoPerfil" value="" id="codigoPreview" style="display:none;">
+                    <div class="row" style="display:flex; justify-content: center; padding-bottom: 10px;">
+                        <img src="{% static 'assets/img/user_profile.png' %}" class="rounded-circle" width="45%">
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-control-label" id="userPreview" for="input-username"></label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-control-label" id="passPreview" for="input-username"></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-control-label" id="nombrePreview" for="input-username"></label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-control-label" id="apellidoPreview" for="input-username"></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-control-label" id="emailPreview" for="input-username"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Ver Perfil!</a>
                     <button type="button" class="btn btn-link  ml-auto" data-dismiss="modal">Mas tarde</button>
                 </div>
             </form>
@@ -206,6 +257,7 @@
         })
     })
 </script>
+
 <script>
     function mostrarUsuarios(){
         if($("#listausuarios").is(":visible")){
@@ -218,6 +270,29 @@
     }
 </script>
 
+<script>
+    function obtenerUsuario(codigo){
+        $.ajax({
+        url: "{% url 'detalle_usuario' %}",
+        type: 'GET',
+        data: {"codigo": codigo},
+        success: 
+            function(data){
+                console.log(data);
+                detalle = data.detalle;
+                detalle = JSON.parse(detalle);
+                $('#modalPreview').modal('show');
+                document.getElementById("codigoPreview").value = detalle[0].pk;
+                console.log(detalle[0].pk)
+                document.querySelector('#userPreview').innerHTML = 'Username: ' + detalle[0].fields.nombre_usuario;
+                document.querySelector('#passPreview').innerHTML = 'Contraseña: ' + detalle[0].fields.contraseña;
+                document.querySelector('#nombrePreview').innerHTML = 'Nombres: ' + detalle[0].fields.nombres_del_usuario;
+                document.querySelector('#apellidoPreview').innerHTML = 'Apellidos: ' + detalle[0].fields.apellidos_del_usuario;
+                document.querySelector('#emailPreview').innerHTML = 'Correo Electronico: ' + detalle[0].fields.direccion_email;
+            }
+        })
+    }
+</script>
 
 
 

@@ -10,6 +10,7 @@ urlpatterns = [
 
     #USUARIOS
     path('usuario', views.usuario, name='usuario'),
+    path('detalle_usuario', views.detalle_usuario, name='detalle_usuario'),
     path('agregar_usuario', views.agregar_usuario, name='agregar_usuario'),
 
     #PERFIL

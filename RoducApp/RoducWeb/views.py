@@ -103,6 +103,11 @@ def agregar_usuario(request):
         respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito",
                                   "usuario": usuario_nuevo})
         return respuesta
+def detalle_usuario(request):
+    if request.method == 'GET':
+        detalle = Usuario.objects.filter(cod_usuario = request.GET.get("codigo"))
+        detalle = serializers.serialize("json", detalle)
+        return JsonResponse({"detalle": detalle})
 
 
 
