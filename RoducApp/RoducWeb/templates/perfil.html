@@ -141,7 +141,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form role="form" action='' id="updateForm" name="update">
+        <form role="form" action='' id="rolForm" name="update">
           {% csrf_token %}
           <h6 class="heading-small text-muted mb-4">Datos para el rol del usuario</h6>
           <div class="pl-lg-1">
@@ -149,7 +149,7 @@
               <div class="col-lg-6">
                 <div class="form-group">
                   <label class="form-control-label" for="input-username">Seleccione un rol para el usuario</label>
-                  <select class="form-control">
+                  <select class="form-control" name="rol">
                     {% for rol in lista_roles %}
                     <option value="{{rol.cod_rol_usuario}}">{{rol.descripcion}}</option>
                     {% endfor %}
@@ -159,7 +159,7 @@
               <div class="col-lg-6">
                 <div class="form-group">
                   <label class="form-control-label" for="input-username">Seleccione la carrera</label>
-                  <select class="form-control">
+                  <select class="form-control" name="carrera">
                     {% for carrera in lista_carreras %}
                     <option value="{{carrera.cod_carrera}}">{{carrera.descripcion}}</option>
                     {% endfor %}
@@ -181,5 +181,25 @@
     function rolAgg(){
       $('#rolModal').modal('show');
     }
+  </script>
+
+  <script>
+    $('#rolForm').on('submit', function(){
+        var formulario = new FormData(this);
+        event.preventDefault();
+        $.ajax({
+        url: "{% url 'asignar_rol' %}",
+        type: 'POST',
+        data: formulario,
+        processData:false,
+        contentType:false,
+        success: 
+            function(data){
+                document.getElementById('descripcion').value = ''
+                document.getElementById('fecha').value = ''
+                
+            }
+        })
+    })
   </script>
 {% endblock %}
