@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect } from 'react'
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Platform } from 'react-native';
 
 export const UserContext = createContext();
 
@@ -46,6 +47,7 @@ export const UserProvider = ({ children }) => {
                 setUser(data);
             }
         })
+
     }, [])
 
     function Auth({ username, password }) {
@@ -55,11 +57,21 @@ export const UserProvider = ({ children }) => {
         .then(response => {
             if(response.data.nombre_usuario.length > 0) {
                 if(response.data.nombre_usuario === username && response.data.contraseña === password) {
-
                     const codUser = response.data.cod_usuario;  //recuperar codigo del usuario
-                    axios.get(`http://26.247.235.244:8000/restapi/usuario_rol/${codUser}`)
+                    axios.get(`${URL}/usuario_rol/${codUser}`)
                     .then(responseCod => {
                         if(responseCod.data.cod_rol_usuario == 2) {   //si es profesor
+                            axios.post(`${URL}/auditoria_sesion`, {
+                                nombre_usuario: username,
+                                fecha: new Date(),
+                                informacion: `Inicio de sesion en ${Platform.OS}`,
+                            })
+                            .then(response => {
+                                console.log(response.data);
+                            })
+                            .catch(error => {
+                                console.log(error);
+                            })
                             setUser(response.data) //si el usuario existe y es profesor, guardar datos en el contexto
                             storeData(response.data) //persistir datos
                         } else {

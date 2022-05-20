@@ -20,7 +20,7 @@ const theme = {
         body: 14,
         subheading: 16,
         heading: 20,
-        large: 34,
+        large: 28,
     },
     fonts: {
         main: Platform.select({

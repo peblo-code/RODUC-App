@@ -1,18 +1,43 @@
 import { View, Text, StyleSheet } from 'react-native';
+import { useEffect, useState } from 'react'
+import StyledText from './StyledText';
 import RNPickerSelect from 'react-native-picker-select';
+import axios from 'axios';
+
+const URL = 'http://26.247.235.244:8000/restapi'; //url del servidor
 
 const NewForm = () => {
+
+    const [facultades, setFacultades] = useState([]);
+
+    useEffect(() => {
+        axios.get(`${URL}/lista_facultades`)
+        .then((response) => {
+            setFacultades(response.data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    }, [])
+
+    const FacultadItems = (facultades.map(facultad => ({
+        label: facultad.descripcion,
+        value: facultad.cod_facultad,
+        key: facultad.cod_facultad
+    })));
+    
     return(
         <View style={styles.form}>
-            <Text>Generar Nuevo Formulario</Text>
+            <StyledText 
+                fontSize="large"
+                fontWeight="bold"
+                color="primary">
+                Nuevo Informe
+            </StyledText>
             <RNPickerSelect
             onValueChange={(value) => console.log(value)}
-            items={[
-                { label: 'Football', value: 'football' },
-                { label: 'Baseball', value: 'baseball' },
-                { label: 'Hockey', value: 'hockey' },
-            ]}
-            />
+            items={FacultadItems}
+            /> 
         </View>
     )
 }
