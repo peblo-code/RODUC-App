@@ -74,15 +74,36 @@ def inicio(request):
                                            "mensaje_bienvenida": mensaje_bienvenida})
 
 
-def usuario(request, usuario_actual = 0):
+def usuario(request):
     mensaje_bienvenida = generar_saludo()
     lista_usuarios = Usuario.objects.filter(estado = 1)
+    lista_roles = Rol_Usuario.objects.filter(estado = 1)
+    lista_facultades = Facultad.objects.filter(estado = 1)
     return render(request, "usuarios/usuario.html", {"usuario_conectado": request.session.get("usuario_conectado"),
                                                      "nombre_usuario": request.session.get("nombre_del_usuario"),
                                                      "direccion_email":request.session.get("correo_usuario"),
                                                      "mensaje_bienvenida": mensaje_bienvenida,
                                                      "lista_usuarios":lista_usuarios,
-                                                     "usuario_actual": usuario_actual})
+                                                     "lista_roles": lista_roles,
+                                                     "lista_facultades": lista_facultades})
+def agregar_usuario(request):
+    if request.method == 'POST':
+        usuario_nuevo = Usuario(
+            nombre_usuario = request.POST.get('username'),
+            contraseña = request.POST.get('password'),
+            nombres_del_usuario = request.POST.get('nombres'),
+            apellidos_del_usuario = request.POST.get('apellidos'),
+            direccion_email = request.POST.get('correo'),
+            estado = 1,
+            alta_usuario = request.session.get('usuario_conectado')
+        )
+        usuario_nuevo.save()
+        usuario_nuevo = Usuario.objects.filter(nombre_usuario = usuario_nuevo.nombre_usuario)
+        usuario_nuevo = serializers.serialize("json", usuario_nuevo)
+        respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito",
+                                  "usuario": usuario_nuevo})
+        return respuesta
+
 
 
 def facultad(request):
@@ -131,3 +152,17 @@ def semestre(request):
 
 def asignatura(request):
     return render(request, "asignatura/asignatura.html")
+
+def perfil(request):
+    usuario = request.GET.get("codigoPerfil")
+    datos_usuario = Usuario.objects.get(cod_usuario = usuario)
+    lista_roles = Rol_Usuario.objects.filter(estado = 1)
+    lista_usuario_rol = Usuario_Rol.objects.filter(estado = 1, cod_usuario = usuario)
+    lista_carreras = Carrera.objects.all()
+    return render(request, "perfil.html", {"datos_usuario": datos_usuario,
+                                           "lista_roles": lista_roles,
+                                           "lista_usuario_rol": lista_usuario_rol,
+                                           "lista_carreras": lista_carreras,
+                                           "mensaje_bienvenida": generar_saludo(),
+                                           "usuario_conectado": request.session.get("usuario_conectado"),
+                                           "nombre_usuario": request.session.get("nombre_del_usuario")})

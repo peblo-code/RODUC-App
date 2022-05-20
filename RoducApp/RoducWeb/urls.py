@@ -9,7 +9,11 @@ urlpatterns = [
     path('inicio', views.inicio, name = 'inicio'),
 
     #USUARIOS
-    path('usuario/<int:usuario_actual>', views.usuario, name='usuario'),
+    path('usuario', views.usuario, name='usuario'),
+    path('agregar_usuario', views.agregar_usuario, name='agregar_usuario'),
+
+    #PERFIL
+    path('perfil', views.perfil, name='perfil'),
 
     #FACULTAD
     path('facultad', views.facultad, name='facultad'),
