@@ -61,7 +61,8 @@ export const UserProvider = ({ children }) => {
                     axios.get(`${URL}/usuario_rol/${codUser}`)
                     .then(responseCod => {
                         if(responseCod.data.cod_rol_usuario == 2) {   //si es profesor
-                            axios.post(`${URL}/auditoria_sesion`, {
+                            axios.post(`${URL}/auditar_sesion`, {
+                                
                                 nombre_usuario: username,
                                 fecha: new Date(),
                                 informacion: `Inicio de sesion en ${Platform.OS}`,
