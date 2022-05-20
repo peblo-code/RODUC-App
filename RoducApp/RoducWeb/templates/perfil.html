@@ -76,7 +76,7 @@
         <div class="card-body">
           <div class="table-responsive py-2">
             <div class="dataTables_wrapper dt-bootrstrap4">
-              <table class="table table-flush dataTable align-items-center table-hover" id="datos">
+              <table class="table table-flush dataTable align-items-center table-hover" id="tablaRoles">
                 <thead class="thead-light">
                   <tr>
                     <th scope="col" class="sort" data-sort="id">ID</th>
@@ -112,7 +112,7 @@
                       {% endfor %}
                     </td>
                     <!---BOTONES-->
-                    <td>
+                    <td id="acciones">
                       <a class="btn btn-outline-danger" href=''>
                         <i class="fas fa-trash-alt"></i>
                       </a>
@@ -224,11 +224,35 @@
         })
     })
 
+    var tabla = $('#tablaRoles').DataTable( {
+            "language": {
+                "emptyTable":     "No existen registros a exponer.",
+                "info":           "",
+                "infoEmpty":      "",
+                "infoFiltered":   "",
+                "infoPostFix":    "",
+                "thousands":      ".",
+                "lengthMenu":     "Registros a mostrar _MENU_",
+                "loadingRecords": "Cargando...",
+                "processing":     "Procesando...",
+                "search":         "Buscar:",
+                "zeroRecords":    "No se obtuvo ninguna coincidencia",
+                oPaginate: {
+                    sNext: '<i class="fa fa-forward"></i>',
+                    sPrevious: '<i class="fa fa-backward"></i>',
+                    sFirst: '<i class="fa fa-step-backward"></i>',
+                    sLast: '<i class="fa fa-step-forward"></i>'
+                    }
+            },
+            "lengthMenu": [[5 ,10, 25, 50, -1], [5, 10, 25, 50, "Todo"]],
+        });
 
     function actualizarRoles(roles_user){
       var rol = ''
       var carrera = ''
       var aux = ''
+
+      $('#tablaRoles').DataTable().clear()
       document.querySelector("#cuerpoTabla").innerHTML = "";
       for(var x = 0; x < Object.keys(roles_user).length; x++){
         //ROLES
@@ -245,22 +269,9 @@
             carrera = '{{carreras.descripcion}}';
           }
         {% endfor %}
+
         //CARGA DE TABLA
-        document.getElementById("cuerpoTabla").insertRow(-1).innerHTML = 
-              `<td>
-                  ${roles_user[x].pk}
-              </td>
-              <td>
-                  ${rol}
-              </td>
-              <td>
-                  ${carrera}
-              </td>
-              <td>
-                <button class = "btn btn-icon btn-outline-danger" type = "button">
-                      <span><i class = "fas fa-trash"></i></span>
-                  </button>
-              </td>`;
+        tabla.row.add([roles_user[x].pk, rol, carrera, '<button type="button" class = "btn btn-icon btn-outline-danger"><span><i class = "fas fa-trash"></i></span></button>']).draw();
       }
     }
 
