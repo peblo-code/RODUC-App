@@ -154,4 +154,15 @@ def asignatura(request):
     return render(request, "asignatura/asignatura.html")
 
 def perfil(request):
-    return render(request, "perfil.html")
+    usuario = request.GET.get("codigoPerfil")
+    datos_usuario = Usuario.objects.get(cod_usuario = usuario)
+    lista_roles = Rol_Usuario.objects.filter(estado = 1)
+    lista_usuario_rol = Usuario_Rol.objects.filter(estado = 1, cod_usuario = usuario)
+    lista_carreras = Carrera.objects.all()
+    return render(request, "perfil.html", {"datos_usuario": datos_usuario,
+                                           "lista_roles": lista_roles,
+                                           "lista_usuario_rol": lista_usuario_rol,
+                                           "lista_carreras": lista_carreras,
+                                           "mensaje_bienvenida": generar_saludo(),
+                                           "usuario_conectado": request.session.get("usuario_conectado"),
+                                           "nombre_usuario": request.session.get("nombre_del_usuario")})
