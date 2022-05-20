@@ -169,51 +169,49 @@
     <div class="modal-dialog modal- modal-dialog-centered modal-" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h6 class="modal-title" id="modal-title-default">Vista Previa</h6>
+                <h6 class="modal-title" id="modal-title-default">Datos del Usuario</h6>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
             <form action="{% url 'perfil' %}" method="GET">
-                <div class="modal-body">
+                <div class="modal-body" style="padding: 0em !important;">
                     <input type="text" name="codigoPerfil" value="" id="codigoPreview" style="display:none;">
                     <div class="row" style="display:flex; justify-content: center; padding-bottom: 10px;">
                         <img src="{% static 'assets/img/user_profile.png' %}" class="rounded-circle" width="45%">
                     </div>
-                    <div class="row">
-                        <div class="col-lg-6">
+                    <hr class="my-3">
+                    <div class="row" style="display:grid; justify-content: center ;grid-template-columns: 1fr 1fr;">
+                        <div class="py-3 text-center" style="padding-bottom: 0em !important; padding-top: 0em !important;">
                             <div class="form-group">
                                 <label class="form-control-label" id="userPreview" for="input-username"></label>
                             </div>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="py-3 text-center" style="padding-bottom: 0em !important; padding-top: 0em !important;">
                             <div class="form-group">
                                 <label class="form-control-label" id="passPreview" for="input-username"></label>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-6">
+                        <div class="py-3 text-center" style="padding-bottom: 0em !important; padding-top: 0em !important;">
                             <div class="form-group">
                                 <label class="form-control-label" id="nombrePreview" for="input-username"></label>
                             </div>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="py-3 text-center" style="padding-bottom: 0em !important; padding-top: 0em !important;">
                             <div class="form-group">
                                 <label class="form-control-label" id="apellidoPreview" for="input-username"></label>
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="form-group">
-                                <label class="form-control-label" id="emailPreview" for="input-username"></label>
-                            </div>
+                    <div class="col-12 py-3 text-center" style="padding-bottom: 0em !important; padding-top: 0em !important;">
+                        <div class="form-group">
+                            <label class="form-control-label" id="emailPreview" for="input-username"></label>
                         </div>
                     </div>
                 </div>
+                <hr class="my-0">
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Ver Perfil!</a>
+                    <button type="submit" class="btn btn-primary">Ver Perfil</a>
                     <button type="button" class="btn btn-link  ml-auto" data-dismiss="modal">Mas tarde</button>
                 </div>
             </form>
