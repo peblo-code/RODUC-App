@@ -41,4 +41,5 @@ class FacultadRetrieveAPIView(generics.RetrieveAPIView):
 
 class AuditoriaSesionesCreateAPIView(generics.CreateAPIView):
     queryset = Auditoria_Sesiones.objects.all()
+    print(request.post.get('nombre_usuario'))
     serializer_class = Auditoria_SesionesSerializer
