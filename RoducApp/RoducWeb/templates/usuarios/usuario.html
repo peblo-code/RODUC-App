@@ -80,13 +80,71 @@
                             </div>
                         </div>
                         <span><button type="submit" class="btn btn-success">Guardar</button></span>
-                        <span><a type="button" class="btn btn-warning" href=''>Listar</a></span>
+                        <span><button type="button" class="btn btn-warning" onclick="mostrarUsuarios()">Listar</button></span>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+    <div class="row" style="display: none;" id="listausuarios">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="heading-small text-muted mb-4">Usuarios Registradas</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive py-2">
+                        <div class="dataTables_wrapper dt-bootrstrap4">
+                            <table class="table table-flush dataTable align-items-center table-hover" id="datos">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th scope="col" class="sort" data-sort="id">ID</th>
+                                        <th scope="col" class="sort" data-sort="nombre">Nombre de Usuario</th>
+                                        <th scope="col" class="sort" data-sort="nombre">Contraseña</th>
+                                        <th scope="col" class="sort" data-sort="nombre">Nombres y apellidos</th>
+                                        <th scope="col" class="sort" data-sort="nombre">Correo Electronico</th>
+                                        <th scope="col">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tfoot class="thead-light">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nombre de Usuario</th>
+                                        <th>Contraseña</th>
+                                        <th>Nombres y apellidos</th>
+                                        <th>Correo Electronico</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </tfoot>
+                                <tbody class="list">
+                                    {% for usuario in lista_usuarios %}
+                                    <tr>
+                                        <td class="id">{{usuario.cod_usuario}}</td>
+                                        <td class="user">{{usuario.nombre_usuario}}</td>
+                                        <td class="pass">{{usuario.contraseña}}</td>
+                                        <td class="nombres">{{usuario.apellidos_del_usuario}},{{usuario.nombres_del_usuario}}</td>
+                                        <td class="correo">{{usuario.direccion_email}}</td>
+                                        <!---BOTONES-->
+                                        <td>
+                                            <button type="button" class="btn btn-outline-success">
+                                                <i class="far fa-edit"></i>
+                                            </button>
+                                            <a class="btn btn-outline-danger" href=''>
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
 
 <!---Modal-->
 <div class="modal fade" id="modalPerfil" tabindex="-1" role="dialog" aria-labelledby="modal-default" aria-hidden="true">
@@ -148,4 +206,19 @@
         })
     })
 </script>
+<script>
+    function mostrarUsuarios(){
+        if($("#listausuarios").is(":visible")){
+            $('#listausuarios').hide(500);
+            document.querySelector('#BT_Listar').innerHTML = 'Listar';
+        } else {
+            $('#listausuarios').show(500);
+            document.querySelector('#BT_Listar').innerHTML = 'Ocultar';
+        }
+    }
+</script>
+
+
+
+
 {% endblock %}
