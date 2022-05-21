@@ -128,6 +128,7 @@ def agregar_facultad(request):
             descripcion = request.POST.get('descripcion'),
             fecha_fundacion = request.POST.get('fecha'),
             estado = 1
+            alta_usuario = request.session.get("usuario_conectado")
         )
         facultad_nueva.save()
         respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
