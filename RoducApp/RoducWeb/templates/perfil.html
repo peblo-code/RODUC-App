@@ -116,6 +116,11 @@
                       <a class="btn btn-outline-danger" href=''>
                         <i class="fas fa-trash-alt"></i>
                       </a>
+                      {% if usuario_rol.cod_rol_usuario_id == 2 %}
+                      <button class="btn btn-outline-primary" onclick="materiasModal('{{usuario_rol.cod_carrera_id}}')">
+                        <i class="fas fa-regular fa-book"></i>
+                      </button>
+                      {% endif %}
                     </td>
                   </tr>
                   {% endfor %}
@@ -177,6 +182,27 @@
     </div>
   </div>
 </div>
+
+
+
+<!---Modal-->
+<div class="modal fade" id="materiasModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="tituloModal">Asignacion de Materias a Profesor</h5>
+        <button type="button" class="close" href="" aria-label="Close" data-dismiss="modal">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock %}
 
 {% block extrajs %}
@@ -271,9 +297,38 @@
         {% endfor %}
 
         //CARGA DE TABLA
-        tabla.row.add([roles_user[x].pk, rol, carrera, '<button type="button" class = "btn btn-icon btn-outline-danger"><span><i class = "fas fa-trash"></i></span></button>']).draw();
+        if(rol == 'Profesor'){
+          tabla.row.add([roles_user[x].pk, rol, carrera, `<button type="button" class = "btn btn-icon btn-outline-danger"><span><i class = "fas fa-trash"></i></span></button><button type="button" onclick="materiasModal('${roles_user[x].fields.cod_carrera}')" class = "btn btn-icon btn-outline-primary"><span><i class = "fas fa-book"></i></span></button>`]).draw();
+        } else{
+          tabla.row.add([roles_user[x].pk, rol, carrera, '<button type="button" class = "btn btn-icon btn-outline-danger"><span><i class = "fas fa-trash"></i></span></button>']).draw();
+        }
       }
     }
 
   </script>
+
+  <script>
+    /*function materiasModal(carrera){
+      $('#materiasModal').modal('show');
+      $.ajax({
+        url: "",
+        type: 'GET',
+        data: {"carrera": carrera},
+        success: 
+            function(data){
+                console.log("Hay conexion");
+                console.log(data);
+                detalle = data.detalle;
+                $('#updateModal').modal('show');
+                detalle = JSON.parse(detalle);
+                document.querySelector('#tituloModal').innerHTML = 'Modificar Facultad: ' + detalle[0].fields.descripcion;
+                document.getElementById("updateCodigo").value = detalle[0].pk;
+                document.getElementById("updateNombre").value = detalle[0].fields.descripcion;
+                document.getElementById("updateFecha").value = detalle[0].fields.fecha_fundacion;
+            }
+        })
+    }*/
+  </script>
+
+
 {% endblock %}

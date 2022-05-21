@@ -16,6 +16,7 @@ urlpatterns = [
     #PERFIL
     path('perfil', views.perfil, name='perfil'),
     path('asignar_rol', views.asignar_rol, name='asignar_rol'),
+    #path('detalleAsignaturasCarrera', views.detalleAsignaturasCarrera, name='detalleAsignaturasCarrera')
     
     #FACULTAD
     path('facultad', views.facultad, name='facultad'),
@@ -31,6 +32,8 @@ urlpatterns = [
 
     #SEMESTRES
     path('semestre', views.semestre, name='semestre'),
+    path('agregar_semestre', views.agregar_semestre, name='agregar_semestre'),
+    path('detalle_semestre', views.detalle_semestre, name='detalle_semestre'),
 
     #ASIGNATURAS
     path('asignatura', views.asignatura, name='asignatura')

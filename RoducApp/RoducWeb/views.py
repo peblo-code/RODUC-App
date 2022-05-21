@@ -152,8 +152,27 @@ def carrera(request):
 def plan_estudio(request):
     return render(request, "plan_estudio/plan_estudio.html")
 
+
 def semestre(request):
-    return render(request, "semestre/semestre.html")
+    lista_semestre = Semestre.objects.filter(estado = 1)
+    return render(request, "semestre/semestre.html", {"lista_semestre": lista_semestre,
+                                                      "mensaje_bienvenida": generar_saludo(),
+                                                      "usuario_conectado": request.session.get("usuario_conectado"),
+                                                      "nombre_usuario": request.session.get("nombre_del_usuario"),
+                                                      "direccion_email":request.session.get("correo_usuario")})  
+def agregar_semestre(request):
+    if request.method == 'POST':
+        nuevo_semestre = Semestre(
+            descripcion = request.POST.get("descripcion")
+        )
+        nuevo_semestre.save()
+        respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
+        return respuesta
+def detalle_semestre(request):
+    if request.method == 'GET':
+        detalle = Semestre.objects.filter(cod_semestre = request.GET.get("codigo"))
+        detalle = serializers.serialize("json", detalle)
+        return JsonResponse({"detalle": detalle})
 
 def asignatura(request):
     return render(request, "asignatura/asignatura.html")
@@ -193,4 +212,8 @@ def asignar_rol(request):
                                       "mensaje": "Rol asignado correctamente.",
                                       "lista_roles": lista_roles})
             return respuesta
+
+#def detalleAsignaturasCarrera(request):
+#    cod_carrera = request.GET.get('carrera')
+#    lista_asignaturas = 
 

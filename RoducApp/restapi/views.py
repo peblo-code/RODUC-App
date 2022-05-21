@@ -1,4 +1,3 @@
-from curses.ascii import HT
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from rest_framework import generics
@@ -25,18 +24,11 @@ def auditar_sesion(request, user, info):
 class UsuarioListAPIView(generics.ListAPIView):
     queryset = Usuario.objects.all()
     serializer_class = UsuarioListSerializer
+    
 class UsuarioRetrieveAPIView(generics.RetrieveAPIView):
     lookup_field = "nombre_usuario"
     queryset = Usuario.objects.all()
     serializer_class = UsuarioDetailSerializer
-
-class Usuario_RolRetrieveAPIView(generics.RetrieveAPIView):
-    lookup_field = "cod_usuario_id"
-    #queryset = Usuario_Rol.objects.filter(estado = 1, cod_rol_usuario = 2).first()
-    #queryset = Usuario_Rol.objects.all()
-    #queryset = Usuario_Rol.objects.filter()
-    queryset = Usuario_Rol.objects.raw('select * from roducweb_usuario_rol where cod_rol_usuario_id = 2 limit 1')
-    serializer_class = Usuario_RolDetailSerializer
 
 class FacultadListAPIView(generics.ListAPIView):
     queryset = Facultad.objects.all()
@@ -46,11 +38,6 @@ class FacultadRetrieveAPIView(generics.RetrieveAPIView):
     lookup_field = "cod_facultad"
     queryset = Facultad.objects.all()
     serializer_class = FacultadListSerializer
-
-class AuditoriaSesionesCreateAPIView(generics.CreateAPIView):
-    queryset = Auditoria_Sesiones.objects.all()
-    serializer_class = Auditoria_SesionesSerializer
-
 
 #FUNCIONES
 def validarSesion(request, user):
