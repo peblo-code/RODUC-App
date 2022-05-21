@@ -6,6 +6,9 @@ from django.core import serializers
 from RoducWeb.models import *
 import time #sacar hora
 
+from django.views.decorators.csrf import csrf_protect, csrf_exempt
+from django.utils.decorators import method_decorator
+
 
 #NOTAS
 #1-Serializers solo se puede con metodo Filter, con get no funciona
@@ -173,6 +176,16 @@ def detalle_semestre(request):
         detalle = Semestre.objects.filter(cod_semestre = request.GET.get("codigo"))
         detalle = serializers.serialize("json", detalle)
         return JsonResponse({"detalle": detalle})
+
+def actualizar_semestre(request):
+    if request.method == 'POST':
+        print(request.POST.get("codigo"))
+        semestre_actualizar = Semestre.objects.get(cod_semestre = request.POST.get("codigo"))
+        semestre_actualizar.descripcion = request.POST.get("descripcion")
+        semestre_actualizar.save()
+        respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
+        return respuesta
+
 
 def asignatura(request):
     return render(request, "asignatura/asignatura.html")

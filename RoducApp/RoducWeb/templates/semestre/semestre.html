@@ -30,13 +30,15 @@
                 <div class="col-lg-6">
                   <div class="form-group">
                     <label class="form-control-label" for="input-username">Descripción</label>
-                    <input required autocomplete="off" type="text" id="descripcion" class="form-control" name="descripcion" placeholder="Ingrese la descripción del semestre..." name="nombres" autofocus>
+                    <input required autocomplete="off" type="text" id="descripcion" class="form-control"
+                      name="descripcion" placeholder="Ingrese la descripción del semestre..." name="nombres" autofocus>
                   </div>
                 </div>
               </div>
             </div>
             <span><button type="submit" class="btn btn-success">Guardar</button></span>
-            <span><button type="button" id="BT_Listar" class="btn btn-warning" onclick="mostrarSemestres()">Listar</button></span>
+            <span><button type="button" id="BT_Listar" class="btn btn-warning"
+                onclick="mostrarSemestres()">Listar</button></span>
           </form>
         </div>
       </div>
@@ -73,7 +75,8 @@
                     <td class="nombre">{{semestre.descripcion}}</td>
                     <!---BOTONES-->
                     <td>
-                      <button type="button" class="btn btn-outline-success" onclick=''>
+                      <button type="button" class="btn btn-outline-success"
+                        onclick='obtenerSemestre("{{semestre.cod_semestre}}")'>
                         <i class="far fa-edit"></i>
                       </button>
                       <a class="btn btn-outline-danger" href=''>
@@ -95,38 +98,32 @@
 <!---Modal-->
 <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-      <div class="modal-content">
-          <div class="modal-header">
-              <h5 class="modal-title" id="tituloModal"></h5>
-              <button type="button" class="close" href="" aria-label="Close" data-dismiss="modal">
-                  <span aria-hidden="true">&times;</span>
-              </button>
-          </div>
-          <div class="modal-body">
-              <form role="form" action='' id="updateForm" onsubmit="" name = "update">
-                  {% csrf_token %}
-                  <h6 class="heading-small text-muted mb-4">Datos de la Facultad</h6>
-                  <div class="pl-lg-1">
-                      <div class="row">
-                          <div class="col-lg-6">
-                              <div class="form-group">
-                                  <label class="form-control-label" for="input-username">Nombre</label>
-                                  <input required type="text" id="updateNombre" class="form-control" value= "" name = "nombre" autofocus required>
-                                  <input required type="text" id="updateCodigo" class="form-control" value= "" name = "codigo" style="display: none;">
-                              </div>
-                          </div>
-                          <div class="col-lg-6">
-                              <div class="form-group">
-                                  <label class="form-control-label" for="input-username">Fecha de Fundacion</label>
-                                  <input required type="date" id="updateFecha" class="form-control" value= "" name = "fecha" autofocus required>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                  <span><button type="submit" class="btn btn-success">Guardar</button></span>
-              </form>
-          </div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="tituloModal"></h5>
+        <button type="button" class="close" href="" aria-label="Close" data-dismiss="modal">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
+      <div class="modal-body">
+        <form role="form" action='' id="updateForm" onsubmit="updateSemestre(this)" name="update">
+          {% csrf_token %}
+          <h6 class="heading-small text-muted mb-4">Datos del Semestre</h6>
+          <div class="pl-lg-1">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="form-group">
+                  <label class="form-control-label" for="input-username">Descripción</label>
+                  <input required type="text" id="updateNombre" class="form-control" value="" name="descripcion" autofocus required>
+                  <input required type="text" id="updateCodigo" class="form-control" value="" name="codigo" style="display: none;">
+                </div>
+              </div>
+            </div>
+          </div>
+          <span><button type="submit" class="btn btn-success">Guardar</button></span>
+        </form>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -182,23 +179,63 @@
 </script>
 
 <script>
-  function obtenerFacultad(codigo){
-      $.ajax({
+  function obtenerSemestre(codigo) {
+    $.ajax({
       url: "{% url 'detalle_semestre' %}",
       type: 'GET',
-      data: {"codigo": codigo},
-      success: 
-          function(data){
-              console.log("Hay conexion");
-              console.log(data);
-              detalle = data.detalle;
-              $('#updateModal').modal('show');
-              detalle = JSON.parse(detalle);
-              document.querySelector('#tituloModal').innerHTML = 'Modificar Semestre: ' + detalle[0].fields.descripcion;
-              document.getElementById("updateCodigo").value = detalle[0].pk;
-              document.getElementById("updateNombre").value = detalle[0].fields.descripcion;
-          }
-      })
+      data: { "codigo": codigo },
+      success:
+        function (data) {
+          console.log("Hay conexion");
+          console.log(data);
+          detalle = data.detalle;
+          $('#updateModal').modal('show');
+          detalle = JSON.parse(detalle);
+          document.querySelector('#tituloModal').innerHTML = 'Modificar Semestre: ' + detalle[0].fields.descripcion;
+          document.getElementById("updateCodigo").value = detalle[0].pk;
+          document.getElementById("updateNombre").value = detalle[0].fields.descripcion;
+        }
+    })
+  }
+</script>
+
+
+<script>
+  function updateSemestre(form) {
+    event.preventDefault();
+    var formulario = new FormData(form)
+    Swal.fire({
+      title: 'Actualización de Semestre',
+      text: 'Esta seguro de actualizar el registro?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: '#2dce89',
+      cancelButtonColor: '#d33',
+    }).then((result) => {
+      if (result.value) {
+        $.ajax({
+          url: "{% url 'actualizar_semestre' %}",
+          type: 'POST',
+          data: formulario,
+          processData: false,
+          contentType: false,
+          success:
+            function (data) {
+              $('#updateModal').modal('hide');
+              Swal.fire({
+                icon: 'success',
+                title: 'Aviso',
+                text: data.mensaje,
+                showConfirmButton: true
+              }).then(() => {
+                location.href = '{% url 'semestre' %}'
+              })
+            }
+        })
+      }
+    })
   }
 </script>
 

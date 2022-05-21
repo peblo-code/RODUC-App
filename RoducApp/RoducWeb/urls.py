@@ -34,6 +34,7 @@ urlpatterns = [
     path('semestre', views.semestre, name='semestre'),
     path('agregar_semestre', views.agregar_semestre, name='agregar_semestre'),
     path('detalle_semestre', views.detalle_semestre, name='detalle_semestre'),
+    path('actualizar_semestre', views.actualizar_semestre, name='actualizar_semestre'),
 
     #ASIGNATURAS
     path('asignatura', views.asignatura, name='asignatura')
