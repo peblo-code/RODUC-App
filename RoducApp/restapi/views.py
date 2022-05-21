@@ -54,5 +54,18 @@ def auditoriaSesion(request, user, info):
     else:
         print("No entro a get")
         return JsonResponse({"bandera": 0})
+
+def listaFacultades_Carreras(request, user):
+    if request.method == 'GET':
+        lista_facultades = Facultad.objects.raw('SELECT DISTINCT f.cod_facultad, f.descripcion FROM roducweb_carrera as c, roducweb_facultad as f, roducweb_usuario_rol as u WHERE u.cod_carrera_id = c.cod_carrera AND c.cod_facultad_id = f.cod_facultad AND u.cod_usuario_id = 1 AND u.cod_rol_usuario_id = 2 AND u.estado = 1')
+        lista_facultades = serializers.serialize('json', lista_facultades)
+        lista_carreras = Carrera.objects.raw('SELECT DISTINCT c.cod_carrera, c.descripcion FROM roducweb_carrera as c, roducweb_facultad as f, roducweb_usuario_rol as u WHERE u.cod_carrera_id = c.cod_carrera AND c.cod_facultad_id = f.cod_facultad AND u.cod_usuario_id = 1 AND u.cod_rol_usuario_id = 2 AND u.estado = 1')
+        lista_carreras = serializers.serialize('json', lista_carreras)
+        return JsonResponse({
+            "lista_facultades": lista_facultades,
+            "lista_carreras": lista_carreras
+        })
+
+        
     
 
