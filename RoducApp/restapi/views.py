@@ -5,18 +5,20 @@ from rest_framework import generics
 from .serializers import *
 from RoducWeb.models import *
 from datetime import datetime
+from django.core import serializers
 
 #################################################################
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.utils.decorators import method_decorator
 
 # Create your views here.
-
-def Auditoria(request, user, info):
+###########
+#Auditoria Sesion
+def auditar_sesion(request, user, info):
     nueva_sesion = Auditoria_Sesiones(
-        nombre_usuario = request.session.get(user),
+        nombre_usuario = user,
         fecha = datetime.now(),
-        informacion = info
+        informacion = "Inicio de Sesion en " + info
     )
     nueva_sesion.save()
 
@@ -25,14 +27,15 @@ class UsuarioListAPIView(generics.ListAPIView):
     serializer_class = UsuarioListSerializer
 class UsuarioRetrieveAPIView(generics.RetrieveAPIView):
     lookup_field = "nombre_usuario"
-    def Solicitud(request):
-        Auditoria(request, 'Inicio Sesion')
     queryset = Usuario.objects.all()
     serializer_class = UsuarioDetailSerializer
 
 class Usuario_RolRetrieveAPIView(generics.RetrieveAPIView):
     lookup_field = "cod_usuario_id"
-    queryset = Usuario_Rol.objects.all()
+    #queryset = Usuario_Rol.objects.filter(estado = 1, cod_rol_usuario = 2).first()
+    #queryset = Usuario_Rol.objects.all()
+    #queryset = Usuario_Rol.objects.filter()
+    queryset = Usuario_Rol.objects.raw('select * from roducweb_usuario_rol where cod_rol_usuario_id = 2 limit 1')
     serializer_class = Usuario_RolDetailSerializer
 
 class FacultadListAPIView(generics.ListAPIView):
@@ -47,3 +50,22 @@ class FacultadRetrieveAPIView(generics.RetrieveAPIView):
 class AuditoriaSesionesCreateAPIView(generics.CreateAPIView):
     queryset = Auditoria_Sesiones.objects.all()
     serializer_class = Auditoria_SesionesSerializer
+
+
+#FUNCIONES
+def validarSesion(request, user):
+    if request.method == 'GET':
+        if Usuario_Rol.objects.filter(estado = 1, cod_usuario = user, cod_rol_usuario = 2).exists():
+            return JsonResponse({"respuesta": 1})
+        else:
+            return JsonResponse({"respuesta": 0})
+@csrf_exempt
+def auditoriaSesion(request, user, info):
+    if request.method == "GET":
+        auditar_sesion(request, user, info)
+        return JsonResponse({"bandera": 1})
+    else:
+        print("No entro a get")
+        return JsonResponse({"bandera": 0})
+    
+
