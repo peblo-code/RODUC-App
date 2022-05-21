@@ -58,15 +58,11 @@ export const UserProvider = ({ children }) => {
             if(response.data.nombre_usuario.length > 0) {
                 if(response.data.nombre_usuario === username && response.data.contraseña === password) {
                     const codUser = response.data.cod_usuario;  //recuperar codigo del usuario
-                    axios.get(`${URL}/usuario_rol/${codUser}`)
+                    axios.get(`${URL}/validarSesion/${codUser}`)
                     .then(responseCod => {
-                        if(responseCod.data.cod_rol_usuario == 2) {   //si es profesor
-                            axios.post(`${URL}/auditar_sesion`, {
-                                
-                                nombre_usuario: username,
-                                fecha: new Date(),
-                                informacion: `Inicio de sesion en ${Platform.OS}`,
-                            })
+                        const res = JSON.parse(responseCod.data.respuesta);
+                        if(res) {   //si es profesor
+                            axios.get(`${URL}/auditoriaSesion/${username}/${Platform.OS}`)
                             .then(response => {
                                 console.log(response.data);
                             })
