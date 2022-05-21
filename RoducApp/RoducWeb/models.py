@@ -35,7 +35,7 @@ class Facultad(models.Model):
 
 class Carrera(models.Model):
     cod_carrera           = models.AutoField(primary_key = True)
-    cod_faculad           = models.ForeignKey(Facultad, on_delete = models.CASCADE, blank = True)
+    cod_facultad           = models.ForeignKey(Facultad, on_delete = models.CASCADE, blank = True)
     descripcion           = models.CharField(max_length = 45)
     duracion              = models.IntegerField()
     titulo_obtenido       = models.CharField(max_length = 100)
