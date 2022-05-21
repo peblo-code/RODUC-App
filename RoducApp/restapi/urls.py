@@ -13,5 +13,6 @@ urlpatterns = [
     #prueba
     path('validarSesion/<int:user>', views.validarSesion, name='validarSesion'),
     #prueba auditoria
-    path('auditoriaSesion/<str:user>/<str:info>', views.auditoriaSesion, name='auditoriaSesion')
+    path('auditoriaSesion/<str:user>/<str:info>', views.auditoriaSesion, name='auditoriaSesion'),
+    path('listaFacultades_Carreras/<int:user>', views.listaFacultades_Carreras, name='listaFacultades_Carreras')
 ]
