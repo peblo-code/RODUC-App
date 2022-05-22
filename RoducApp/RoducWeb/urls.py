@@ -49,5 +49,9 @@ urlpatterns = [
     path('eliminar_semestre', views.eliminar_semestre, name='eliminar_semestre'),
 
     # ASIGNATURAS
-    path('asignatura', views.asignatura, name='asignatura')
+    path('asignatura', views.asignatura, name='asignatura'),
+    path('agregar_asignatura', views.agregar_asignatura, name='agregar_asignatura'),
+    path('detalle_asignatura', views.detalle_asignatura, name='detalle_asignatura'),
+    path('actualizar_asignatura', views.actualizar_asignatura, name='actualizar_asignatura'),
+    path('eliminar_asignatura', views.eliminar_asignatura, name='eliminar_asignatura'),
 ]

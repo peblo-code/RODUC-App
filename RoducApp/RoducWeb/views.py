@@ -393,12 +393,65 @@ def asignatura(request):
     lista_carreras = Carrera.objects.filter(estado = 1)
     lista_planes = Plan_Estudio.objects.filter(estado = 1)
     lista_semestres = Semestre.objects.filter(estado = 1)
+    lista_asignaturas = Asignatura.objects.filter(estado = 1)
     return render(request, "asignatura/asignatura.html", {"mensaje_bienvenida": generar_saludo(),
                                                           "usuario_conectado": request.session.get("usuario_conectado"),
                                                           "nombre_usuario": request.session.get("nombre_del_usuario"),
                                                           "lista_carreras": lista_carreras,
                                                           "lista_planes": lista_planes,
-                                                          "lista_semestres": lista_semestres})
+                                                          "lista_semestres": lista_semestres,
+                                                          "lista_asignaturas": lista_asignaturas})
+
+
+def agregar_asignatura(request):
+    asignatura_nueva = Asignatura(
+        descripcion = request.POST.get("descripcion"),
+        horas_catedra = request.POST.get("horas"),
+        curso = request.POST.get("curso"),
+        estado = 1,
+        alta_usuario = request.session.get("usuario_conectado"),
+        cod_carrera_id = request.POST.get("carrera"),
+        cod_plan_estudio_id = request.POST.get("plan"),
+        cod_semestre_id = request.POST.get("semestre")
+    )
+    asignatura_nueva.save()
+    respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
+    return respuesta
+
+
+def detalle_asignatura(request):
+    if request.method == 'GET':
+        detalle = Asignatura.objects.filter(cod_asignatura=request.GET.get("codigo"))
+        detalle = serializers.serialize("json", detalle)
+        return JsonResponse({"detalle": detalle})
+
+
+def actualizar_asignatura(request):
+    if request.method == "POST":
+        asignatura_actualizar = Asignatura.objects.get(cod_asignatura = request.POST.get("codigo"))
+        asignatura_actualizar.descripcion = request.POST.get("descripcion")
+        asignatura_actualizar.horas_catedra = request.POST.get("horas")
+        asignatura_actualizar.curso = request.POST.get("curso")
+        asignatura_actualizar.cod_carrera_id = request.POST.get("carrera")
+        asignatura_actualizar.cod_plan_estudio_id = request.POST.get("plan")
+        asignatura_actualizar.cod_semestre_id = request.POST.get("semestre")
+        asignatura_actualizar.modif_usuario = request.session.get("usuario_conectado")
+        asignatura_actualizar.save()
+        respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
+        return respuesta
+
+
+@csrf_exempt
+def eliminar_asignatura(request):
+    if request.method == "POST":
+        asignatura_eliminar = Asignatura.objects.get(cod_asignatura=request.POST.get("codigo"))
+        asignatura_eliminar.estado = 0
+        asignatura_eliminar.modif_usuario = request.session.get(
+            "usuario_conectado")
+        asignatura_eliminar.save()
+        respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
+        return respuesta
+
 
 
 def perfil(request):
