@@ -115,3 +115,14 @@ class Asignatura(models.Model):
     alta_fecha = models.DateTimeField(auto_now_add=True)
     modif_usuario = models.CharField(max_length=45)
     modif_fecha = models.DateTimeField(auto_now=True)
+
+
+class Asignatura_Usuario(models.Model):
+    cod_asignatura_usuario = models.AutoField(primary_key=True)
+    cod_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, blank=True)
+    cod_asignatura = models.ForeignKey(Asignatura, on_delete=models.CASCADE, blank=True)
+    estado = models.IntegerField()
+    alta_usuario = models.CharField(max_length=45)
+    alta_fecha = models.DateTimeField(auto_now_add=True)
+    modif_usuario = models.CharField(max_length=45)
+    modif_fecha = models.DateTimeField(auto_now=True)
