@@ -494,6 +494,7 @@ def asignar_rol(request):
                                       "lista_roles": lista_roles})
             return respuesta
 
-# def detalleAsignaturasCarrera(request):
-#    cod_carrera = request.GET.get('carrera')
-#    lista_asignaturas =
+def detalleAsignaturasCarrera(request):
+    cod_carrera = request.GET.get('carrera')
+    usuario = request.GET.get('codigo')
+    lista_asignaturas = Asignatura.objects.filter(estado = 1, cod_carrera_id = cod_carrera)
