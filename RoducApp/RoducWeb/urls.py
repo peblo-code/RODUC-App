@@ -29,7 +29,10 @@ urlpatterns = [
 
     #PLAN DE ESTUDIOS
     path('plan_estudio', views.plan_estudio, name='plan_estudio'),
-
+    path('agregar_plan', views.agregar_plan, name='agregar_plan'),
+    path('detalle_plan', views.detalle_plan, name='detalle_plan'),
+    path('actualizar_plan', views.actualizar_plan, name='actualizar_plan'),
+    
     #SEMESTRES
     path('semestre', views.semestre, name='semestre'),
     path('agregar_semestre', views.agregar_semestre, name='agregar_semestre'),

@@ -1,4 +1,5 @@
 from datetime import datetime
+from doctest import debug_script
 import json
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
@@ -127,7 +128,7 @@ def agregar_facultad(request):
         facultad_nueva = Facultad(
             descripcion = request.POST.get('descripcion'),
             fecha_fundacion = request.POST.get('fecha'),
-            estado = 1
+            estado = 1,
             alta_usuario = request.session.get("usuario_conectado")
         )
         facultad_nueva.save()
@@ -154,7 +155,48 @@ def carrera(request):
     return render(request, "carrera/carrera.html")
     
 def plan_estudio(request):
-    return render(request, "plan_estudio/plan_estudio.html")
+    lista_carreras = Carrera.objects.filter(estado = 1)
+    lista_facultades = Facultad.objects.filter(estado = 1)
+    lista_planes = Plan_Estudio.objects.filter(estado = 1)
+    return render(request, "plan_estudio/plan_estudio.html", {"mensaje_bienvenida": generar_saludo(),
+                                                              "usuario_conectado": request.session.get("usuario_conectado"),
+                                                              "nombre_usuario": request.session.get("nombre_del_usuario"),
+                                                              "direccion_email": request.session.get("correo_usuario"),
+                                                              "lista_carreras": lista_carreras,
+                                                              "lista_facultades": lista_facultades,
+                                                              "lista_planes":lista_planes})
+def agregar_plan(request):
+    if request.method == "POST":
+        nuevo_plan = Plan_Estudio(
+            descripcion = request.POST.get("descripcion"),
+            estado = 1,
+            alta_usuario = request.session.get("usuario_conectado"),
+            cod_carrera_id = request.POST.get("carrera")
+        )
+        nuevo_plan.save()
+        respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
+        return respuesta
+def detalle_plan(request):
+    if request.method == 'GET':
+        detalle = Plan_Estudio.objects.filter(cod_plan_estudio = request.GET.get("codigo"))
+        carrera = Plan_Estudio.objects.get(cod_plan_estudio = request.GET.get("codigo")).cod_carrera_id
+        facultad = Facultad.objects.get(cod_facultad = (Carrera.objects.get(cod_carrera = carrera).cod_facultad_id)).cod_facultad
+        detalle = serializers.serialize("json", detalle)
+        
+        #facultad = Facultad.objects.get(cod_facultad = (Carrera.objects.get(detalle.cod_facultad).cod_facultad))
+        return JsonResponse({"detalle": detalle,
+                             "facultad": facultad})
+def actualizar_plan(request):
+    if request.method == "POST":
+        plan_actualizar = Plan_Estudio.objects.get(cod_plan_estudio = request.POST.get("codigo"))
+        plan_actualizar.descripcion = request.POST.get("descripcion")
+        plan_actualizar.cod_carrera_id = request.POST.get("carrera")
+        plan_actualizar.modif_usuario = request.session.get("usuario_conectado")
+        plan_actualizar.save()
+        respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
+        return respuesta
+
+
 
 
 def semestre(request):
@@ -167,7 +209,8 @@ def semestre(request):
 def agregar_semestre(request):
     if request.method == 'POST':
         nuevo_semestre = Semestre(
-            descripcion = request.POST.get("descripcion")
+            descripcion = request.POST.get("descripcion"),
+            alta_usuario = request.session.get("usuario_conectado")
         )
         nuevo_semestre.save()
         respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
