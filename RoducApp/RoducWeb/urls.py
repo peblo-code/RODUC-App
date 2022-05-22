@@ -23,6 +23,7 @@ urlpatterns = [
     path('agregar_facultad', views.agregar_facultad, name='agregar_facultad'),
     path('detalle_facultad', views.detalle_facultad, name='detalle_facultad'),
     path('actualizar_facultad', views.actualizar_facultad, name='actualizar_facultad'),
+    path('eliminar_facultad', views.eliminar_facultad, name='eliminar_facultad'),
 
     #CARRERA
     path('carrera', views.carrera, name='carrera'),
@@ -32,12 +33,14 @@ urlpatterns = [
     path('agregar_plan', views.agregar_plan, name='agregar_plan'),
     path('detalle_plan', views.detalle_plan, name='detalle_plan'),
     path('actualizar_plan', views.actualizar_plan, name='actualizar_plan'),
+    path('eliminar_plan', views.eliminar_plan, name='eliminar_plan'),
     
     #SEMESTRES
     path('semestre', views.semestre, name='semestre'),
     path('agregar_semestre', views.agregar_semestre, name='agregar_semestre'),
     path('detalle_semestre', views.detalle_semestre, name='detalle_semestre'),
     path('actualizar_semestre', views.actualizar_semestre, name='actualizar_semestre'),
+    path('eliminar_semestre', views.eliminar_semestre, name='eliminar_semestre'),
 
     #ASIGNATURAS
     path('asignatura', views.asignatura, name='asignatura')

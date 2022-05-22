@@ -82,9 +82,9 @@
                                             <button type="button" class="btn btn-outline-success" onclick='obtenerFacultad("{{facultad.cod_facultad}}")'>
                                                 <i class="far fa-edit"></i>
                                             </button>
-                                            <a class="btn btn-outline-danger" href=''>
+                                            <button class="btn btn-outline-danger" onclick='eliminarFacultad("{{facultad.cod_facultad}}")'>
                                                 <i class="fas fa-trash-alt"></i>
-                                            </a>
+                                            </button>
                                         </td>
                                     </tr>
                                     {% endfor %}
@@ -222,20 +222,11 @@
                     success: 
                     function(data){
                         $('#updateModal').modal('hide');
-                        const Toast = Swal.mixin({
-                            toast: true,
-                            position: 'top',
-                            showConfirmButton: false,
-                            timer: 2000,
-                            timerProgressBar: true,
-                            didOpen: (toast) => {
-                                toast.addEventListener('mouseenter', Swal.stopTimer)
-                                toast.addEventListener('mouseleave', Swal.resumeTimer)
-                            }
-                        })
-                        Toast.fire({
+                        Swal.fire({
                             icon: 'success',
-                            title: data.mensaje
+                            title: 'Aviso',
+                            text: data.mensaje,
+                            showConfirmButton: true
                         }).then( () => {
                             location.href = '{% url 'facultad' %}'
                         })
@@ -246,6 +237,41 @@
     }
 </script>
 
+<script>
+    function eliminarFacultad(codigo){
+        Swal.fire({
+            title: 'Eliminacion de Facultad',
+            text: 'Esta seguro de eliminar el registro?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Confirmar',
+            cancelButtonText: "Cancelar",
+            confirmButtonColor: '#2dce89',
+            cancelButtonColor: '#d33',
+        }).then((result) => {
+            if (result.value) {
+                console.log(codigo)
+                $.ajax({
+                    url: "{% url 'eliminar_facultad' %}",
+                    type: 'POST',
+                    data: {"codigo": codigo},
+                    success: 
+                    function(data){
+                        $('#updateModal').modal('hide');
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Aviso',
+                            text: data.mensaje,
+                            showConfirmButton: true
+                        }).then( () => {
+                            location.href = '{% url 'facultad' %}'
+                        })
+                    }
+                })
+            }
+        })
+    }
+</script>
 
 <script>
     function mostrarFacultades(){

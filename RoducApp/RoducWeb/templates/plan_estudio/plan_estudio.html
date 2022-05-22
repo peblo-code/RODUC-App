@@ -112,9 +112,9 @@
                       <button type="button" class="btn btn-outline-success" onclick='obtenerFacultad("{{plan.cod_plan_estudio}}")'>
                         <i class="far fa-edit"></i>
                       </button>
-                      <a class="btn btn-outline-danger" href=''>
+                      <button class="btn btn-outline-danger" onclick='eliminarPlan("{{plan.cod_plan_estudio}}")'>
                         <i class="fas fa-trash-alt"></i>
-                      </a>
+                      </button>
                     </td>
                   </tr>
                   {% endfor %}
@@ -301,6 +301,42 @@
         })
       }
     })
+  }
+</script>
+
+<script>
+  function eliminarPlan(codigo){
+      Swal.fire({
+          title: 'Eliminacion de Plan',
+          text: 'Esta seguro de eliminar el registro?',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonText: 'Confirmar',
+          cancelButtonText: "Cancelar",
+          confirmButtonColor: '#2dce89',
+          cancelButtonColor: '#d33',
+      }).then((result) => {
+          if (result.value) {
+              console.log(codigo)
+              $.ajax({
+                  url: "{% url 'eliminar_plan' %}",
+                  type: 'POST',
+                  data: {"codigo": codigo},
+                  success: 
+                  function(data){
+                      $('#updateModal').modal('hide');
+                      Swal.fire({
+                          icon: 'success',
+                          title: 'Aviso',
+                          text: data.mensaje,
+                          showConfirmButton: true
+                      }).then( () => {
+                          location.href = '{% url 'plan_estudio' %}'
+                      })
+                  }
+              })
+          }
+      })
   }
 </script>
 

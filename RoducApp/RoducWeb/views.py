@@ -144,7 +144,17 @@ def actualizar_facultad(request):
         facultad_actualizar.estado = 1
         facultad_actualizar.modif_usuario = request.session.get("usuario_conectado")
         facultad_actualizar.save()
-        respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
+        respuesta = JsonResponse({"mensaje": "Registro Actualizado con Exito"})
+        return respuesta
+@csrf_exempt
+def eliminar_facultad(request):
+    if request.method == "POST":
+        print(request.POST.get("codigo"))
+        facultad_eliminar = Facultad.objects.get(cod_facultad = request.POST.get("codigo"))
+        facultad_eliminar.estado = 0
+        facultad_eliminar.modif_usuario = request.session.get("usuario_conectado")
+        facultad_eliminar.save()
+        respuesta = JsonResponse({"mensaje": "Registro Eliminado con Exito"})
         return respuesta
 
 def carrera(request):
@@ -191,6 +201,15 @@ def actualizar_plan(request):
         plan_actualizar.save()
         respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
         return respuesta
+@csrf_exempt
+def eliminar_plan(request):
+    if request.method == "POST":
+        plan_eliminar = Plan_Estudio.objects.get(cod_plan_estudio = request.POST.get("codigo"))
+        plan_eliminar.estado = 0
+        plan_eliminar.modif_usuario = request.session.get("usuario_conectado")
+        plan_eliminar.save()
+        respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
+        return respuesta
 
 def semestre(request):
     lista_semestre = Semestre.objects.filter(estado = 1)
@@ -220,6 +239,15 @@ def actualizar_semestre(request):
         semestre_actualizar.descripcion = request.POST.get("descripcion")
         semestre_actualizar.modif_usuario = request.session.get("usuario_conectado")
         semestre_actualizar.save()
+        respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
+        return respuesta
+@csrf_exempt
+def eliminar_semestre(request):
+    if request.method == "POST":
+        semestre_eliminar = Semestre.objects.get(cod_semestre = request.POST.get("codigo"))
+        semestre_eliminar.estado = 0
+        semestre_eliminar.modif_usuario = request.session.get("usuario_conectado")
+        semestre_eliminar.save()
         respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
         return respuesta
 
