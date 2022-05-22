@@ -1,3 +1,4 @@
+from tkinter import CASCADE
 from django.db import models
 
 # Create your models here.
@@ -94,6 +95,21 @@ class Plan_Estudio(models.Model):
     cod_plan_estudio = models.AutoField(primary_key=True)
     cod_carrera = models.ForeignKey(Carrera, on_delete=models.CASCADE, blank=True, null=True)
     descripcion = models.CharField(max_length=100)
+    estado = models.IntegerField()
+    alta_usuario = models.CharField(max_length=45)
+    alta_fecha = models.DateTimeField(auto_now_add=True)
+    modif_usuario = models.CharField(max_length=45)
+    modif_fecha = models.DateTimeField(auto_now=True)
+
+
+class Asignatura(models.Model):
+    cod_asignatura = models.AutoField(primary_key=True)
+    descripcion = models.CharField(max_length=100)
+    horas_catedra = models.IntegerField()
+    curso = models.IntegerField()
+    cod_semestre = models.ForeignKey(Semestre, on_delete=models.CASCADE, blank=True)
+    cod_plan_estudio = models.ForeignKey(Plan_Estudio, on_delete=models.CASCADE, blank=True)
+    cod_carrera = models.ForeignKey(Carrera, on_delete=models.CASCADE, blank=True)
     estado = models.IntegerField()
     alta_usuario = models.CharField(max_length=45)
     alta_fecha = models.DateTimeField(auto_now_add=True)

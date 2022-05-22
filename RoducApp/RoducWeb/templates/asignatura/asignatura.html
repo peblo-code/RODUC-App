@@ -1,4 +1,5 @@
 {% extends "panel.html" %}
+{% block titulo %}Asignaturas - Roduc{% endblock %}
 {% block formularios %}
 {% load static %}
 <div class="header pb-9 d-flex align-items-center"
@@ -30,71 +31,74 @@
                 <div class="col-lg-6">
                   <div class="form-group">
                     <label class="form-control-label" for="input-username">Descripción</label>
-                    <input required autocomplete="off" type="text" id="input-username" class="form-control"
-                      placeholder="Ingrese la descripción de la asignatura..." name="nombres" autofocus>
+                    <input required autocomplete="off" type="text" id="input-username" class="form-control" placeholder="Ingrese la descripción de la asignatura..." name="nombres" autofocus>
                   </div>
                 </div>
                 <div class="col-lg-6">
                   <div class="form-group">
                     <label class="form-control-label" for="input-username">Horas Cátedras</label>
-                    <input required type="number" autocomplete="off" id="input-username" class="form-control"
-                      placeholder="Ingrese las horas cátedras correspondientes a la asignatura..." name="nombres"
-                      autofocus>
+                    <input required type="number" autocomplete="off" id="input-username" class="form-control" placeholder="Ingrese las horas cátedras correspondientes a la asignatura..." name="nombres" autofocus>
                   </div>
                 </div>
-                  <div class="col-lg-6">
-                    <div class="form-group">
-                      <label for="exampleFormControlSelect1" class="form-control-label">Carrera</label>
-                      <select class="form-control" id="exampleFormControlSelect1" id="input-first-name"
-                        class="form-control">
-                        <option>Seleccione la carrera...</option>
-                      </select>
-                    </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1" class="form-control-label">Carrera</label>
+                    <select class="form-control" id="carrera" class="form-control">
+                      <option value="">Seleccione la carrera...</option>
+                      {% for carrera in lista_carreras %}
+                      <option value="{{carrera.cod_carrera}}">{{carrera.descripcion}}</option>
+                      {% endfor %}
+                    </select>
                   </div>
-                  <div class="col-lg-6">
-                    <div class="form-group">
-                      <label for="exampleFormControlSelect1" class="form-control-label">Plan de Estudios</label>
-                      <select class="form-control" id="exampleFormControlSelect1" id="input-first-name"
-                        class="form-control">
-                        <option>Seleccione el plan de estudios...</option>
-                      </select>
-                    </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1" class="form-control-label">Plan de Estudios</label>
+                    <select class="form-control" id="plan" class="form-control">
+                      <option value="">Seleccione el plan de estudios...</option>
+                      {% for plan in lista_planes %}
+                      <option value="{{plan.cod_plan_estudio}}" data-chained="{{plan.cod_carrera_id}}">{{plan.descripcion}}</option>
+                      {% endfor %}
+                    </select>
                   </div>
-                  <div class="col-lg-6">
-                    <div class="form-group">
-                      <label for="exampleFormControlSelect1" class="form-control-label">Curso</label>
-                      <select class="form-control" id="exampleFormControlSelect1" id="input-first-name"
-                        class="form-control">
-                        <option>Seleccione el curso...</option>
-                        <option value="1">Primer Curso</option>
-                        <option value="2">Segundo Curso</option>
-                        <option value="3">Tercer Curso</option>
-                        <option value="4">Cuarto Curso</option>
-                        <option value="5">Quinto Curso</option>
-                      </select>
-                    </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1" class="form-control-label">Curso</label>
+                    <select class="form-control" id="exampleFormControlSelect1" class="form-control">
+                      <option>Seleccione el curso...</option>
+                      <option value="1">Primer Curso</option>
+                      <option value="2">Segundo Curso</option>
+                      <option value="3">Tercer Curso</option>
+                      <option value="4">Cuarto Curso</option>
+                      <option value="5">Quinto Curso</option>
+                    </select>
                   </div>
-                  <div class="col-lg-6">
-                    <div class="form-group">
-                      <label for="exampleFormControlSelect1" class="form-control-label">Semestre</label>
-                      <select class="form-control" id="exampleFormControlSelect1" id="input-first-name"
-                        class="form-control">
-                        <option>Seleccione el semestre...</option>
-                        <option>Primer Semestre</option>
-                        <option>Segundo Semestre</option>
-                      </select>
-                    </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1" class="form-control-label">Semestre</label>
+                    <select class="form-control" id="exampleFormControlSelect1" class="form-control">
+                      <option value="">Seleccione el semestre...</option>
+                      {% for semestre in lista_semestres %}
+                      <option value="{{semestre.cod_semestre}}">{{semestre.descripcion}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
               </div>
-            </div>
-            <span><button type="submit" class="btn btn-success">Guardar</button></span>
-            <span><a type="button" class="btn btn-warning" href=''>Listar</a></span>
+              <span><button type="submit" class="btn btn-success">Guardar</button></span>
+              <span><a type="button" class="btn btn-warning" href=''>Listar</a></span>
           </form>
         </div>
       </div>
     </div>
   </div>
 </div>
+{% endblock %}
 
-
-
+{% block extrajs %}
+  <script>
+    $("#plan").chained("#carrera");
+  </script>
 {% endblock %}

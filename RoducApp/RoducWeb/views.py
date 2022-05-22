@@ -390,7 +390,15 @@ def eliminar_semestre(request):
 
 
 def asignatura(request):
-    return render(request, "asignatura/asignatura.html")
+    lista_carreras = Carrera.objects.filter(estado = 1)
+    lista_planes = Plan_Estudio.objects.filter(estado = 1)
+    lista_semestres = Semestre.objects.filter(estado = 1)
+    return render(request, "asignatura/asignatura.html", {"mensaje_bienvenida": generar_saludo(),
+                                                          "usuario_conectado": request.session.get("usuario_conectado"),
+                                                          "nombre_usuario": request.session.get("nombre_del_usuario"),
+                                                          "lista_carreras": lista_carreras,
+                                                          "lista_planes": lista_planes,
+                                                          "lista_semestres": lista_semestres})
 
 
 def perfil(request):
