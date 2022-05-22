@@ -77,7 +77,6 @@ def inicio(request):
                                            "inicio": 'S',
                                            "mensaje_bienvenida": mensaje_bienvenida})
 
-
 def usuario(request):
     mensaje_bienvenida = generar_saludo()
     lista_usuarios = Usuario.objects.filter(estado = 1)
@@ -113,8 +112,6 @@ def detalle_usuario(request):
         detalle = serializers.serialize("json", detalle)
         return JsonResponse({"detalle": detalle})
 
-
-
 def facultad(request):
     mensaje_bienvenida = generar_saludo()
     lista_facultad = Facultad.objects.filter(estado = 1)
@@ -134,7 +131,6 @@ def agregar_facultad(request):
         facultad_nueva.save()
         respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
         return respuesta
-
 def detalle_facultad(request):
     if request.method == 'GET':
         detalle = Facultad.objects.filter(cod_facultad = request.GET.get("codigo"))
@@ -196,9 +192,6 @@ def actualizar_plan(request):
         respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
         return respuesta
 
-
-
-
 def semestre(request):
     lista_semestre = Semestre.objects.filter(estado = 1)
     return render(request, "semestre/semestre.html", {"lista_semestre": lista_semestre,
@@ -220,16 +213,15 @@ def detalle_semestre(request):
         detalle = Semestre.objects.filter(cod_semestre = request.GET.get("codigo"))
         detalle = serializers.serialize("json", detalle)
         return JsonResponse({"detalle": detalle})
-
 def actualizar_semestre(request):
     if request.method == 'POST':
         print(request.POST.get("codigo"))
         semestre_actualizar = Semestre.objects.get(cod_semestre = request.POST.get("codigo"))
         semestre_actualizar.descripcion = request.POST.get("descripcion")
+        semestre_actualizar.modif_usuario = request.session.get("usuario_conectado")
         semestre_actualizar.save()
         respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
         return respuesta
-
 
 def asignatura(request):
     return render(request, "asignatura/asignatura.html")
