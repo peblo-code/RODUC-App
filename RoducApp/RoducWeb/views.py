@@ -215,8 +215,59 @@ def eliminar_facultad(request):
 
 
 def carrera(request):
-    return render(request, "carrera/carrera.html")
+    lista_carreras = Carrera.objects.filter(estado = 1)
+    lista_facultades = Facultad.objects.filter(estado = 1)
+    return render(request, "carrera/carrera.html", {"usuario_conectado": request.session.get("usuario_conectado"),
+                                                      "nombre_usuario": request.session.get("nombre_del_usuario"),
+                                                      "direccion_email": request.session.get("correo_usuario"),
+                                                      "mensaje_bienvenida": generar_saludo(),
+                                                      "lista_facultades": lista_facultades,
+                                                      "lista_carreras": lista_carreras})
 
+
+def agregar_carrera(request):
+    if request.method == "POST":
+        carrera_nueva = Carrera(
+            descripcion = request.POST.get("descripcion"),
+            duracion = request.POST.get("duracion"),
+            titulo_obtenido = request.POST.get("titulo"),
+            cod_facultad_id = request.POST.get("facultad"),
+            alta_usuario = request.session.get("usuario_conectado"),
+            estado = 1
+        )
+        carrera_nueva.save()
+        respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
+        return respuesta
+
+
+def detalle_carrera(request):
+    if request.method == 'GET':
+        detalle = Carrera.objects.filter(cod_carrera=request.GET.get("codigo"))
+        detalle = serializers.serialize("json", detalle)
+        return JsonResponse({"detalle": detalle})
+
+
+def actualizar_carrera(request):
+    if request.method == "POST":
+        carrera_actualizar = Carrera.objects.get(cod_carrera = request.POST.get("codigo"))
+        carrera_actualizar.descripcion = request.POST.get("descripcion")
+        carrera_actualizar.duracion = request.POST.get("duracion")
+        carrera_actualizar.titulo_obtenido = request.POST.get("titulo")
+        carrera_actualizar.cod_facultad_id = request.POST.get("facultad")
+        carrera_actualizar.modif_usuario = request.session.get("usuario_conectado")
+        carrera_actualizar.save()
+        respuesta = JsonResponse({"mensaje": "Registro Actualizado con Exito"})
+        return respuesta
+
+@csrf_exempt
+def eliminar_carrera(request):
+    if request.method == "POST":
+        carrera_eliminar = Carrera.objects.get(cod_carrera = request.POST.get("codigo"))
+        carrera_eliminar.estado = 0
+        carrera_eliminar.modif_usuario = request.session.get("usuario_conectado")
+        carrera_eliminar.save()
+        respuesta = JsonResponse({"mensaje": "Registro Eliminado con Exito"})
+        return respuesta
 
 def plan_estudio(request):
     lista_carreras = Carrera.objects.filter(estado=1)

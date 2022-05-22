@@ -29,6 +29,10 @@ urlpatterns = [
 
     # CARRERA
     path('carrera', views.carrera, name='carrera'),
+    path('agregar_carrera', views.agregar_carrera, name='agregar_carrera'),
+    path('detalle_carrera', views.detalle_carrera, name='detalle_carrera'),
+    path('actualizar_carrera', views.actualizar_carrera, name='actualizar_carrera'),
+    path('eliminar_carrera', views.eliminar_carrera, name='eliminar_carrera'),
 
     # PLAN DE ESTUDIOS
     path('plan_estudio', views.plan_estudio, name='plan_estudio'),
