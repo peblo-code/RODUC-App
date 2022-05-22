@@ -117,13 +117,13 @@
                                         <td class="nombres">{{usuario.apellidos_del_usuario}},{{usuario.nombres_del_usuario}}</td>
                                         <!---BOTONES-->
                                         <td>
-                                            <button type="button" class="btn btn-outline-success">
+                                            <button type="button" class="btn btn-outline-success" onclick="obtenerUsuario('{{usuario.cod_usuario}}', 1)">
                                                 <i class="far fa-edit"></i>
                                             </button>
-                                            <a class="btn btn-outline-danger" href=''>
+                                            <button class="btn btn-outline-danger" onclick='eliminarUsuario("{{usuario.cod_usuario}}")'>
                                                 <i class="fas fa-trash-alt"></i>
-                                            </a>
-                                            <button class="btn btn-outline-warning" onclick="obtenerUsuario('{{usuario.cod_usuario}}')">
+                                            </button>
+                                            <button class="btn btn-outline-warning" onclick="obtenerUsuario('{{usuario.cod_usuario}}', 2)">
                                                 <i class="fas fa-address-card"></i>
                                             </button>
                                         </td>
@@ -164,7 +164,71 @@
     </div>
 </div>
 
-<!---Modal-->
+<!---Modal Update-->
+<div class="modal fade" id="modalUpdate" tabindex="-1" role="dialog" aria-labelledby="modal-default" aria-hidden="true">
+    <div class="modal-dialog modal- modal-dialog-centered modal-" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="modal-title-default"></h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form role="form" action='#' method="POST" onsubmit="updateUsuario(this)" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <h6 class="heading-small text-muted mb-4">Datos del Usuario</h6>
+                    <div class="pl-lg-0">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-username">Correo Electronico</label>
+                                    <input type="text" value="" name="codigo" id="updateCodigo" style="display: none;">
+                                    <input required type="email" autocomplete="off" id="updateCorreo" class="form-control"
+                                    placeholder="Ingrese el correo electronico del usuario..." name="correo"
+                                    autofocus>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-username">Contraseña</label>
+                                    <input required type="password" autocomplete="off" id="updatePassword"
+                                        class="form-control" placeholder="Ingrese una contraseña para el usuario..."
+                                        name="password" autofocus>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-username">Nombres Completos</label>
+                                    <input required type="text" autocomplete="off" id="updateNombre" class="form-control"
+                                        placeholder="Ingrese los nombres del usuario a registrar..." name="nombres"
+                                        autofocus>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-username">Apellidos
+                                        Completos</label>
+                                    <input required type="text" autocomplete="off" id="updateApellido"
+                                        class="form-control"
+                                        placeholder="Ingrese los apellidos del usuario a registrar..."
+                                        name="apellidos" autofocus>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <span><button type="submit" class="btn btn-success">Guardar</button></span>
+                    <span><button type="button" id="BT_Listar" class="btn btn-warning" onclick="mostrarUsuarios()">Listar</button></span>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!---Modal Preview-->
 <div class="modal fade" id="modalPreview" tabindex="-1" role="dialog" aria-labelledby="modal-default" aria-hidden="true">
     <div class="modal-dialog modal- modal-dialog-centered modal-" role="document">
         <div class="modal-content">
@@ -269,7 +333,7 @@
 </script>
 
 <script>
-    function obtenerUsuario(codigo){
+    function obtenerUsuario(codigo, bandera){
         $.ajax({
         url: "{% url 'detalle_usuario' %}",
         type: 'GET',
@@ -279,14 +343,97 @@
                 console.log(data);
                 detalle = data.detalle;
                 detalle = JSON.parse(detalle);
-                $('#modalPreview').modal('show');
-                document.getElementById("codigoPreview").value = detalle[0].pk;
-                console.log(detalle[0].pk)
-                document.querySelector('#userPreview').innerHTML = 'Username: ' + detalle[0].fields.nombre_usuario;
-                document.querySelector('#passPreview').innerHTML = 'Contraseña: ' + detalle[0].fields.contraseña;
-                document.querySelector('#nombrePreview').innerHTML = 'Nombres: ' + detalle[0].fields.nombres_del_usuario;
-                document.querySelector('#apellidoPreview').innerHTML = 'Apellidos: ' + detalle[0].fields.apellidos_del_usuario;
-                document.querySelector('#emailPreview').innerHTML = 'Correo Electronico: ' + detalle[0].fields.direccion_email;
+                if (bandera == 2) {
+                    $('#modalPreview').modal('show');
+                    document.getElementById("codigoPreview").value = detalle[0].pk;
+
+                    document.querySelector('#userPreview').innerHTML = 'Username: ' + detalle[0].fields.nombre_usuario;
+                    document.querySelector('#passPreview').innerHTML = 'Contraseña: ' + detalle[0].fields.contraseña;
+                    document.querySelector('#nombrePreview').innerHTML = 'Nombres: ' + detalle[0].fields.nombres_del_usuario;
+                    document.querySelector('#apellidoPreview').innerHTML = 'Apellidos: ' + detalle[0].fields.apellidos_del_usuario;
+                    document.querySelector('#emailPreview').innerHTML = 'Correo Electronico: ' + detalle[0].fields.direccion_email;
+                } else {
+                    $('#modalUpdate').modal('show');
+                    document.getElementById("updateCodigo").value = detalle[0].pk;
+                    document.getElementById('updatePassword').value = detalle[0].fields.contraseña;
+                    document.getElementById('updateNombre').value = detalle[0].fields.nombres_del_usuario;
+                    document.getElementById('updateApellido').value = detalle[0].fields.apellidos_del_usuario;
+                    document.getElementById('updateCorreo').value = detalle[0].fields.direccion_email;
+                }
+            }
+        })
+    }
+</script>
+
+<script>
+    function updateUsuario(form) {
+      event.preventDefault();
+      var formulario = new FormData(form)
+      Swal.fire({
+        title: 'Actualización de Usuario',
+        text: 'Esta seguro de actualizar el registro?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Confirmar',
+        cancelButtonText: "Cancelar",
+        confirmButtonColor: '#2dce89',
+        cancelButtonColor: '#d33',
+      }).then((result) => {
+        if (result.value) {
+          $.ajax({
+            url: "{% url 'actualizar_usuario' %}",
+            type: 'POST',
+            data: formulario,
+            processData: false,
+            contentType: false,
+            success:
+              function (data) {
+                $('#updateModal').modal('hide');
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Aviso',
+                  text: data.mensaje,
+                  showConfirmButton: true
+                }).then(() => {
+                  location.href = '{% url 'usuario' %}'
+                })
+              }
+          })
+        }
+      })
+    }
+  </script>
+
+<script>
+    function eliminarUsuario(codigo){
+        Swal.fire({
+            title: 'Eliminacion de usuario',
+            text: 'Esta seguro de eliminar el registro?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Confirmar',
+            cancelButtonText: "Cancelar",
+            confirmButtonColor: '#2dce89',
+            cancelButtonColor: '#d33',
+        }).then((result) => {
+            if (result.value) {
+                console.log(codigo)
+                $.ajax({
+                    url: "{% url 'eliminar_usuario' %}",
+                    type: 'POST',
+                    data: {"codigo": codigo},
+                    success: 
+                    function(data){
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Aviso',
+                            text: data.mensaje,
+                            showConfirmButton: true
+                        }).then( () => {
+                            location.href = '{% url 'usuario' %}'
+                        })
+                    }
+                })
             }
         })
     }

@@ -12,6 +12,8 @@ urlpatterns = [
     path('usuario', views.usuario, name='usuario'),
     path('detalle_usuario', views.detalle_usuario, name='detalle_usuario'),
     path('agregar_usuario', views.agregar_usuario, name='agregar_usuario'),
+    path('actualizar_usuario', views.actualizar_usuario, name='actualizar_usuario'),
+    path('eliminar_usuario', views.eliminar_usuario, name='eliminar_usuario'),
 
     #PERFIL
     path('perfil', views.perfil, name='perfil'),

@@ -111,6 +111,26 @@ def detalle_usuario(request):
         detalle = Usuario.objects.filter(cod_usuario = request.GET.get("codigo"))
         detalle = serializers.serialize("json", detalle)
         return JsonResponse({"detalle": detalle})
+def actualizar_usuario(request):
+    if request.method == "POST":
+        usuario_actualizar = Usuario.objects.get(cod_usuario = request.POST.get("codigo"))
+        usuario_actualizar.nombres_del_usuario = request.POST.get("nombres")
+        usuario_actualizar.apellidos_del_usuario = request.POST.get("apellidos")
+        usuario_actualizar.direccion_email = request.POST.get("correo")
+        usuario_actualizar.estado = 1
+        usuario_actualizar.modif_usuario = request.session.get("usuario_conectado")
+        usuario_actualizar.save()
+        respuesta = JsonResponse({"mensaje": "Registro Actualizado con Exito"})
+        return respuesta
+@csrf_exempt
+def eliminar_usuario(request):
+    if request.method == "POST":
+        usuario_eliminar = Usuario.objects.get(cod_usuario = request.POST.get("codigo"))
+        usuario_eliminar.estado = 0
+        usuario_eliminar.modif_usuario = request.session.get("usuario_conectado")
+        usuario_eliminar.save()
+        respuesta = JsonResponse({"mensaje": "Registro Eliminado con Exito"})
+        return respuesta
 
 def facultad(request):
     mensaje_bienvenida = generar_saludo()
