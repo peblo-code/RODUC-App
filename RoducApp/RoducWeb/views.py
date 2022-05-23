@@ -498,3 +498,10 @@ def detalleAsignaturasCarrera(request):
     cod_carrera = request.GET.get('carrera')
     usuario = request.GET.get('codigo')
     lista_asignaturas = Asignatura.objects.filter(estado = 1, cod_carrera_id = cod_carrera)
+    print(lista_asignaturas)
+    print("**********")
+    asignaturas_del_usuario = Asignatura_Usuario.objects.filter(estado = 1, cod_usuario_id = usuario)
+    lista_asignaturas = serializers.serialize("json", lista_asignaturas)
+    asignaturas_del_usuario = serializers.serialize("json", asignaturas_del_usuario)
+    return JsonResponse({"lista_asignaturas": lista_asignaturas,
+                         "asignaturas_del_usuario": asignaturas_del_usuario})

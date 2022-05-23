@@ -197,7 +197,31 @@
         </button>
       </div>
       <div class="modal-body">
+        <div class="table-responsive py-2">
+          <div class="dataTables_wrapper dt-bootrstrap4">
+            <table class="table table-flush dataTable align-items-center table-hover" id="tablaMaterias">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col" class="sort" data-sort="id">ID</th>
+                  <th scope="col" class="sort" data-sort="rol">Descripcion</th>
+                  <th scope="col" class="sort" data-sort="carrera">Curso</th>
+                  <th scope="col">Acciones</th>
+                </tr>
+              </thead>
+              <tfoot class="thead-light">
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Descripcion</th>
+                  <th scope="col">Curso</th>
+                  <th scope="col">Acciones</th>
+                </tr>
+              </tfoot>
+              <tbody class="list" id="cuerpoTabla">
 
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -273,6 +297,30 @@
             "lengthMenu": [[5 ,10, 25, 50, -1], [5, 10, 25, 50, "Todo"]],
         });
 
+        var tabla_materias = $('#tablaMaterias').DataTable( {
+            "language": {
+                "emptyTable":     "No existen registros a exponer.",
+                "info":           "",
+                "infoEmpty":      "",
+                "infoFiltered":   "",
+                "infoPostFix":    "",
+                "thousands":      ".",
+                "lengthMenu":     "Registros a mostrar _MENU_",
+                "loadingRecords": "Cargando...",
+                "processing":     "Procesando...",
+                "search":         "Buscar:",
+                "zeroRecords":    "No se obtuvo ninguna coincidencia",
+                oPaginate: {
+                    sNext: '<i class="fa fa-forward"></i>',
+                    sPrevious: '<i class="fa fa-backward"></i>',
+                    sFirst: '<i class="fa fa-step-backward"></i>',
+                    sLast: '<i class="fa fa-step-forward"></i>'
+                    }
+            },
+            "lengthMenu": [[5 ,10, 25, 50, -1], [5, 10, 25, 50, "Todo"]],
+        });  
+
+
     function actualizarRoles(roles_user){
       var rol = ''
       var carrera = ''
@@ -308,26 +356,62 @@
   </script>
 
   <script>
-    /*function materiasModal(carrera){
+    function materiasModal(carrera){
       $('#materiasModal').modal('show');
+      $("#tablaMaterias").dataTable().fnDestroy();
+      $('#tablaMaterias').DataTable( {
+            "language": {
+                "emptyTable":     "No existen registros a exponer.",
+                "info":           "",
+                "infoEmpty":      "",
+                "infoFiltered":   "",
+                "infoPostFix":    "",
+                "thousands":      ".",
+                "lengthMenu":     "Registros a mostrar _MENU_",
+                "loadingRecords": "Cargando...",
+                "processing":     "Procesando...",
+                "search":         "Buscar:",
+                "zeroRecords":    "No se obtuvo ninguna coincidencia",
+                oPaginate: {
+                    sNext: '<i class="fa fa-forward"></i>',
+                    sPrevious: '<i class="fa fa-backward"></i>',
+                    sFirst: '<i class="fa fa-step-backward"></i>',
+                    sLast: '<i class="fa fa-step-forward"></i>'
+                    }
+            },
+            "lengthMenu": [[5 ,10, 25, 50, -1], [5, 10, 25, 50, "Todo"]],
+        });  
+      tabla_materias.clear()
       $.ajax({
-        url: "",
+        url: "{% url 'detalleAsignaturasCarrera' %}",
         type: 'GET',
-        data: {"carrera": carrera},
+        data: {"carrera": carrera,
+               "codigo": '{{datos_usuario.cod_usuario}}'},
         success: 
             function(data){
-                console.log("Hay conexion");
-                console.log(data);
-                detalle = data.detalle;
-                $('#updateModal').modal('show');
-                detalle = JSON.parse(detalle);
-                document.querySelector('#tituloModal').innerHTML = 'Modificar Facultad: ' + detalle[0].fields.descripcion;
-                document.getElementById("updateCodigo").value = detalle[0].pk;
-                document.getElementById("updateNombre").value = detalle[0].fields.descripcion;
-                document.getElementById("updateFecha").value = detalle[0].fields.fecha_fundacion;
+              console.log("Hay conexion");
+              asignaturas_carrera = JSON.parse(data.lista_asignaturas);
+              asignaturas_del_usuario = JSON.parse(data.asignaturas_del_usuario)
+              var bandera = 0
+              for(var x = 0; x < Object.keys(asignaturas_carrera).length; x++){
+                for(var y = 0; y < Object.keys(asignaturas_del_usuario).length; x++){
+                  if(asignaturas_carrera[x].pk == asignaturas_del_usuario[y].cod_carrera){
+                    bandera = 1;
+                  }
+                }
+                if(bandera == 1){ //SIGNIFICA QUE LLEVA LA MATERIA
+                  tabla_materias.row.add([asignaturas_carrera[x].pk, asignaturas_carrera[x].fields.descripcion, asignaturas_carrera[x].fields.curso, "Lleva"]).draw();
+                  bandera = 0;
+                } else {
+                  tabla_materias.row.add([asignaturas_carrera[x].pk, asignaturas_carrera[x].fields.descripcion, asignaturas_carrera[x].fields.curso, "No lleva"]).draw();
+                  bandera = 0;
+                }
+              }
+              asignaturas_carrera = null;
+              asignaturas_del_usuario = null;
             }
         })
-    }*/
+    }
   </script>
 
 
