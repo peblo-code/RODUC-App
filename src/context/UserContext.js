@@ -35,6 +35,7 @@ export const UserProvider = ({ children }) => {
 
     const [user, setUser] = useState(initialState); //estado del usuario
     const [error, setError] = useState(''); //estado del error
+    const URL = 'http://26.247.235.244:8000/restapi'; //url del servidor
 
     const closeSession = () => {    //funcion para cerrar sesion
         storeData(initialState);
@@ -51,7 +52,6 @@ export const UserProvider = ({ children }) => {
     }, [])
 
     function Auth({ username, password }) {
-        const URL = 'http://26.247.235.244:8000/restapi'; //url del servidor
 
         axios.get(`${URL}/lista_usuarios/${username}`)
         .then(response => {
@@ -101,7 +101,8 @@ export const UserProvider = ({ children }) => {
             setError,
             setUser,
             Auth,
-            closeSession
+            closeSession,
+            URL
         }}>
             { children }
         </UserContext.Provider>
