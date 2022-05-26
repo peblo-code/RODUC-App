@@ -1,7 +1,7 @@
 import { View, StyleSheet } from 'react-native';
 import { useEffect, useState } from 'react'
 import StyledText from './StyledText';
-import RNPickerSelect from 'react-native-picker-select';
+import Select2 from "react-select2-native";
 import useUserContext from '../hooks/useUserContext.js';
 import axios from 'axios';
 
@@ -18,16 +18,16 @@ const NewForm = () => {
 
     useEffect(() => {
         axios.get(`${URL}/listaFacultades_Carreras/${user.cod_usuario}`)
-        .then((response) => {
-            const resFacu = JSON.parse(response.data.lista_facultades);
-            const resCarreras = JSON.parse(response.data.lista_carreras);
-            setFacultades(resFacu.map(field => field));
-            setCarreras(resCarreras.map(field => field));
-            //getCarreras(response);
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+            .then((response) => {
+                const resFacu = JSON.parse(response.data.lista_facultades);
+                const resCarreras = JSON.parse(response.data.lista_carreras);
+                setFacultades(resFacu.map(field => field));
+                setCarreras(resCarreras.map(field => field));
+                //getCarreras(response);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }, [])
 
     const FacultadItems = (facultades.map(facultad => ({
@@ -37,13 +37,13 @@ const NewForm = () => {
     })));
 
     const getCarreraItems = (carreras) => {
-        if(carreraPicker == undefined) {
-            return [{key: '', label: 'Seleccione una carrera', value: ''}];
+        if (carreraPicker == undefined) {
+            return [{ key: '', label: 'Seleccione una carrera', value: '' }];
         }
 
         let arr = []
         carreras.forEach(carrera => {
-            if(carrera.fields.cod_facultad == carreraPicker) {
+            if (carrera.fields.cod_facultad == carreraPicker) {
                 let obj = {
                     label: carrera.fields.descripcion,
                     value: carrera.pk,
@@ -61,40 +61,55 @@ const NewForm = () => {
     useEffect(() => {
         setCarreraItems(getCarreraItems(carreras));
     }, [carreraPicker])
-    
+
     const placeholder = {
         label: 'Seleccione una facultad',
         value: null,
         color: '#9EA0A4',
     };
-    
-    return(
+
+    return (
         <View style={styles.form}>
-            <StyledText 
+            <StyledText
                 fontSize="large"
                 fontWeight="bold"
                 color="primary">
                 Nuevo Informe
             </StyledText>
-            <RNPickerSelect
-                placeholder={{
-                    label: 'Seleccione una facultad',
-                    value: null,
-                    color: '#9EA0A4',
-                }}
-                onValueChange={(value) => setCarreraPicker(value)}
-                items={FacultadItems}
-            /> 
 
-            <RNPickerSelect
-                placeholder={{
-                    label: 'Seleccione una carrera',
-                    value: null,
-                    color: '#9EA0A4',
+            <Select2
+                isSelectSingle
+                style={{ borderRadius: 5 }}
+                colorTheme="blue"
+                popupTitle="Select item"
+                title="Select item"
+                data={FacultadItems}
+                onSelect={(data) => {
+                    console.log({ data });
+                    setCarreraPicker({ data })
                 }}
-                onValueChange={(value) => console.log("Id de carrera:" + value)}
-                items={carreraItems}
-            /> 
+                onRemoveItem={(data) => {
+                    console.log({ data });
+                }}
+            />
+
+            <Select2
+                isSelectSingle
+                style={{ borderRadius: 5 }}
+                colorTheme="blue"
+                popupTitle="Select item"
+                title="Select item"
+                data={carreraItems}
+                onSelect={(data) => {
+                    console.log({ data });
+                    setCarreraPicker({ data })
+                }}
+                onRemoveItem={(data) => {
+                    console.log({ data });
+                }}
+            />
+
+
         </View>
     )
 }
