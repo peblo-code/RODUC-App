@@ -5,8 +5,6 @@ import RNPickerSelect from 'react-native-picker-select';
 import useUserContext from '../hooks/useUserContext.js';
 import axios from 'axios';
 
-const URL = 'http://26.247.235.244:8000/restapi'; //url del servidor
-
 const NewForm = () => {
     const { user } = useUserContext();
     const [facultades, setFacultades] = useState([]);
@@ -84,6 +82,7 @@ const NewForm = () => {
                 }}
                 onValueChange={(value) => setCarreraPicker(value)}
                 items={FacultadItems}
+                style={ pickerSelectStyles.inputAndroid }
             /> 
 
             <RNPickerSelect
@@ -94,6 +93,7 @@ const NewForm = () => {
                 }}
                 onValueChange={(value) => console.log("Id de carrera:" + value)}
                 items={carreraItems}
+                style={ pickerSelectStyles.inputAndroid }
             /> 
         </View>
     )
@@ -104,8 +104,24 @@ const styles = StyleSheet.create({
         marginHorizontal: 12,
         marginVertical: 12,
         alignItems: 'center',
-        flex: 1
+        flex: 1,
+        height: '100%',
+        gap: 12
     },
 })
+
+const pickerSelectStyles = StyleSheet.create({
+    inputAndroid: {
+      fontSize: 16,
+      paddingHorizontal: 10,
+      paddingVertical: 8,
+      borderWidth: 0.5,
+      borderColor: 'purple',
+      borderRadius: 8,
+      color: 'red',
+      paddingRight: 30, // to ensure the text is never behind the icon
+    },
+  });
+  
 
 export default NewForm;
