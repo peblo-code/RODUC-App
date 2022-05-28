@@ -11,6 +11,7 @@ const NewForm = () => {
     const [carreras, setCarreras] = useState([]);
     const [carreraItems, setCarreraItems] = useState([]);
     const [carreraPicker, setCarreraPicker] = useState('');
+    const [facultadPicker, setFacultadPicker] = useState('');
     const { URL } = useUserContext();
 
 
@@ -29,10 +30,10 @@ const NewForm = () => {
     }, [])
 
     const FacultadItems = (facultades.map(facultad => ({
-        label: facultad.fields.descripcion,
-        value: facultad.pk,
-        key: facultad.pk
+        id: facultad.pk,
+        name: facultad.fields.descripcion,
     })));
+
 
     const getCarreraItems = (carreras) => {
         if (carreraPicker == undefined) {
@@ -41,11 +42,10 @@ const NewForm = () => {
 
         let arr = []
         carreras.forEach(carrera => {
-            if (carrera.fields.cod_facultad == carreraPicker) {
+            if (carrera.fields.cod_facultad == facultadPicker) {
                 let obj = {
-                    label: carrera.fields.descripcion,
-                    value: carrera.pk,
-                    key: carrera.pk
+                    id: carrera.pk,
+                    name: carrera.fields.descripcion,
                 }
                 arr.push(obj);
 
@@ -58,13 +58,8 @@ const NewForm = () => {
 
     useEffect(() => {
         setCarreraItems(getCarreraItems(carreras));
-    }, [carreraPicker])
+    }, [facultadPicker])
 
-    const placeholder = {
-        label: 'Seleccione una facultad',
-        value: null,
-        color: '#9EA0A4',
-    };
 
     return (
         <View style={styles.form}>
@@ -80,14 +75,14 @@ const NewForm = () => {
                 style={{ borderRadius: 5 }}
                 colorTheme="blue"
                 popupTitle="Select item"
-                title="Select item"
+                title='Seleccione una Facultad'
                 data={FacultadItems}
                 onSelect={(data) => {
-                    console.log({ data });
-                    setCarreraPicker({ data })
+                    console.log(data[0]);
+                    setFacultadPicker(data[0]);
                 }}
                 onRemoveItem={(data) => {
-                    console.log({ data });
+                    setFacultadPicker(data[0]);
                 }}
             />
 
@@ -96,14 +91,15 @@ const NewForm = () => {
                 style={{ borderRadius: 5 }}
                 colorTheme="blue"
                 popupTitle="Select item"
-                title="Select item"
+                title='Seleccione una Carrera'
                 data={carreraItems}
                 onSelect={(data) => {
-                    console.log({ data });
-                    setCarreraPicker({ data })
+                    console.log(data[0]);
+                    setCarreraPicker({data})
                 }}
                 onRemoveItem={(data) => {
-                    console.log({ data });
+                    removeEventListener()
+                    setFacultadPicker({data});
                 }}
             />
 
