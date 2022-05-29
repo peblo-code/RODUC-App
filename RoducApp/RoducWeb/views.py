@@ -500,8 +500,8 @@ def eliminar_rol(request):
         rol = request.POST.get("codigo")
         if Asignatura_Usuario.objects.filter(estado = 1, cod_usuario_rol_id = rol).exists():
             for asignatura_usuario in Asignatura_Usuario.objects.filter(estado = 1, cod_usuario_rol_id = rol):
-                asignar_asignatura.estado = 0
-                asignar_asignatura.save()
+                asignatura_usuario.estado = 0
+                asignatura_usuario.save()
         rol_eliminar = Usuario_Rol.objects.get(estado = 1, cod_usuario_rol = rol)
         aux = rol_eliminar.cod_usuario_id
         rol_eliminar.estado = 0
