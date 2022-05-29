@@ -2,6 +2,25 @@
 {% block titulo %}Perfil - Inicio{% endblock %}
 {% block formularios %}
 {% load static %}
+
+{% block extracss %}
+<style>
+    tr{
+        animation: myAnim .2s ease-in 0s 1 normal forwards;
+    }
+
+    @keyframes myAnim {
+        0% {
+            opacity: 0;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+</style>
+{% endblock %}
+
 <!-- Main content -->
 <div class="header pb-9 d-flex align-items-center"
   style="min-height: 230px; background-image: url('{% static 'assets/img/header-bg.png' %}'); ">
@@ -188,7 +207,7 @@
 <!---Modal-->
 <div class="modal fade" id="materiasModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
   aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+  <div class="modal-dialog modal-dialog-centered" style="max-width: 70%;" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="tituloModal">Asignacion de Materias a Profesor</h5>
@@ -209,7 +228,8 @@
                 <tr>
                   <th scope="col" class="sort" data-sort="id">ID</th>
                   <th scope="col" class="sort" data-sort="rol">Descripcion</th>
-                  <th scope="col" class="sort" data-sort="carrera">Curso</th>
+                  <th scope="col" class="sort" data-sort="curso">Curso</th>
+                  <th scope="col" class="sort" data-sort="plan">Plan de Estudio</th>
                   <th scope="col">Acciones</th>
                 </tr>
               </thead>
@@ -218,6 +238,7 @@
                   <th scope="col">ID</th>
                   <th scope="col">Descripcion</th>
                   <th scope="col">Curso</th>
+                  <th scope="col">Plan de Estudio</th>
                   <th scope="col">Acciones</th>
                 </tr>
               </tfoot>
@@ -301,6 +322,7 @@
             },
             "lengthMenu": [[5 ,10, 25, 50, -1], [5, 10, 25, 50, "Todo"]],
         });
+        
     var tablaMaterias = $('#tablaMaterias').DataTable( {
             "language": {
                 "emptyTable":     "No existen registros a exponer.",
@@ -376,7 +398,11 @@
             function(data){
               asignaturas_carrera = JSON.parse(data.lista_asignaturas);
               asignaturas_del_usuario = JSON.parse(data.asignaturas_del_usuario);
-              var bandera = 0
+              lista_planes = JSON.parse(data.lista_planes)
+              console.log(asignaturas_carrera)
+              var bandera = 0;
+              var curso = '';
+              var plan = '';
               for(var x = 0; x < Object.keys(asignaturas_carrera).length; x++){
                 for(var y = 0; y < Object.keys(asignaturas_del_usuario).length; y++){
                   if(asignaturas_carrera[x].pk == asignaturas_del_usuario[y].fields.cod_asignatura){
@@ -392,10 +418,26 @@
                   //tabla_materias.row.add([asignaturas_carrera[x].pk, asignaturas_carrera[x].fields.descripcion, asignaturas_carrera[x].fields.curso, `<button type="button" onclick="asignarMateria(${asignaturas_carrera[x].pk}, ${carrera}, ${rol})" class="btn btn-success btn-sm">Vincular</button>`]).draw();
                   bandera = 0;
                 }*/
+                
+                //ENMASCARAR CURSO
+                switch(asignaturas_carrera[x].fields.curso){
+                  case 1: curso = "Primer Curso"; break;
+                  case 2: curso = "Segundo Curso"; break;
+                  case 3: curso = "Tercer Curso"; break;
+                  case 4: curso = "Cuarto Curso"; break;
+                  case 5: curso = "Quinto Curso"; break;
+                }
+
+                for(var z = 0; z < Object.keys(lista_planes).length; z++){
+                  if(lista_planes[z].pk == asignaturas_carrera[x].fields.cod_plan_estudio){
+                    plan = lista_planes[z].fields.descripcion;
+                  }
+                }
+
                 if(bandera == 0) {
-                  tablaMaterias.row.add([asignaturas_carrera[x].pk, asignaturas_carrera[x].fields.descripcion, asignaturas_carrera[x].fields.curso, `<button type="button" onclick="asignarMateria(${asignaturas_carrera[x].pk}, ${carrera}, ${rol})" class="btn btn-success btn-sm">Vincular</button>`]).draw();
+                  tablaMaterias.row.add([asignaturas_carrera[x].pk, asignaturas_carrera[x].fields.descripcion, curso, plan, `<button type="button" onclick="asignarMateria(${asignaturas_carrera[x].pk}, ${carrera}, ${rol}, 1)" class="btn btn-success btn-sm">Vincular</button>`]).draw();
                 } else {
-                  tablaMaterias.row.add([asignaturas_carrera[x].pk, asignaturas_carrera[x].fields.descripcion, asignaturas_carrera[x].fields.curso, `<button type="button" onclick="asignarMateria(${asignaturas_carrera[x].pk}, ${carrera}, ${rol})" class="btn btn-danger btn-sm">Desvincular</button>`]).draw();
+                  tablaMaterias.row.add([asignaturas_carrera[x].pk, asignaturas_carrera[x].fields.descripcion, curso, plan, `<button type="button" onclick="asignarMateria(${asignaturas_carrera[x].pk}, ${carrera}, ${rol}, 2)" class="btn btn-danger btn-sm">Desvincular</button>`]).draw();
                 }
                 console.log(bandera)
                 bandera = 0;
@@ -406,10 +448,19 @@
   </script>
 
   <script>
-    function asignarMateria(materia, carrera, rol){
+    function asignarMateria(materia, carrera, rol, flag){
+      if (flag == 2){
+        titulo = "Desvinculacion de Profesor"
+        texto = "Esta a punto de desvincular al profesor de la asignatura. Desea continuar?"
+        url = "{% url 'desvincular_asignatura' %}"
+      } else {
+        titulo = "Asignacion de Profesor"
+        texto = "Esta a punto asignar al profesor una asignatura. Desea continuar?"
+        url = "{% url 'asignar_asignatura' %}"
+      }
       Swal.fire({
-        title: 'Asignacion a Profesor',
-        text: 'Esta a punto de asignar una asignatura al usuario. Desea continuar?',
+        title: titulo,
+        text: texto,
         icon: 'question',
         showCancelButton: true,
         confirmButtonText: 'Confirmar',
@@ -418,11 +469,8 @@
         cancelButtonColor: '#d33',
       }).then((result) => {
         if (result.value){
-          console.log("Carrera:" + carrera);
-          console.log("Materia:" + materia);
-          console.log("Cod Rol User:" + rol);
           $.ajax({
-            url: "{% url 'asignar_asignatura' %}",
+            url: url,
             type: 'POST',
             data: {"carrera": carrera,
                    "codigo": rol,
@@ -444,6 +492,8 @@
                   icon: 'success',
                   title: data.mensaje
                   })  
+                  $('#tablaMaterias').hide(300);
+                  $('#tablaMaterias').show(300);
                   materiasModal(carrera, rol);
                 }
           })

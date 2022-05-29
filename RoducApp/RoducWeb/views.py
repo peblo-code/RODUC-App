@@ -499,28 +499,48 @@ def detalleAsignaturasCarrera(request):
     usuario = request.GET.get('codigo')
     lista_asignaturas = Asignatura.objects.filter(estado = 1, cod_carrera_id = cod_carrera)
     asignaturas_del_usuario = Asignatura_Usuario.objects.filter(estado = 1, cod_usuario_rol_id = usuario)
+    lista_planes = Plan_Estudio.objects.filter(estado = 1)
     lista_asignaturas = serializers.serialize("json", lista_asignaturas)
     asignaturas_del_usuario = serializers.serialize("json", asignaturas_del_usuario)
+    lista_planes = serializers.serialize("json", lista_planes)
     return JsonResponse({"lista_asignaturas": lista_asignaturas,
-                         "asignaturas_del_usuario": asignaturas_del_usuario})
+                         "asignaturas_del_usuario": asignaturas_del_usuario,
+                         "lista_planes": lista_planes})
 
 
 @csrf_exempt      
 def asignar_asignatura(request):
     if request.method == "POST":
-        print(request.POST.get("asignatura"))
-        print("************************")
-        nueva_asignatura_usuario = Asignatura_Usuario(
-            estado = 1,
-            alta_usuario = request.session.get("usuario_conectado"),
-            cod_asignatura_id = request.POST.get("asignatura"),
-            cod_usuario_rol_id = request.POST.get("codigo")
-        )
-        nueva_asignatura_usuario.save()
+        if Asignatura_Usuario.objects.filter(cod_asignatura_id = request.POST.get("asignatura"), cod_usuario_rol_id = request.POST.get("codigo")).exists():
+            reasignar = Asignatura_Usuario.objects.get(cod_asignatura_id = request.POST.get("asignatura"), cod_usuario_rol_id = request.POST.get("codigo"))
+            reasignar.estado = 1
+            reasignar.modif_usuario = request.session.get("usuario_conectado")
+            reasignar.save()
+        else:
+            nueva_asignatura_usuario = Asignatura_Usuario(
+                estado = 1,
+                alta_usuario = request.session.get("usuario_conectado"),
+                cod_asignatura_id = request.POST.get("asignatura"),
+                cod_usuario_rol_id = request.POST.get("codigo")
+            )
+            nueva_asignatura_usuario.save()        
+
         lista_asignaturas = Asignatura.objects.filter(estado = 1, cod_carrera_id = request.POST.get("carrera"))
         asignaturas_del_usuario = Asignatura_Usuario.objects.filter(estado = 1, cod_usuario_rol_id = request.POST.get("codigo"))
         lista_asignaturas = serializers.serialize("json", lista_asignaturas)
         asignaturas_del_usuario = serializers.serialize("json", asignaturas_del_usuario)
         respuesta = JsonResponse({"mensaje": "Asignatura asignada correctamente."})
         return respuesta
-
+@csrf_exempt      
+def desvincular_asignatura(request):
+    if request.method == "POST":
+        desasignar = Asignatura_Usuario.objects.get(estado = 1, cod_asignatura_id = request.POST.get("asignatura"), cod_usuario_rol_id = request.POST.get("codigo"))
+        desasignar.estado = 0
+        desasignar.modif_usuario = request.session.get("usuario_conectado")
+        desasignar.save()
+        lista_asignaturas = Asignatura.objects.filter(estado = 1, cod_carrera_id = request.POST.get("carrera"))
+        asignaturas_del_usuario = Asignatura_Usuario.objects.filter(estado = 1, cod_usuario_rol_id = request.POST.get("codigo"))
+        lista_asignaturas = serializers.serialize("json", lista_asignaturas)
+        asignaturas_del_usuario = serializers.serialize("json", asignaturas_del_usuario)
+        respuesta = JsonResponse({"mensaje": "Asignatura desvinculada correctamente."})
+        return respuesta
