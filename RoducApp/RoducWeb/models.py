@@ -119,7 +119,7 @@ class Asignatura(models.Model):
 
 class Asignatura_Usuario(models.Model):
     cod_asignatura_usuario = models.AutoField(primary_key=True)
-    cod_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, blank=True)
+    cod_usuario_rol = models.ForeignKey(Usuario_Rol, on_delete=models.CASCADE, blank=True, null = True)
     cod_asignatura = models.ForeignKey(Asignatura, on_delete=models.CASCADE, blank=True)
     estado = models.IntegerField()
     alta_usuario = models.CharField(max_length=45)

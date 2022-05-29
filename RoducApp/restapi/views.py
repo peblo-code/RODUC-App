@@ -52,7 +52,6 @@ def auditoriaSesion(request, user, info):
         auditar_sesion(request, user, info)
         return JsonResponse({"bandera": 1})
     else:
-        print("No entro a get")
         return JsonResponse({"bandera": 0})
 
 def listaFacultades_Carreras(request, user):

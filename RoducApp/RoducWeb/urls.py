@@ -19,6 +19,7 @@ urlpatterns = [
     path('perfil', views.perfil, name='perfil'),
     path('asignar_rol', views.asignar_rol, name='asignar_rol'),
     path('detalleAsignaturasCarrera', views.detalleAsignaturasCarrera, name='detalleAsignaturasCarrera'),
+    path('asignar_asignatura', views.asignar_asignatura, name='asignar_asignatura'),
 
     # FACULTAD
     path('facultad', views.facultad, name='facultad'),

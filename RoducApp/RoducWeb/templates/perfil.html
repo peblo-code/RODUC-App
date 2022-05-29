@@ -99,9 +99,9 @@
                     <td class="id">{{usuario_rol.cod_usuario_rol}}</td>
                     <td>
                       {% for rol in lista_roles %}
-                      {% if usuario_rol.cod_rol_usuario_id == rol.cod_rol_usuario %}
-                      {{rol.descripcion}}
-                      {% endif %}
+                        {% if usuario_rol.cod_rol_usuario_id == rol.cod_rol_usuario %}
+                          {{rol.descripcion}}
+                        {% endif %}
                       {% endfor %}
                     </td>
                     <td>
@@ -117,7 +117,7 @@
                         <i class="fas fa-trash-alt"></i>
                       </a>
                       {% if usuario_rol.cod_rol_usuario_id == 2 %}
-                      <button class="btn btn-outline-primary" onclick="materiasModal('{{usuario_rol.cod_carrera_id}}')">
+                      <button class="btn btn-outline-primary" onclick="materiasModal('{{usuario_rol.cod_carrera_id}}', '{{usuario_rol.cod_usuario_rol}}')">
                         <i class="fas fa-regular fa-book"></i>
                       </button>
                       {% endif %}
@@ -197,6 +197,11 @@
         </button>
       </div>
       <div class="modal-body">
+        <div class="row">
+          <div class="col-lg-12">
+            
+          </div>
+        </div>
         <div class="table-responsive py-2">
           <div class="dataTables_wrapper dt-bootrstrap4">
             <table class="table table-flush dataTable align-items-center table-hover" id="tablaMaterias">
@@ -296,8 +301,7 @@
             },
             "lengthMenu": [[5 ,10, 25, 50, -1], [5, 10, 25, 50, "Todo"]],
         });
-
-        var tabla_materias = $('#tablaMaterias').DataTable( {
+    var tablaMaterias = $('#tablaMaterias').DataTable( {
             "language": {
                 "emptyTable":     "No existen registros a exponer.",
                 "info":           "",
@@ -318,9 +322,9 @@
                     }
             },
             "lengthMenu": [[5 ,10, 25, 50, -1], [5, 10, 25, 50, "Todo"]],
-        });  
+        });
 
-
+        
     function actualizarRoles(roles_user){
       var rol = ''
       var carrera = ''
@@ -356,63 +360,96 @@
   </script>
 
   <script>
-    function materiasModal(carrera){
-      $('#materiasModal').modal('show');
-      $("#tablaMaterias").dataTable().fnDestroy();
-      $('#tablaMaterias').DataTable( {
-            "language": {
-                "emptyTable":     "No existen registros a exponer.",
-                "info":           "",
-                "infoEmpty":      "",
-                "infoFiltered":   "",
-                "infoPostFix":    "",
-                "thousands":      ".",
-                "lengthMenu":     "Registros a mostrar _MENU_",
-                "loadingRecords": "Cargando...",
-                "processing":     "Procesando...",
-                "search":         "Buscar:",
-                "zeroRecords":    "No se obtuvo ninguna coincidencia",
-                oPaginate: {
-                    sNext: '<i class="fa fa-forward"></i>',
-                    sPrevious: '<i class="fa fa-backward"></i>',
-                    sFirst: '<i class="fa fa-step-backward"></i>',
-                    sLast: '<i class="fa fa-step-forward"></i>'
-                    }
-            },
-            "lengthMenu": [[5 ,10, 25, 50, -1], [5, 10, 25, 50, "Todo"]],
-        });  
-      tabla_materias.clear()
+    function materiasModal(carrera, rol){
+      tablaMaterias.clear().draw();
+      if($('#materiasModal').is(':visible')){
+        null;
+      } else {
+        $('#materiasModal').modal('show');
+      }
       $.ajax({
         url: "{% url 'detalleAsignaturasCarrera' %}",
         type: 'GET',
         data: {"carrera": carrera,
-               "codigo": '{{datos_usuario.cod_usuario}}'},
+               "codigo": rol},
         success: 
             function(data){
-              console.log("Hay conexion");
               asignaturas_carrera = JSON.parse(data.lista_asignaturas);
-              asignaturas_del_usuario = JSON.parse(data.asignaturas_del_usuario)
+              asignaturas_del_usuario = JSON.parse(data.asignaturas_del_usuario);
               var bandera = 0
               for(var x = 0; x < Object.keys(asignaturas_carrera).length; x++){
-                for(var y = 0; y < Object.keys(asignaturas_del_usuario).length; x++){
-                  if(asignaturas_carrera[x].pk == asignaturas_del_usuario[y].cod_carrera){
+                for(var y = 0; y < Object.keys(asignaturas_del_usuario).length; y++){
+                  if(asignaturas_carrera[x].pk == asignaturas_del_usuario[y].fields.cod_asignatura){
                     bandera = 1;
                   }
                 }
-                if(bandera == 1){ //SIGNIFICA QUE LLEVA LA MATERIA
-                  tabla_materias.row.add([asignaturas_carrera[x].pk, asignaturas_carrera[x].fields.descripcion, asignaturas_carrera[x].fields.curso, "Lleva"]).draw();
+                /*if(bandera == 1){ //SIGNIFICA QUE LLEVA LA MATERIA
+                  $(`<tr><td>${asignaturas_carrera[x].pk}</td><td>${asignaturas_carrera[x].fields.descripcion}</td><td>${asignaturas_carrera[x].fields.curso}</td><td><button type="button" onclick="asignarMateria(${asignaturas_carrera[x].pk}, ${carrera}, ${rol})" class="btn btn-danger btn-sm">Desvincular</button></td></tr>`).appendto("#tablaMaterias>tbody");
+                  //tabla_materias.row.add([asignaturas_carrera[x].pk, asignaturas_carrera[x].fields.descripcion, asignaturas_carrera[x].fields.curso, `<button type="button" onclick="asignarMateria(${asignaturas_carrera[x].pk}, ${carrera}, ${rol})" class="btn btn-danger btn-sm">Desvincular</button>`]).draw();
                   bandera = 0;
                 } else {
-                  tabla_materias.row.add([asignaturas_carrera[x].pk, asignaturas_carrera[x].fields.descripcion, asignaturas_carrera[x].fields.curso, "No lleva"]).draw();
+                  $("#tablaMaterias>tbody").append(`<tr><td>${asignaturas_carrera[x].pk}</td><td>${asignaturas_carrera[x].fields.descripcion}</td><td>${asignaturas_carrera[x].fields.curso}</td><td><button type="button" onclick="asignarMateria(${asignaturas_carrera[x].pk}, ${carrera}, ${rol})" class="btn btn-success btn-sm">Vincular</button></td></tr>`);
+                  //tabla_materias.row.add([asignaturas_carrera[x].pk, asignaturas_carrera[x].fields.descripcion, asignaturas_carrera[x].fields.curso, `<button type="button" onclick="asignarMateria(${asignaturas_carrera[x].pk}, ${carrera}, ${rol})" class="btn btn-success btn-sm">Vincular</button>`]).draw();
                   bandera = 0;
+                }*/
+                if(bandera == 0) {
+                  tablaMaterias.row.add([asignaturas_carrera[x].pk, asignaturas_carrera[x].fields.descripcion, asignaturas_carrera[x].fields.curso, `<button type="button" onclick="asignarMateria(${asignaturas_carrera[x].pk}, ${carrera}, ${rol})" class="btn btn-success btn-sm">Vincular</button>`]).draw();
+                } else {
+                  tablaMaterias.row.add([asignaturas_carrera[x].pk, asignaturas_carrera[x].fields.descripcion, asignaturas_carrera[x].fields.curso, `<button type="button" onclick="asignarMateria(${asignaturas_carrera[x].pk}, ${carrera}, ${rol})" class="btn btn-danger btn-sm">Desvincular</button>`]).draw();
                 }
+                console.log(bandera)
+                bandera = 0;
               }
-              asignaturas_carrera = null;
-              asignaturas_del_usuario = null;
             }
         })
     }
   </script>
 
+  <script>
+    function asignarMateria(materia, carrera, rol){
+      Swal.fire({
+        title: 'Asignacion a Profesor',
+        text: 'Esta a punto de asignar una asignatura al usuario. Desea continuar?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Confirmar',
+        cancelButtonText: "Cancelar",
+        confirmButtonColor: '#2dce89',
+        cancelButtonColor: '#d33',
+      }).then((result) => {
+        if (result.value){
+          console.log("Carrera:" + carrera);
+          console.log("Materia:" + materia);
+          console.log("Cod Rol User:" + rol);
+          $.ajax({
+            url: "{% url 'asignar_asignatura' %}",
+            type: 'POST',
+            data: {"carrera": carrera,
+                   "codigo": rol,
+                   "asignatura": materia},
+            success: 
+                function(data){
+                  const Toast = Swal.mixin({
+                      toast: true,
+                      position: 'top',
+                      showConfirmButton: false,
+                      timer: 2000,
+                      timerProgressBar: true,
+                      didOpen: (toast) => {
+                          toast.addEventListener('mouseenter', Swal.stopTimer)
+                          toast.addEventListener('mouseleave', Swal.resumeTimer)
+                      }
+                  })
+                  Toast.fire({
+                  icon: 'success',
+                  title: data.mensaje
+                  })  
+                  materiasModal(carrera, rol);
+                }
+          })
+        }
+      })
+    }
+  </script>
 
 {% endblock %}
