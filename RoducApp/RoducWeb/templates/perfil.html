@@ -93,7 +93,7 @@
           </div>
         </div>
         <div class="card-body">
-          <div class="table-responsive py-2">
+          <div class="table-responsive py-2" style="overflow: hidden;">
             <div class="dataTables_wrapper dt-bootrstrap4">
               <table class="table table-flush dataTable align-items-center table-hover" id="tablaRoles">
                 <thead class="thead-light">
@@ -125,16 +125,16 @@
                     </td>
                     <td>
                       {% for carrera in lista_carreras %}
-                      {% if usuario_rol.cod_carrera_id == carrera.cod_carrera %}
-                      {{carrera.descripcion}}
-                      {% endif %}
+                        {% if usuario_rol.cod_carrera_id == carrera.cod_carrera %}
+                          {{carrera.descripcion}}
+                        {% endif %}
                       {% endfor %}
                     </td>
                     <!---BOTONES-->
                     <td id="acciones">
-                      <a class="btn btn-outline-danger" href=''>
+                      <button class="btn btn-outline-danger" onclick="eliminar_rol('{{usuario_rol.cod_usuario_rol}}')">
                         <i class="fas fa-trash-alt"></i>
-                      </a>
+                      </button>
                       {% if usuario_rol.cod_rol_usuario_id == 2 %}
                       <button class="btn btn-outline-primary" onclick="materiasModal('{{usuario_rol.cod_carrera_id}}', '{{usuario_rol.cod_usuario_rol}}')">
                         <i class="fas fa-regular fa-book"></i>
@@ -207,7 +207,7 @@
 <!---Modal-->
 <div class="modal fade" id="materiasModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
   aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" style="max-width: 70%;" role="document">
+  <div class="modal-dialog modal-dialog-centered modal-lg"  role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="tituloModal">Asignacion de Materias a Profesor</h5>
@@ -221,7 +221,7 @@
             
           </div>
         </div>
-        <div class="table-responsive py-2">
+        <div class="table-responsive py-2" style="overflow: hidden;">
           <div class="dataTables_wrapper dt-bootrstrap4">
             <table class="table table-flush dataTable align-items-center table-hover" id="tablaMaterias">
               <thead class="thead-light">
@@ -372,9 +372,9 @@
 
         //CARGA DE TABLA
         if(rol == 'Profesor'){
-          tabla.row.add([roles_user[x].pk, rol, carrera, `<button type="button" class = "btn btn-icon btn-outline-danger"><span><i class = "fas fa-trash"></i></span></button><button type="button" onclick="materiasModal('${roles_user[x].fields.cod_carrera}')" class = "btn btn-icon btn-outline-primary"><span><i class = "fas fa-book"></i></span></button>`]).draw();
+          tabla.row.add([roles_user[x].pk, rol, carrera, `<button type="button" class = "btn btn-icon btn-outline-danger" onclick = "eliminar_rol(${roles_user[x].pk})"><span><i class = "fas fa-trash"></i></span></button><button type="button" onclick="materiasModal('${roles_user[x].fields.cod_carrera}')" class = "btn btn-icon btn-outline-primary"><span><i class = "fas fa-book"></i></span></button>`]).draw();
         } else{
-          tabla.row.add([roles_user[x].pk, rol, carrera, '<button type="button" class = "btn btn-icon btn-outline-danger"><span><i class = "fas fa-trash"></i></span></button>']).draw();
+          tabla.row.add([roles_user[x].pk, rol, carrera, `<button type="button" class = "btn btn-icon btn-outline-danger" onclick = "eliminar_rol(${roles_user[x].pk})"><span><i class = "fas fa-trash"></i></span></button>`]).draw();
         }
       }
     }
@@ -502,4 +502,39 @@
     }
   </script>
 
+<script>
+  function eliminar_rol(codigo){
+      Swal.fire({
+          title: 'Eliminacion de rol',
+          text: 'Esta seguro de eliminar el registro?',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonText: 'Confirmar',
+          cancelButtonText: "Cancelar",
+          confirmButtonColor: '#2dce89',
+          cancelButtonColor: '#d33',
+      }).then((result) => {
+          if (result.value) {
+              console.log(codigo)
+              $.ajax({
+                  url: "{% url 'eliminar_rol' %}",
+                  type: 'POST',
+                  data: {"codigo": codigo},
+                  success: 
+                  function(data){
+                      Swal.fire({
+                          icon: 'success',
+                          title: 'Aviso',
+                          text: data.mensaje,
+                          showConfirmButton: true
+                      }).then( () => {
+                          lista_roles = JSON.parse(data.lista_roles)
+                          actualizarRoles(lista_roles)
+                      })
+                  }
+              })
+          }
+      })
+  }
+</script>
 {% endblock %}

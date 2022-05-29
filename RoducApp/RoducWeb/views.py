@@ -494,6 +494,25 @@ def asignar_rol(request):
             return respuesta
 
 
+@csrf_exempt
+def eliminar_rol(request):
+    if request.method == 'POST':
+        rol = request.POST.get("codigo")
+        if Asignatura_Usuario.objects.filter(estado = 1, cod_usuario_rol_id = rol).exists():
+            for asignatura_usuario in Asignatura_Usuario.objects.filter(estado = 1, cod_usuario_rol_id = rol):
+                asignar_asignatura.estado = 0
+                asignar_asignatura.save()
+        rol_eliminar = Usuario_Rol.objects.get(estado = 1, cod_usuario_rol = rol)
+        aux = rol_eliminar.cod_usuario_id
+        rol_eliminar.estado = 0
+        rol_eliminar.save()
+        lista_roles = Usuario_Rol.objects.filter(estado = 1, cod_usuario_id = aux)
+        lista_roles = serializers.serialize("json", lista_roles)
+        respuesta = JsonResponse({"mensaje": "Registro eliminado con exito.",
+                                  "lista_roles": lista_roles})
+        return respuesta
+
+
 def detalleAsignaturasCarrera(request):
     cod_carrera = request.GET.get('carrera')
     usuario = request.GET.get('codigo')
@@ -531,6 +550,8 @@ def asignar_asignatura(request):
         asignaturas_del_usuario = serializers.serialize("json", asignaturas_del_usuario)
         respuesta = JsonResponse({"mensaje": "Asignatura asignada correctamente."})
         return respuesta
+
+
 @csrf_exempt      
 def desvincular_asignatura(request):
     if request.method == "POST":
