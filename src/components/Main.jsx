@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-native';
 import { View } from 'react-native';
 import AppBar from './AppBar.jsx';
