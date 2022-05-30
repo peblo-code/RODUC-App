@@ -85,7 +85,7 @@ const NewForm = () => {
     
     return(
         <View style={styles.form}>
-            <StyledText 
+            <StyledText
                 fontSize="large"
                 fontWeight="bold"
                 color="primary">
@@ -124,7 +124,9 @@ const styles = StyleSheet.create({
         marginHorizontal: 12,
         marginVertical: 12,
         alignItems: 'center',
-        flex: 1
+        flex: 1,
+        height: '100%',
+        gap: 12
     },
 })
 
