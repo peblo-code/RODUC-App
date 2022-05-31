@@ -11,9 +11,6 @@ const extraerPrimerNombre = (nombres_del_usuario) => {
 
 
 const Home = ({navigation}) => {
-    const { user } = useUserContext();
-    const navigate = useNavigate();
-
     return (
         <View style={styles.container}>
             <RepositoryList />

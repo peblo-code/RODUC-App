@@ -5,6 +5,8 @@ import RNPickerSelect, { defaultStyles } from 'react-native-picker-select';
 import useUserContext from '../hooks/useUserContext.js';
 import axios from 'axios';
 
+const isAndroid = Platform.OS === 'android';
+
 const NewForm = ({ navigation }) => {
     const { user } = useUserContext();
     const [facultades, setFacultades] = useState([]);
@@ -110,7 +112,7 @@ const NewForm = ({ navigation }) => {
                 placeholder={placeholder}
                 items={FacultadItems}
                 style={pickerSelectStyles}
-                useNativeAndroidPickerStyle={true}
+                useNativeAndroidPickerStyle={isAndroid}
                 onValueChange={(value) => setCarreraPicker(value)}
             /> 
 
@@ -119,7 +121,7 @@ const NewForm = ({ navigation }) => {
                 placeholder={placeholder}
                 items={carreraItems}
                 style={pickerSelectStyles}
-                useNativeAndroidPickerStyle={true}
+                useNativeAndroidPickerStyle={isAndroid}
                 onValueChange={(value) => { setAsignaturaPicker(value) }}
             />
 
@@ -128,7 +130,7 @@ const NewForm = ({ navigation }) => {
                 placeholder={placeholder}
                 items={asignaturaItems}
                 style={pickerSelectStyles}
-                useNativeAndroidPickerStyle={true}
+                useNativeAndroidPickerStyle={isAndroid}
                 onValueChange={(value) => console.log(value)}
             />
         </View>
