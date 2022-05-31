@@ -57,4 +57,7 @@ urlpatterns = [
     path('detalle_asignatura', views.detalle_asignatura, name='detalle_asignatura'),
     path('actualizar_asignatura', views.actualizar_asignatura, name='actualizar_asignatura'),
     path('eliminar_asignatura', views.eliminar_asignatura, name='eliminar_asignatura'),
+
+    # CABECERA
+    path('cabecera', views.cabecera, name='cabecera'),
 ]

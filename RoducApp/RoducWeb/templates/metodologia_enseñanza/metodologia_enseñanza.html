@@ -1,0 +1,176 @@
+{% extends "panel.html" %}
+{% block titulo %}Plan de Estudio - Roduc{% endblock %}
+{% block formularios %}
+{% load static %}
+<div class="header pb-9 d-flex align-items-center"
+  style="min-height: 350px; background-image: url('{% static 'assets/img/header-bg.png' %}'); ">
+  <!-- Mask -->
+  <span></span>
+  <!-- Header container -->
+  <div class="container-fluid d-flex align-items-justify">
+    <div class="row">
+      <div class=".col-12 .col-md-8">
+        <h1 class="display-2 text-white">Registro de Metodologías de Enseñanza</h1>
+        <p class="text-white mt-0 mb-5">El formulario actual sirve para el registro de metodologías de enseñanza.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid mt--9">
+  <div class="row">
+    <div class="col-xl-12 order-xl-1">
+      <div class="card">
+        <div class="card-body">
+          <form role="form" action='#' method="POST" id="form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <h6 class="heading-small text-muted mb-4">Datos de la Metodología de Enseñanza</h6>
+            <div class="pl-lg-0">
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="form-group">
+                    <label class="form-control-label" for="input-username">Descripción</label>
+                    <input required autocomplete="off" type="text" id="descripcion" class="form-control"
+                      placeholder="Ingrese la descripción del Plan de Estudios..." name="descripcion" autofocus>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1" class="form-control-label">Estadp</label>
+                    <select class="form-control" name="facultad" id="facultad" class="form-control">
+                      <option value="">Seleccione una facultad...</option>
+                      {% for facultad in lista_facultades %}
+                      <option value="{{facultad.cod_facultad}}">{{facultad.descripcion}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <span><button type="submit" class="btn btn-success">Guardar</button></span>
+            <span><button type="button" class="btn btn-warning" id="BT_Listar" onclick="mostrarPlanes()">Listar</button></span>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" style="display: none;" id="listaplanes">
+    <div class="col-xl-12">
+      <div class="card">
+        <div class="card-header">
+          <h6 class="heading-small text-muted mb-4">Planes de Estudios Registrados</h6>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive py-2">
+            <div class="dataTables_wrapper dt-bootrstrap4">
+              <table class="table table-flush dataTable align-items-center table-hover" id="datos">
+                <thead class="thead-light">
+                  <tr>
+                    <th scope="col" class="sort" data-sort="id">ID</th>
+                    <th scope="col" class="sort" data-sort="nombre">Descripcion</th>
+                    <th scope="col" class="sort" data-sort="nombre">Carrera</th>
+                    <th scope="col">Acciones</th>
+                  </tr>
+                </thead>
+                <tfoot class="thead-light">
+                  <tr>
+                    <th>ID</th>
+                    <th>Descripción</th>
+                    <th>Carrera</th>
+                    <th>Acciones</th>
+                  </tr>
+                </tfoot>
+                <tbody class="list">
+                  {% for plan in lista_planes %}
+                  <tr>
+                    <td class="id">{{plan.cod_plan_estudio}}</td>
+                    <td class="nombre">{{plan.descripcion}}</td>
+                    <td class="nombre">
+                      {% for carrera in lista_carreras %}
+                        {% if plan.cod_carrera_id == carrera.cod_carrera %}
+                          {{carrera.descripcion}}
+                        {% endif %}
+                      {% endfor %}
+                    </td>
+                    <!---BOTONES-->
+                    <td>
+                      <button type="button" class="btn btn-outline-success" onclick='obtenerFacultad("{{plan.cod_plan_estudio}}")'>
+                        <i class="far fa-edit"></i>
+                      </button>
+                      <button class="btn btn-outline-danger" onclick='eliminarPlan("{{plan.cod_plan_estudio}}")'>
+                        <i class="fas fa-trash-alt"></i>
+                      </button>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!---Modal-->
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="tituloModal"></h5>
+              <button type="button" class="close" href="" aria-label="Close" data-dismiss="modal">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+              <form role="formUpdate" action='' id="updateForm" onsubmit="updatePlan(this)" name = "update">
+                  {% csrf_token %}
+                  <h6 class="heading-small text-muted mb-4">Datos del Plan de Estudios</h6>
+                  <div class="pl-lg-0">
+                    <div class="row">
+                      <div class="col-lg-12">
+                        <div class="form-group">
+                          <label class="form-control-label" for="input-username">Descripción</label>
+                          <input type="text" name="codigo" id="updateCodigo" style="display: none;">
+                          <input required autocomplete="off" type="text" id="updateDescripcion" class="form-control" placeholder="Ingrese la descripción del Plan de Estudios..." name="descripcion" autofocus>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label for="exampleFormControlSelect1" class="form-control-label">Facultad</label>
+                          <select class="form-control" name="facultad" id="updateFacultad" class="form-control">
+                            <option value="">Seleccione una facultad...</option>
+                            {% for facultad in lista_facultades %}
+                            <option value="{{facultad.cod_facultad}}">{{facultad.descripcion}}</option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label for="exampleFormControlSelect1" class="form-control-label">Carrera</label>
+                          <select class="form-control" name="carrera" id="updateCarrera" class="form-control">
+                            <option value="">Seleccione una carrera...</option>
+                            {% for carrera in lista_carreras %}
+                            <option value="{{carrera.cod_carrera}}" data-chained="{{carrera.cod_facultad_id}}">
+                              {{carrera.descripcion}}</option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <span><button type="submit" class="btn btn-success">Guardar</button></span>
+              </form>
+          </div>
+      </div>
+  </div>
+</div>
+
+
+{% endblock %}

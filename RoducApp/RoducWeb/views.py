@@ -565,3 +565,6 @@ def desvincular_asignatura(request):
         asignaturas_del_usuario = serializers.serialize("json", asignaturas_del_usuario)
         respuesta = JsonResponse({"mensaje": "Asignatura desvinculada correctamente."})
         return respuesta
+
+def cabecera(request):
+    return render(request, "reporte/cabecera.html")
