@@ -1,7 +1,5 @@
 import { View, StyleSheet, Button } from 'react-native';
-import useUserContext from '../hooks/useUserContext';
 import RepositoryList from '../components/RepositoryList';
-import { useNavigate } from 'react-router-native';
 import theme from '../theme';
 
 const extraerPrimerNombre = (nombres_del_usuario) => {
