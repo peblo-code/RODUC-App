@@ -84,6 +84,8 @@ class Auditoria_Sesiones(models.Model):
 class Semestre(models.Model):
     cod_semestre = models.AutoField(primary_key=True)
     descripcion = models.CharField(max_length=100)
+    fecha_inicio = models.DateField(auto_now = False, null=True)
+    fecha_fin = models.DateField(auto_now = False, null=True)
     estado = models.IntegerField(null=True)
     alta_usuario = models.CharField(max_length=45, null=True)
     alta_fecha = models.DateTimeField(auto_now_add=True, null=True)
