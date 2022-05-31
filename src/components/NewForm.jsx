@@ -5,7 +5,7 @@ import RNPickerSelect, { defaultStyles } from 'react-native-picker-select';
 import useUserContext from '../hooks/useUserContext.js';
 import axios from 'axios';
 
-const NewForm = () => {
+const NewForm = ({ navigation }) => {
     const { user } = useUserContext();
     const [facultades, setFacultades] = useState([]);
     const [carreras, setCarreras] = useState([]);

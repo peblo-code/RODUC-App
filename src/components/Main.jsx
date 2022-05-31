@@ -6,6 +6,10 @@ import Home from '../pages/Home.jsx';
 import LoginInPage from '../pages/LogIn.jsx';
 import NewForm from './NewForm.jsx';
 import useUserContext from '../hooks/useUserContext.js';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
+
+const Stack = createNativeStackNavigator();
 
 const Main = () => {
 
@@ -17,14 +21,14 @@ const Main = () => {
     }, [user.cod_usuario]);
 
     return(
-        <View style={{flex: 1}}>
-            { user.cod_usuario > 0 ? <AppBar /> : null }
-            <Routes>
-                <Route path='/' element={<Home />} />
-                <Route path='/signin' element={<LoginInPage />} />
-                <Route path='/new_form' element={<NewForm />}/>
-            </Routes>
-        </View>
+        <NavigationContainer style={{flex: 1}}>
+            {/* { user.cod_usuario > 0 ? <AppBar /> : null } */}
+            <Stack.Navigator>
+                <Stack.Screen name='Inicio' component={ Home } />
+                <Stack.Screen name='Iniciar Sesion' component={ LoginInPage } />
+                <Stack.Screen name='Nuevo Formulario' component={ NewForm }/>
+            </Stack.Navigator>
+        </NavigationContainer>
     )
 }
 

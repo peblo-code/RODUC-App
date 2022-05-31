@@ -10,7 +10,7 @@ const extraerPrimerNombre = (nombres_del_usuario) => {
 }
 
 
-const Home = () => {
+const Home = ({navigation}) => {
     const { user } = useUserContext();
     const navigate = useNavigate();
 
@@ -21,7 +21,7 @@ const Home = () => {
                 <Button 
                     color={theme.appBar.primary} 
                     title="Registrar nuevo formulario" 
-                    onPress={() => navigate('/new_form')}/>
+                    onPress={() => navigation.navigate('Nuevo Formulario')}/>
             </View>
         </View>
 
