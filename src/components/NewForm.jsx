@@ -1,8 +1,6 @@
 import { View, StyleSheet, Platform, Text } from 'react-native';
 import { useEffect, useState } from 'react'
 import StyledText from './StyledText';
-import { Chevron } from 'react-native-shapes';
-import { Ionicons } from '@expo/vector-icons';
 import RNPickerSelect, { defaultStyles } from 'react-native-picker-select';
 import useUserContext from '../hooks/useUserContext.js';
 import axios from 'axios';
@@ -14,22 +12,7 @@ const NewForm = () => {
     const [carreraItems, setCarreraItems] = useState([]);
     const [carreraPicker, setCarreraPicker] = useState('');
     const { URL } = useUserContext();
-
-    const sports = [
-        {
-          label: 'Football',
-          value: 'football',
-        },
-        {
-          label: 'Baseball',
-          value: 'baseball',
-        },
-        {
-          label: 'Hockey',
-          value: 'hockey',
-        },
-      ];
-
+    const [ isAndroid, setIsAndroid ] = useState(false);
 
     useEffect(() => {
         axios.get(`${URL}/listaFacultades_Carreras/${user.cod_usuario}`)
@@ -53,7 +36,7 @@ const NewForm = () => {
 
     const getCarreraItems = (carreras) => {
         if(carreraPicker == undefined) {
-            return [{key: '', label: 'Seleccione una carrera', value: ''}];
+            return [{key: '', label: 'Seleccione una facultad', value: ''}];
         }
 
         let arr = []
@@ -91,6 +74,7 @@ const NewForm = () => {
                 color="primary">
                 Nuevo Informe
             </StyledText>
+            <Text>Facultad</Text>
             <RNPickerSelect
                 items={FacultadItems}
                 style={pickerSelectStyles}
@@ -98,17 +82,7 @@ const NewForm = () => {
                 onValueChange={(value) => setCarreraPicker(value)}
             /> 
 
-            {/* <RNPickerSelect
-                placeholder={{
-                    label: 'Seleccione una carrera',
-                    value: null,
-                    color: '#9EA0A4',
-                }}
-                onValueChange={(value) => console.log("Id de carrera:" + value)}
-                items={carreraItems}
-            />  */}
-
-        <Text>set useNativeAndroidPickerStyle to false</Text>
+        <Text>Carrera</Text>
         <RNPickerSelect
             items={carreraItems}
             style={pickerSelectStyles}
@@ -123,7 +97,7 @@ const styles = StyleSheet.create({
     form: {
         marginHorizontal: 12,
         marginVertical: 12,
-        alignItems: 'center',
+        //alignItems: 'center',
         flex: 1,
         height: '100%',
         gap: 12
