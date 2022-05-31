@@ -1,10 +1,8 @@
-import { useEffect } from 'react';
-import { Route, Routes, useNavigate } from 'react-router-native';
-import { View } from 'react-native';
-import AppBar from './AppBar.jsx';
+import { StyleSheet, Alert } from 'react-native';
 import Home from '../pages/Home.jsx';
 import LoginInPage from '../pages/LogIn.jsx';
 import NewForm from './NewForm.jsx';
+import TouchIcon from './TouchIcon.jsx';
 import useUserContext from '../hooks/useUserContext.js';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
@@ -12,24 +10,58 @@ import { NavigationContainer } from '@react-navigation/native';
 const Stack = createNativeStackNavigator();
 
 const Main = () => {
+    const { user, closeSession } = useUserContext();  //recuperar datos del contexto
 
-    const { user } = useUserContext();  //recuperar datos del contexto
-    let navigate = useNavigate(); //funcion para navegar entre paginas
+    const createTwoButtonAlert = () =>
+        Alert.alert('Cerrar Sesión', 'Estas seguro/a de cerrar tu sesión?', [
+            {
+                text: 'Cancelar',
+                style: 'cancel',
+            },
+            { text: 'Sí!', onPress: () => closeSession() },
+        ]);
 
-    useEffect(() => {
-        user.cod_usuario == 0 ? navigate('/signin') : navigate('/') //si el usuario no esta logueado, redireccionar a la pagina de login
-    }, [user.cod_usuario]);
+    const styles = StyleSheet.create({
+        headerStyle: {
+            backgroundColor: '#0d3498',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+            fontWeight: 'bold',
+        },
+        headerRight: () => (
+            <TouchIcon
+                name="sign-out"
+                size={24}
+                color="#fff"
+                onPress={() => createTwoButtonAlert()} 
+            />
+        ),
+    });
 
-    return(
-        <NavigationContainer style={{flex: 1}}>
-            {/* { user.cod_usuario > 0 ? <AppBar /> : null } */}
-            <Stack.Navigator>
-                <Stack.Screen name='Inicio' component={ Home } />
-                <Stack.Screen name='Iniciar Sesion' component={ LoginInPage } />
-                <Stack.Screen name='Nuevo Formulario' component={ NewForm }/>
-            </Stack.Navigator>
+    return (
+        <NavigationContainer style={{ flex: 1 }}>
+            {
+                user.cod_usuario == 0 ? <LoginInPage /> :
+                    <Stack.Navigator>
+                        <Stack.Screen
+                            name='Inicio'
+                            component={Home}
+                            options={styles} />
+                        <Stack.Screen
+                            name='Iniciar Sesion'
+                            component={LoginInPage}
+                            options={styles} />
+                        <Stack.Screen
+                            name='Nuevo Formulario'
+                            component={NewForm}
+                            options={styles} />
+                    </Stack.Navigator>
+            }
         </NavigationContainer>
     )
+
 }
+
 
 export default Main;

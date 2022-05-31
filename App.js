@@ -6,7 +6,7 @@ import { UserProvider } from './src/context/UserContext.js';
 export default function App() {
   return (
     <UserProvider>
-      <StatusBar style='dark'/>
+      <StatusBar style='light'/>
       <NativeRouter>
         <Main />
       </NativeRouter>
