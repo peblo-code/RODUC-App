@@ -9,19 +9,22 @@ const NewForm = () => {
     const { user } = useUserContext();
     const [facultades, setFacultades] = useState([]);
     const [carreras, setCarreras] = useState([]);
+    const [asignaturas, setAsignaturas] = useState([]);
+    const [asignaturaItems, setAsignaturaItems] = useState([]);
     const [carreraItems, setCarreraItems] = useState([]);
+    const [asignaturaPicker, setAsignaturaPicker] = useState('');
     const [carreraPicker, setCarreraPicker] = useState('');
     const { URL } = useUserContext();
-    const [ isAndroid, setIsAndroid ] = useState(false);
 
     useEffect(() => {
         axios.get(`${URL}/listaFacultades_Carreras/${user.cod_usuario}`)
         .then((response) => {
             const resFacu = JSON.parse(response.data.lista_facultades);
             const resCarreras = JSON.parse(response.data.lista_carreras);
+            const resAsignaturas = JSON.parse(response.data.lista_asignaturas);
             setFacultades(resFacu.map(field => field));
             setCarreras(resCarreras.map(field => field));
-            //getCarreras(response);
+            setAsignaturas(resAsignaturas.map(field => field));
         })
         .catch((error) => {
             console.log(error);
@@ -35,6 +38,7 @@ const NewForm = () => {
     })));
 
     const getCarreraItems = (carreras) => {
+        setCarreraItems([])
         if(carreraPicker == undefined) {
             return [{key: '', label: 'Seleccione una facultad', value: ''}];
         }
@@ -56,12 +60,38 @@ const NewForm = () => {
         return arr;
     }
 
+    const getAsignaturaItems = (asignaturas) => {
+        if(asignaturaPicker == undefined) {
+            return [{key: '', label: 'Seleccione una carrera', value: ''}];
+        }
+
+        let arr = []
+        asignaturas.forEach(asignatura => {
+            if(asignatura.fields.cod_carrera == asignaturaPicker) {
+                let obj = {
+                    label: asignatura.fields.descripcion,
+                    value: asignatura.pk,
+                    key: asignatura.pk
+                }
+                arr.push(obj);
+
+                return arr;
+            }
+        })
+
+        return arr;
+    }
+
     useEffect(() => {
         setCarreraItems(getCarreraItems(carreras));
     }, [carreraPicker])
+
+    useEffect(() => {
+        setAsignaturaItems(getAsignaturaItems(asignaturas));
+    }, [asignaturaPicker])
     
     const placeholder = {
-        label: 'Seleccione una facultad',
+        label: 'Seleccione una opción',
         value: null,
         color: '#9EA0A4',
     };
@@ -74,21 +104,33 @@ const NewForm = () => {
                 color="primary">
                 Nuevo Informe
             </StyledText>
+            
             <Text>Facultad</Text>
             <RNPickerSelect
+                placeholder={placeholder}
                 items={FacultadItems}
                 style={pickerSelectStyles}
-                useNativeAndroidPickerStyle={false}
+                useNativeAndroidPickerStyle={true}
                 onValueChange={(value) => setCarreraPicker(value)}
             /> 
 
-        <Text>Carrera</Text>
-        <RNPickerSelect
-            items={carreraItems}
-            style={pickerSelectStyles}
-            useNativeAndroidPickerStyle={false}
-            onValueChange={(value) => console.log(value)}
-          />
+            <Text>Carrera</Text>
+            <RNPickerSelect
+                placeholder={placeholder}
+                items={carreraItems}
+                style={pickerSelectStyles}
+                useNativeAndroidPickerStyle={true}
+                onValueChange={(value) => { setAsignaturaPicker(value) }}
+            />
+
+            <Text>Asignatura</Text>
+            <RNPickerSelect
+                placeholder={placeholder}
+                items={asignaturaItems}
+                style={pickerSelectStyles}
+                useNativeAndroidPickerStyle={true}
+                onValueChange={(value) => console.log(value)}
+            />
         </View>
     )
 }
