@@ -6,7 +6,7 @@ import { Platform } from 'react-native';
 export const UserContext = createContext();
 
 const initialState = {  //valores iniciales
-    cod_usuario: 1,
+    cod_usuario: 0,
     nombre_usuario: '',
     nombres_del_usuario: '',
     apellidos_del_usuario: '',
