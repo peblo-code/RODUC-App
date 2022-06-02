@@ -62,10 +62,16 @@ def listaFacultades_Carreras(request, user):
         lista_carreras = serializers.serialize('json', lista_carreras)
         lista_asignaturas = Asignatura.objects.raw('SELECT asig.cod_asignatura, asig.descripcion FROM roducweb_asignatura asig, roducweb_asignatura_usuario asigu, roducweb_usuario u, roducweb_usuario_rol urol WHERE u.cod_usuario = ' + str(user) + ' AND u.cod_usuario = urol.cod_usuario_id AND urol.cod_rol_usuario_id = 2 AND urol.cod_usuario_rol = asigu.cod_usuario_rol_id AND asigu.cod_asignatura_id = asig.cod_asignatura  AND asigu.estado = 1')
         lista_asignaturas = serializers.serialize('json', lista_asignaturas)
+        lista_planes = Plan_Estudio.objects.filter(estado = 1)
+        lista_planes = serializers.serialize('json', lista_planes)
+        lista_semestre = Semestre.objects.filter(estado = 1)
+        lista_semestre = serializers.serialize('json', lista_semestre)
         return JsonResponse({
             "lista_facultades": lista_facultades,
             "lista_carreras": lista_carreras,
-            "lista_asignaturas": lista_asignaturas
+            "lista_asignaturas": lista_asignaturas,
+            "lista_planes": lista_planes,
+            "lista_semestre": lista_semestre,
         })
 
         
