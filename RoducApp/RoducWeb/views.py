@@ -568,3 +568,40 @@ def desvincular_asignatura(request):
 
 def cabecera(request):
     return render(request, "reporte/cabecera.html")
+
+def metodologia_enseñanza(request):
+    return render(request, "metodologia_enseñanza/metodologia_enseñanza.html")
+
+def recurso_auxiliar(request):
+    return render(request, "recurso_auxiliar/recurso_auxiliar.html")
+
+def unidad_aprendizaje(request):
+    lista_facultades = Facultad.objects.filter(estado=1)
+    lista_carreras = Carrera.objects.filter(estado=1)
+    lista_asignaturas = Asignatura.objects.filter(estado=1)
+    return render(request, "unidad_aprendizaje/unidad_aprendizaje.html", {
+                                                     "lista_facultades": lista_facultades,
+                                                     "lista_asignaturas": lista_asignaturas,
+                                                     "lista_carreras": lista_carreras})
+
+def contenido(request):
+    lista_facultades = Facultad.objects.filter(estado=1)
+    lista_carreras = Carrera.objects.filter(estado=1)
+    lista_asignaturas = Asignatura.objects.filter(estado=1)
+    return render(request, "contenido/contenido.html", {
+                                                     "lista_facultades": lista_facultades,
+                                                     "lista_asignaturas": lista_asignaturas,
+                                                     "lista_carreras": lista_carreras})
+
+def tipo_clase(request):
+    return render(request, "tipo_clase/tipo_clase.html")
+
+def instrumento_evaluacion(request):
+    return render(request, "instrumento_evaluacion/instrumento_evaluacion.html")
+
+def tipo_eva(request):
+    return render(request, "tipo_eva/tipo_eva.html")
+
+def trabajo_autonomo(request):
+    return render(request, "trabajo_autonomo/trabajo_autonomo.html")
+
