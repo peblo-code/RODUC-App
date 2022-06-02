@@ -1,0 +1,50 @@
+{% extends "panel.html" %}
+{% block titulo %}Plan de Estudio - Roduc{% endblock %}
+{% block formularios %}
+{% load static %}
+<div class="header pb-9 d-flex align-items-center"
+  style="min-height: 350px; background-image: url('{% static 'assets/img/header-bg.png' %}'); ">
+  <!-- Mask -->
+  <span></span>
+  <!-- Header container -->
+  <div class="container-fluid d-flex align-items-justify">
+    <div class="row">
+      <div class=".col-12 .col-md-8">
+        <h1 class="display-2 text-white">Registro de Tipos de Clase</h1>
+        <p class="text-white mt-0 mb-5">El formulario actual sirve para el registro de tipos de clase.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid mt--9">
+  <div class="row">
+    <div class="col-xl-12 order-xl-1">
+      <div class="card">
+        <div class="card-body">
+          <form role="form" action='#' method="POST" id="form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <h6 class="heading-small text-muted mb-4">Datos del tipo de clase</h6>
+            <div class="pl-lg-0">
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="form-group">
+                    <label class="form-control-label" for="input-username">Descripción</label>
+                    <input required autocomplete="off" type="text" id="descripcion" class="form-control"
+                      placeholder="Ingrese la descripción del tipo de clase..." name="descripcion" autofocus>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <span><button type="submit" class="btn btn-success">Guardar</button></span>
+            <span><button type="button" class="btn btn-warning" id="BT_Listar" onclick="mostrarPlanes()">Listar</button></span>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock %}

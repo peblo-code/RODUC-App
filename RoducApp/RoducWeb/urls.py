@@ -57,4 +57,31 @@ urlpatterns = [
     path('detalle_asignatura', views.detalle_asignatura, name='detalle_asignatura'),
     path('actualizar_asignatura', views.actualizar_asignatura, name='actualizar_asignatura'),
     path('eliminar_asignatura', views.eliminar_asignatura, name='eliminar_asignatura'),
+
+    # CABECERA
+    path('cabecera', views.cabecera, name='cabecera'),
+
+    # METOLODOGIAS DE ENSEÑANZA
+    path('metodologia_enseñanza', views.metodologia_enseñanza, name='metodologia_enseñanza'),
+
+    # RECURSOS AUXILIARES
+    path('recurso_auxiliar', views.recurso_auxiliar, name='recurso_auxiliar'),
+
+    # UNIDADES DE APRENDIZAJE
+    path('unidad_aprendizaje', views.unidad_aprendizaje, name='unidad_aprendizaje'),
+
+    # CONTENIDOS
+    path('contenido', views.contenido, name='contenido'),
+
+    # TIPO DE CLASE
+    path('tipo_clase', views.tipo_clase, name='tipo_clase'),
+
+    # INSTRUMENTO DE EVALUACION
+    path('instrumento_evaluacion', views.instrumento_evaluacion, name='instrumento_evaluacion'),
+
+    # TIPO DE EVALUACION
+    path('tipo_eva', views.tipo_eva, name='tipo_eva'),
+
+    # TRABAJO AUTÓNOMO
+    path('trabajo_autonomo', views.trabajo_autonomo, name='trabajo_autonomo'),
 ]
