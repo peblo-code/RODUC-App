@@ -27,18 +27,30 @@
             <h6 class="heading-small text-muted mb-4">Datos del Semestre</h6>
             <div class="pl-lg-0">
               <div class="row">
-                <div class="col-lg-6">
+                <div class="col-lg-12">
                   <div class="form-group">
                     <label class="form-control-label" for="input-username">Descripción</label>
-                    <input required autocomplete="off" type="text" id="descripcion" class="form-control"
-                      name="descripcion" placeholder="Ingrese la descripción del semestre..." name="nombres" autofocus>
+                    <input required autocomplete="off" type="text" id="descripcion" class="form-control" name="descripcion" placeholder="Ingrese la descripción del semestre..." autofocus>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="input-username">Fecha Inicio</label>
+                    <input required autocomplete="off" type="date" id="fecha_inicio" class="form-control" name="fecha_inicio" placeholder="" autofocus>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="input-username">Fecha Final</label>
+                    <input required autocomplete="off" type="date" id="fecha_fin" class="form-control" placeholder="" name="fecha_fin" autofocus>
                   </div>
                 </div>
               </div>
             </div>
             <span><button type="submit" class="btn btn-success">Guardar</button></span>
-            <span><button type="button" id="BT_Listar" class="btn btn-warning"
-                onclick="mostrarSemestres()">Listar</button></span>
+            <span><button type="button" id="BT_Listar" class="btn btn-warning" onclick="mostrarSemestres()">Listar</button></span>
           </form>
         </div>
       </div>
@@ -58,6 +70,8 @@
                   <tr>
                     <th scope="col" class="sort" data-sort="id">ID</th>
                     <th scope="col" class="sort" data-sort="nombre">Descripcion</th>
+                    <th scope="col" class="sort" data-sort="nombre">Fecha Inicio</th>
+                    <th scope="col" class="sort" data-sort="nombre">Fecha Finalizacion</th>
                     <th scope="col">Acciones</th>
                   </tr>
                 </thead>
@@ -65,6 +79,8 @@
                   <tr>
                     <th>ID</th>
                     <th>Descripción</th>
+                    <th>Fecha Inicio</th>
+                    <th>Fecha Finalizacion</th>
                     <th>Acciones</th>
                   </tr>
                 </tfoot>
@@ -73,6 +89,8 @@
                   <tr>
                     <td class="id">{{semestre.cod_semestre}}</td>
                     <td class="nombre">{{semestre.descripcion}}</td>
+                    <td class="nombre">{{semestre.fecha_inicio}}</td>
+                    <td class="nombre">{{semestre.fecha_fin}}</td>
                     <!---BOTONES-->
                     <td>
                       <button type="button" class="btn btn-outline-success"
@@ -114,8 +132,22 @@
               <div class="col-lg-12">
                 <div class="form-group">
                   <label class="form-control-label" for="input-username">Descripción</label>
-                  <input required type="text" id="updateNombre" class="form-control" value="" name="descripcion" autofocus required>
+                  <input required type="text" id="updateNombre" class="form-control" value="" name="descripcion"  required>
                   <input required type="text" id="updateCodigo" class="form-control" value="" name="codigo" style="display: none;">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label class="form-control-label" for="input-username">Fecha Inicio</label>
+                  <input required type="date" id="updateFechaInicio" class="form-control" value="" name="fecha_inicio"  required>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label class="form-control-label" for="input-username">Fecha Fin</label>
+                  <input required type="date" id="updateFechaFin" class="form-control" value="" name="fecha_fin"  required>
                 </div>
               </div>
             </div>
@@ -194,6 +226,8 @@
           document.querySelector('#tituloModal').innerHTML = 'Modificar Semestre: ' + detalle[0].fields.descripcion;
           document.getElementById("updateCodigo").value = detalle[0].pk;
           document.getElementById("updateNombre").value = detalle[0].fields.descripcion;
+          document.getElementById("updateFechaInicio").value = detalle[0].fields.fecha_inicio;
+          document.getElementById("updateFechaFin").value = detalle[0].fields.fecha_fin;
         }
     })
   }

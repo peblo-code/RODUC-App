@@ -27,8 +27,6 @@ def generar_saludo():
     return mensaje_bienvenida
 
 # auditar sesiones
-
-
 def auditar_sesion(request, info):
     nueva_sesion = Auditoria_Sesiones(
         nombre_usuario=request.session.get("usuario_conectado"),
@@ -111,8 +109,7 @@ def agregar_usuario(request):
             alta_usuario=request.session.get('usuario_conectado')
         )
         usuario_nuevo.save()
-        usuario_nuevo = Usuario.objects.filter(
-            nombre_usuario=usuario_nuevo.nombre_usuario)
+        usuario_nuevo = Usuario.objects.filter(nombre_usuario=usuario_nuevo.nombre_usuario)
         usuario_nuevo = serializers.serialize("json", usuario_nuevo)
         respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito",
                                   "usuario": usuario_nuevo})
@@ -128,15 +125,12 @@ def detalle_usuario(request):
 
 def actualizar_usuario(request):
     if request.method == "POST":
-        usuario_actualizar = Usuario.objects.get(
-            cod_usuario=request.POST.get("codigo"))
+        usuario_actualizar = Usuario.objects.get(cod_usuario=request.POST.get("codigo"))
         usuario_actualizar.nombres_del_usuario = request.POST.get("nombres")
-        usuario_actualizar.apellidos_del_usuario = request.POST.get(
-            "apellidos")
+        usuario_actualizar.apellidos_del_usuario = request.POST.get("apellidos")
         usuario_actualizar.direccion_email = request.POST.get("correo")
         usuario_actualizar.estado = 1
-        usuario_actualizar.modif_usuario = request.session.get(
-            "usuario_conectado")
+        usuario_actualizar.modif_usuario = request.session.get("usuario_conectado")
         usuario_actualizar.save()
         respuesta = JsonResponse({"mensaje": "Registro Actualizado con Exito"})
         return respuesta
@@ -145,11 +139,9 @@ def actualizar_usuario(request):
 @csrf_exempt
 def eliminar_usuario(request):
     if request.method == "POST":
-        usuario_eliminar = Usuario.objects.get(
-            cod_usuario=request.POST.get("codigo"))
+        usuario_eliminar = Usuario.objects.get(cod_usuario=request.POST.get("codigo"))
         usuario_eliminar.estado = 0
-        usuario_eliminar.modif_usuario = request.session.get(
-            "usuario_conectado")
+        usuario_eliminar.modif_usuario = request.session.get("usuario_conectado")
         usuario_eliminar.save()
         respuesta = JsonResponse({"mensaje": "Registro Eliminado con Exito"})
         return respuesta
@@ -180,21 +172,18 @@ def agregar_facultad(request):
 
 def detalle_facultad(request):
     if request.method == 'GET':
-        detalle = Facultad.objects.filter(
-            cod_facultad=request.GET.get("codigo"))
+        detalle = Facultad.objects.filter(cod_facultad=request.GET.get("codigo"))
         detalle = serializers.serialize("json", detalle)
         return JsonResponse({"detalle": detalle})
 
 
 def actualizar_facultad(request):
     if request.method == 'POST':
-        facultad_actualizar = Facultad.objects.get(
-            cod_facultad=request.POST.get("codigo"))
+        facultad_actualizar = Facultad.objects.get(cod_facultad=request.POST.get("codigo"))
         facultad_actualizar.descripcion = request.POST.get("nombre")
         facultad_actualizar.fecha_fundacion = request.POST.get("fecha")
         facultad_actualizar.estado = 1
-        facultad_actualizar.modif_usuario = request.session.get(
-            "usuario_conectado")
+        facultad_actualizar.modif_usuario = request.session.get("usuario_conectado")
         facultad_actualizar.save()
         respuesta = JsonResponse({"mensaje": "Registro Actualizado con Exito"})
         return respuesta
@@ -204,11 +193,9 @@ def actualizar_facultad(request):
 def eliminar_facultad(request):
     if request.method == "POST":
         print(request.POST.get("codigo"))
-        facultad_eliminar = Facultad.objects.get(
-            cod_facultad=request.POST.get("codigo"))
+        facultad_eliminar = Facultad.objects.get(cod_facultad=request.POST.get("codigo"))
         facultad_eliminar.estado = 0
-        facultad_eliminar.modif_usuario = request.session.get(
-            "usuario_conectado")
+        facultad_eliminar.modif_usuario = request.session.get("usuario_conectado")
         facultad_eliminar.save()
         respuesta = JsonResponse({"mensaje": "Registro Eliminado con Exito"})
         return respuesta
@@ -297,12 +284,9 @@ def agregar_plan(request):
 
 def detalle_plan(request):
     if request.method == 'GET':
-        detalle = Plan_Estudio.objects.filter(
-            cod_plan_estudio=request.GET.get("codigo"))
-        carrera = Plan_Estudio.objects.get(
-            cod_plan_estudio=request.GET.get("codigo")).cod_carrera_id
-        facultad = Facultad.objects.get(cod_facultad=(
-            Carrera.objects.get(cod_carrera=carrera).cod_facultad_id)).cod_facultad
+        detalle = Plan_Estudio.objects.filter(cod_plan_estudio=request.GET.get("codigo"))
+        carrera = Plan_Estudio.objects.get(cod_plan_estudio=request.GET.get("codigo")).cod_carrera_id
+        facultad = Facultad.objects.get(cod_facultad=(Carrera.objects.get(cod_carrera=carrera).cod_facultad_id)).cod_facultad
         detalle = serializers.serialize("json", detalle)
 
         #facultad = Facultad.objects.get(cod_facultad = (Carrera.objects.get(detalle.cod_facultad).cod_facultad))
@@ -316,8 +300,7 @@ def actualizar_plan(request):
             cod_plan_estudio=request.POST.get("codigo"))
         plan_actualizar.descripcion = request.POST.get("descripcion")
         plan_actualizar.cod_carrera_id = request.POST.get("carrera")
-        plan_actualizar.modif_usuario = request.session.get(
-            "usuario_conectado")
+        plan_actualizar.modif_usuario = request.session.get("usuario_conectado")
         plan_actualizar.save()
         respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
         return respuesta
@@ -326,8 +309,7 @@ def actualizar_plan(request):
 @csrf_exempt
 def eliminar_plan(request):
     if request.method == "POST":
-        plan_eliminar = Plan_Estudio.objects.get(
-            cod_plan_estudio=request.POST.get("codigo"))
+        plan_eliminar = Plan_Estudio.objects.get(cod_plan_estudio=request.POST.get("codigo"))
         plan_eliminar.estado = 0
         plan_eliminar.modif_usuario = request.session.get("usuario_conectado")
         plan_eliminar.save()
@@ -348,7 +330,10 @@ def agregar_semestre(request):
     if request.method == 'POST':
         nuevo_semestre = Semestre(
             descripcion=request.POST.get("descripcion"),
-            alta_usuario=request.session.get("usuario_conectado")
+            fecha_inicio = request.POST.get("fecha_inicio"),
+            fecha_fin = request.POST.get("fecha_fin"),
+            alta_usuario=request.session.get("usuario_conectado"),
+            estado = 1
         )
         nuevo_semestre.save()
         respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
@@ -357,8 +342,7 @@ def agregar_semestre(request):
 
 def detalle_semestre(request):
     if request.method == 'GET':
-        detalle = Semestre.objects.filter(
-            cod_semestre=request.GET.get("codigo"))
+        detalle = Semestre.objects.filter(cod_semestre=request.GET.get("codigo"))
         detalle = serializers.serialize("json", detalle)
         return JsonResponse({"detalle": detalle})
 
@@ -366,11 +350,11 @@ def detalle_semestre(request):
 def actualizar_semestre(request):
     if request.method == 'POST':
         print(request.POST.get("codigo"))
-        semestre_actualizar = Semestre.objects.get(
-            cod_semestre=request.POST.get("codigo"))
+        semestre_actualizar = Semestre.objects.get(cod_semestre=request.POST.get("codigo"))
         semestre_actualizar.descripcion = request.POST.get("descripcion")
-        semestre_actualizar.modif_usuario = request.session.get(
-            "usuario_conectado")
+        semestre_actualizar.fecha_inicio = request.POST.get("fecha_inicio")
+        semestre_actualizar.fecha_fin = request.POST.get("fecha_fin")
+        semestre_actualizar.modif_usuario = request.session.get("usuario_conectado")
         semestre_actualizar.save()
         respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
         return respuesta
@@ -379,11 +363,9 @@ def actualizar_semestre(request):
 @csrf_exempt
 def eliminar_semestre(request):
     if request.method == "POST":
-        semestre_eliminar = Semestre.objects.get(
-            cod_semestre=request.POST.get("codigo"))
+        semestre_eliminar = Semestre.objects.get(cod_semestre=request.POST.get("codigo"))
         semestre_eliminar.estado = 0
-        semestre_eliminar.modif_usuario = request.session.get(
-            "usuario_conectado")
+        semestre_eliminar.modif_usuario = request.session.get("usuario_conectado")
         semestre_eliminar.save()
         respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
         return respuesta
@@ -446,8 +428,7 @@ def eliminar_asignatura(request):
     if request.method == "POST":
         asignatura_eliminar = Asignatura.objects.get(cod_asignatura=request.POST.get("codigo"))
         asignatura_eliminar.estado = 0
-        asignatura_eliminar.modif_usuario = request.session.get(
-            "usuario_conectado")
+        asignatura_eliminar.modif_usuario = request.session.get("usuario_conectado")
         asignatura_eliminar.save()
         respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
         return respuesta

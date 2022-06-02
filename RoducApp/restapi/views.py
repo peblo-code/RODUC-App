@@ -60,9 +60,12 @@ def listaFacultades_Carreras(request, user):
         lista_facultades = serializers.serialize('json', lista_facultades)
         lista_carreras = Carrera.objects.raw('SELECT DISTINCT c.cod_carrera, c.descripcion FROM roducweb_carrera as c, roducweb_facultad as f, roducweb_usuario_rol as u WHERE u.cod_carrera_id = c.cod_carrera AND c.cod_facultad_id = f.cod_facultad AND u.cod_usuario_id = ' + str(user) + ' AND u.cod_rol_usuario_id = 2 AND u.estado = 1')
         lista_carreras = serializers.serialize('json', lista_carreras)
+        lista_asignaturas = Asignatura.objects.raw('SELECT asig.cod_asignatura, asig.descripcion FROM roducweb_asignatura asig, roducweb_asignatura_usuario asigu, roducweb_usuario u, roducweb_usuario_rol urol WHERE u.cod_usuario = ' + str(user) + ' AND u.cod_usuario = urol.cod_usuario_id AND urol.cod_rol_usuario_id = 2 AND urol.cod_usuario_rol = asigu.cod_usuario_rol_id AND asigu.cod_asignatura_id = asig.cod_asignatura  AND asigu.estado = 1')
+        lista_asignaturas = serializers.serialize('json', lista_asignaturas)
         return JsonResponse({
             "lista_facultades": lista_facultades,
-            "lista_carreras": lista_carreras
+            "lista_carreras": lista_carreras,
+            "lista_asignaturas": lista_asignaturas
         })
 
         
