@@ -10,6 +10,17 @@ const extraerPrimerNombre = (nombres_del_usuario) => {
     return nombres[0];
 }
 
+const saludo = () => {
+    const hora = new Date().getHours();
+    if(hora >= 6 && hora < 12) {
+        return 'Buenos días,';
+    } else if(hora >= 12 && hora < 18) {
+        return 'Buenas tardes,';
+    } else {
+        return 'Buenas noches,';
+    }
+}
+
 const Home = ({navigation}) => {
     const { user } = useUserContext();
     const { nombres_del_usuario, apellidos_del_usuario } = user;
@@ -21,7 +32,7 @@ const Home = ({navigation}) => {
                     fontSize="heading"
                     fontWeight="bold"
                     align="start">
-                        Bienvenido {extraerPrimerNombre(nombres_del_usuario)} {extraerPrimerNombre(apellidos_del_usuario)}
+                        {saludo()} {extraerPrimerNombre(nombres_del_usuario)} {extraerPrimerNombre(apellidos_del_usuario)}
                 </StyledText>
                 <StyledText
                     fontSize="heading"

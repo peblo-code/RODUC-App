@@ -58,12 +58,13 @@ const styles = StyleSheet.create({
     container: {
         padding: 12,
         flexGrow: 1,
-        justifyContent: 'space-between',
+        justifyContent: 'center',
         height: '90%',
     },
     rowContainer: {
         width: '100%',
-        height: '47%',
+        height: '45%',
+        marginBottom: 12,
         flexDirection: 'row',
         justifyContent: 'space-between',
     },
@@ -71,7 +72,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#f2f2f2',
         padding: 12,
         borderRadius: 4,
-        width: '45%',
+        width: '48%',
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
