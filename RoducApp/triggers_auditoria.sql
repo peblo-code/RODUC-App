@@ -127,7 +127,7 @@ BEGIN
 		'I',
 		NULL,
 		CONCAT('Codigo: ', (SELECT `AUTO_INCREMENT` FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'roducdb' AND TABLE_NAME = 'roducweb_usuario'), '| Nombre Usuario: ', NEW.nombre_usuario, '| Contraseña: ', NEW.contraseña, '| Nombres del usuario: ', NEW.nombres_del_usuario, '| Apellidos del Usuario: ', NEW.apellidos_del_usuario, '| Direccion Email: ', NEW.direccion_email, '| Estado: ', NEW.estado, '| Usuario Alta: ', NEW.alta_usuario, '| Fecha Alta: ', NEW.alta_fecha),
-		NEW.alta_fecha,
+		NEW.alta_usuario,
 		NOW()
 	);
 END$$
@@ -148,7 +148,7 @@ BEGIN
         fecha
     )
     VALUES(
-		'Asignatura_Usuario',
+		'Usuario',
         (IF(NEW.estado = 0 AND OLD.estado = 1, 'D', 'U')),
 		CONCAT('Codigo: ', OLD.cod_usuario, '| Nombre Usuario: ', OLD.nombre_usuario, '| Contraseña: ', OLD.contraseña, '| Nombres del usuario: ', OLD.nombres_del_usuario, '| Apellidos del Usuario: ', OLD.apellidos_del_usuario, '| Direccion Email: ', OLD.direccion_email, '| Estado: ', OLD.estado, '| Usuario Alta: ', OLD.alta_usuario, '| Fecha Alta: ', OLD.alta_fecha, '| Modif. Usuario: ', OLD.modif_usuario, '| Modif. Fecha: ', OLD.modif_fecha),
 		CONCAT('Codigo: ', NEW.cod_usuario, '| Nombre Usuario: ', NEW.nombre_usuario, '| Contraseña: ', NEW.contraseña, '| Nombres del usuario: ', NEW.nombres_del_usuario, '| Apellidos del Usuario: ', NEW.apellidos_del_usuario, '| Direccion Email: ', NEW.direccion_email, '| Estado: ', NEW.estado, '| Usuario Alta: ', NEW.alta_usuario, '| Fecha Alta: ', NEW.alta_fecha, '| Modif. Usuario: ', NEW.modif_usuario, '| Modif. Fecha: ', NEW.modif_fecha),
@@ -182,7 +182,6 @@ BEGIN
 		NULL,
 		CONCAT('Codigo: ', (SELECT `AUTO_INCREMENT` FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'roducdb' AND TABLE_NAME = 'roducweb_facultad'), '| Descripcion: ', NEW.descripcion, '| Fecha Fundacion: ', NEW.fecha_fundacion, '| Estado: ', NEW.estado, '| Usuario Alta: ', NEW.alta_usuario, '| Fecha Alta: ', NEW.alta_fecha),
 		NEW.alta_usuario,
-		NEW.alta_fecha,
 		NOW()
 	);
 END$$
@@ -235,7 +234,7 @@ BEGIN
 		'I',
 		NULL,
 		CONCAT('Codigo: ', (SELECT `AUTO_INCREMENT` FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'roducdb' AND TABLE_NAME = 'roducweb_carrera'), '| Facultad: ', NEW.cod_facultad_id, '| Descripcion: ', NEW.descripcion, '| Duracion: ', NEW.duracion, '| Titulo Obtenido: ', NEW.titulo_obtenido, '| Estado: ', NEW.estado, '| Usuario Alta: ', NEW.alta_usuario, '| Fecha Alta: ', NEW.alta_fecha),
-		NEW.alta_fecha,
+		NEW.alta_usuario,
 		NOW()
 	);
 END$$
@@ -288,7 +287,7 @@ BEGIN
 		'I',
 		NULL,
 		CONCAT('Codigo: ', (SELECT `AUTO_INCREMENT` FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'roducdb' AND TABLE_NAME = 'roducweb_semestre'), '| Descripcion: ', NEW.descripcion, '| Fecha Inicio: ', NEW.fecha_inicio, '| Fecha Fin: ', NEW.fecha_fin, '| Estado: ', NEW.estado, '| Usuario Alta: ', NEW.alta_usuario, '| Fecha Alta: ', NEW.alta_fecha),
-		NEW.alta_fecha,
+		NEW.alta_usuario,
 		NOW()
 	);
 END$$
@@ -311,7 +310,7 @@ BEGIN
 		'Semestre',
         (IF(NEW.estado = 0 AND OLD.estado = 1, 'D', 'U')),
 		CONCAT('Codigo: ', OLD.cod_semestre, '| Descripcion: ', OLD.descripcion, '| Fecha Inicio: ', OLD.fecha_inicio, '| Fecha Fin: ', OLD.fecha_fin, '| Estado: ', OLD.estado, '| Usuario Alta: ', OLD.alta_usuario, '| Fecha Alta: ', OLD.alta_fecha, '| Modif. Usuario: ', OLD.modif_usuario, '| Modif. Fecha: ', OLD.modif_fecha),
-		CONCAT('Codigo: ', OLD.cod_semestre, '| Descripcion: ', NEW.descripcion, '| Fecha Inicio: ', NEW.fecha_inicio, '| Fecha Fin: ', NEW.fecha_fin, '| Estado: ', NEW.estado, '| Usuario Alta: ', NEW.alta_usuario, '| Fecha Alta: ', NEW.alta_fecha, '| Modif. Usuario: ', NEW.modif_usuario, '| Modif. Fecha: ', NEW.modif_fecha),
+		CONCAT('Codigo: ', NEW.cod_semestre, '| Descripcion: ', NEW.descripcion, '| Fecha Inicio: ', NEW.fecha_inicio, '| Fecha Fin: ', NEW.fecha_fin, '| Estado: ', NEW.estado, '| Usuario Alta: ', NEW.alta_usuario, '| Fecha Alta: ', NEW.alta_fecha, '| Modif. Usuario: ', NEW.modif_usuario, '| Modif. Fecha: ', NEW.modif_fecha),
         NEW.modif_usuario,
         NOW()
     );
@@ -341,7 +340,7 @@ BEGIN
 		'I',
 		NULL,
 		CONCAT('Codigo: ', (SELECT `AUTO_INCREMENT` FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'roducdb' AND TABLE_NAME = 'roducweb_plan_estudio'), '| Carrera: ', NEW.cod_carrera_id, '| Descripcion: ', NEW.descripcion, '| Estado: ', NEW.estado, '| Usuario Alta: ', NEW.alta_usuario, '| Fecha Alta: ', NEW.alta_fecha),
-		NEW.alta_fecha,
+		NEW.alta_usuario,
 		NOW()
 	);
 END$$
@@ -374,3 +373,52 @@ DELIMITER ;
 /*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/*AUDITORIA USUARIOS_ROL*/
+DROP TRIGGER IF EXISTS `roducdb`. `AUDITORIA_INSERT_USUARIOS_ROL`;
+DELIMITER $$
+USE `roducdb` $$
+CREATE TRIGGER `roducdb`.`AUDITORIA_INSERT_USUARIOS_ROL` BEFORE INSERT ON `roducweb_usuario_rol` FOR EACH ROW
+BEGIN
+	INSERT INTO roducweb_auditoria(
+		tabla,
+		accion,
+		datos_viejos,
+		datos_nuevos,
+		usuario,
+		fecha
+	)
+	VALUES(
+		'Usuario Rol',
+		'I',
+		NULL,
+		CONCAT('Codigo: ', (SELECT `AUTO_INCREMENT` FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'roducdb' AND TABLE_NAME = 'roducweb_usuario_rol'), '| Usuario: ', NEW.cod_usuario_id, '| Rol: ', NEW.cod_rol_usuario_id, '| Carrera: ', NEW.cod_carrera_id, '| Estado: ', NEW.estado, '| Usuario Alta: ', NEW.alta_usuario, '| Fecha Alta: ', NEW.alta_fecha),
+		NEW.alta_usuario,
+		NOW()
+	);
+END$$
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS `roducdb`.`AUDITORIA_UPDATE_USUARIOS_ROL`;
+DELIMITER $$
+USE `roducdb`$$
+CREATE TRIGGER `roducdb`.`AUDITORIA_UPDATE_USUARIOS_ROL` BEFORE UPDATE ON `roducweb_usuario_rol` FOR EACH ROW
+BEGIN
+	INSERT INTO roducweb_auditoria(
+		tabla,
+        accion,
+        datos_viejos,
+        datos_nuevos,
+        usuario,
+        fecha
+    )
+    VALUES(
+		'Plan de Estudio',
+        (IF(NEW.estado = 0 AND OLD.estado = 1, 'D', 'U')),
+		CONCAT('Codigo: ', OLD.cod_usuario_rol, '| Usuario: ', OLD.cod_usuario_id, '| Rol: ', OLD.cod_rol_usuario_id, '| Carrera: ', OLD.cod_carrera_id, '| Estado: ', OLD.estado, '| Usuario Alta: ', OLD.alta_usuario, '| Fecha Alta: ', OLD.alta_fecha, '| Modif. Usuario: ', OLD.modif_usuario, '| Modif. Fecha: ', OLD.modif_fecha),
+		CONCAT('Codigo: ', NEW.cod_usuario_rol, '| Usuario: ', NEW.cod_usuario_id, '| Rol: ', NEW.cod_rol_usuario_id, '| Carrera: ', NEW.cod_carrera_id, '| Estado: ', NEW.estado, '| Usuario Alta: ', NEW.alta_usuario, '| Fecha Alta: ', NEW.alta_fecha, '| Modif. Usuario: ', NEW.modif_usuario, '| Modif. Fecha: ', NEW.modif_fecha),
+        NEW.modif_usuario,
+        NOW()
+    );
+END$$
+DELIMITER ;

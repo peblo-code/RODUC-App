@@ -485,6 +485,7 @@ def eliminar_rol(request):
                 asignatura_usuario.save()
         rol_eliminar = Usuario_Rol.objects.get(estado = 1, cod_usuario_rol = rol)
         aux = rol_eliminar.cod_usuario_id
+        rol_eliminar.modif_usuario = request.session.get("usuario_conectado")
         rol_eliminar.estado = 0
         rol_eliminar.save()
         lista_roles = Usuario_Rol.objects.filter(estado = 1, cod_usuario_id = aux)
