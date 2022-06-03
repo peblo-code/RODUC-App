@@ -68,9 +68,9 @@
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-username">Correo
-                                            Electronico</label>
+                                            Electrónico</label>
                                         <input required type="email" autocomplete="off" id="correo" class="form-control"
-                                            placeholder="Ingrese el correo electronico del usuario..." name="correo"
+                                            placeholder="Ingrese el correo electrónico del usuario..." name="correo"
                                             autofocus>
                                     </div>
                                 </div>
@@ -87,7 +87,7 @@
         <div class="col-xl-12">
             <div class="card">
                 <div class="card-header">
-                    <h6 class="heading-small text-muted mb-4">Usuarios Registradas</h6>
+                    <h6 class="heading-small text-muted mb-4">Usuarios Registrados</h6>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive py-2">
@@ -182,10 +182,10 @@
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="input-username">Correo Electronico</label>
+                                    <label class="form-control-label" for="input-username">Correo Electrónico</label>
                                     <input type="text" value="" name="codigo" id="updateCodigo" style="display: none;">
                                     <input required type="email" autocomplete="off" id="updateCorreo" class="form-control"
-                                    placeholder="Ingrese el correo electronico del usuario..." name="correo"
+                                    placeholder="Ingrese el correo electrónico del usuario..." name="correo"
                                     autofocus>
                                 </div>
                             </div>
@@ -275,7 +275,7 @@
                 <hr class="my-0">
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Ver Perfil</a>
-                    <button type="button" class="btn btn-link  ml-auto" data-dismiss="modal">Mas tarde</button>
+                    <button type="button" class="btn btn-link  ml-auto" data-dismiss="modal">Más tarde</button>
                 </div>
             </form>
         </div>
@@ -350,7 +350,7 @@
                     document.querySelector('#passPreview').innerHTML = 'Contraseña: ' + detalle[0].fields.contraseña;
                     document.querySelector('#nombrePreview').innerHTML = 'Nombres: ' + detalle[0].fields.nombres_del_usuario;
                     document.querySelector('#apellidoPreview').innerHTML = 'Apellidos: ' + detalle[0].fields.apellidos_del_usuario;
-                    document.querySelector('#emailPreview').innerHTML = 'Correo Electronico: ' + detalle[0].fields.direccion_email;
+                    document.querySelector('#emailPreview').innerHTML = 'Correo Electrónico: ' + detalle[0].fields.direccion_email;
                 } else {
                     $('#modalUpdate').modal('show');
                     document.querySelector('#tituloUpdate').innerHTML = 'Usuario: ' + detalle[0].fields.nombre_usuario;
