@@ -1,9 +1,9 @@
 /*AUDITORIA ASIGNATURAS*/
---INSERT--
+
 DROP TRIGGER IF EXISTS `roducdb`.`AUDITORIA_INSERT_ASIGNATURA`;
 DELIMITER $$
 USE `roducdb`$$
-CREATE DEFINER=`root`@`localhost` TRIGGER `AUDITORIA_INSERT_ASIGNATURA` BEFORE INSERT ON `roducweb_asignatura` FOR EACH ROW BEGIN
+CREATE TRIGGER `AUDITORIA_INSERT_ASIGNATURA` BEFORE INSERT ON `roducweb_asignatura` FOR EACH ROW BEGIN
 	INSERT INTO roducweb_auditoria(
 		tabla,
         accion,
@@ -23,11 +23,11 @@ CREATE DEFINER=`root`@`localhost` TRIGGER `AUDITORIA_INSERT_ASIGNATURA` BEFORE I
 END$$
 DELIMITER ;
 
---UPDATE OR DELETE--
+
 DROP TRIGGER IF EXISTS `roducdb`.`AUDITORIA_UPDATE_ASIGNATURA`;
 DELIMITER $$
 USE `roducdb`$$
-CREATE DEFINER=`root`@`localhost` TRIGGER `AUDITORIA_UPDATE_ASIGNATURA` BEFORE UPDATE ON `roducweb_asignatura` FOR EACH ROW BEGIN
+CREATE TRIGGER `AUDITORIA_UPDATE_ASIGNATURA` BEFORE UPDATE ON `roducweb_asignatura` FOR EACH ROW BEGIN
 	INSERT INTO roducweb_auditoria(
 		tabla,
         accion,
@@ -48,12 +48,12 @@ CREATE DEFINER=`root`@`localhost` TRIGGER `AUDITORIA_UPDATE_ASIGNATURA` BEFORE U
 END$$
 DELIMITER ;
 
-/*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-/*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-/*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /*AUDITORIA ASIGNATURA_USUARIO*/
---INSERT--
+
 DROP TRIGGER IF EXISTS `roducdb`.`AUDITORIA_INSERT_ASIGNATURA_USUARIO`;
 DELIMITER $$
 USE `roducdb`$$
@@ -78,7 +78,7 @@ BEGIN
 END$$
 DELIMITER ;
 
---UPDATE OR DELETE--
+
 DROP TRIGGER IF EXISTS `roducdb`.`AUDITORIA_UPDATE_ASIGNATURA_USUARIO`;
 
 DELIMITER $$
@@ -93,7 +93,7 @@ BEGIN
         usuario,
         fecha
     )
-    VALUE(
+    VALUES(
 		'Asignatura_Usuario',
         (IF(NEW.estado = 0 AND OLD.estado = 1, 'D', 'U')),
         CONCAT('Codigo: ', OLD.cod_asignatura_usuario, '| Estado: ', OLD.estado, '| Usuario Alta: ', OLD.alta_usuario, '| Fecha Alta: ', OLD.alta_fecha, '| Modif. Usuario: ', OLD.modif_usuario, '| Modif. Fecha: ', OLD.modif_fecha, '| Rol:', OLD.cod_usuario_rol_id, '| Asignatura: ', OLD.cod_asignatura_id),
@@ -104,6 +104,273 @@ BEGIN
 END$$
 DELIMITER ;
 
-/*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-/*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-/*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/*AUDITORIA USUARIOS*/
+
+DROP TRIGGER IF EXISTS `roducdb`. `AUDITORIA_INSERT_USUARIO`;
+DELIMITER $$
+USE `roducdb` $$
+CREATE TRIGGER `roducdb`.`AUDITORIA_INSERT_USUARIO` BEFORE INSERT ON `roducweb_usuario` FOR EACH ROW
+BEGIN
+	INSERT INTO roducweb_auditoria(
+		tabla,
+		accion,
+		datos_viejos,
+		datos_nuevos,
+		usuario,
+		fecha
+	)
+	VALUES(
+		'Usuarios',
+		'I',
+		NULL,
+		CONCAT('Codigo: ', (SELECT `AUTO_INCREMENT` FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'roducdb' AND TABLE_NAME = 'roducweb_usuario'), '| Nombre Usuario: ', NEW.nombre_usuario, '| Contraseña: ', NEW.contraseña, '| Nombres del usuario: ', NEW.nombres_del_usuario, '| Apellidos del Usuario: ', NEW.apellidos_del_usuario, '| Direccion Email: ', NEW.direccion_email, '| Estado: ', NEW.estado, '| Usuario Alta: ', NEW.alta_usuario, '| Fecha Alta: ', NEW.alta_fecha),
+		NEW.alta_fecha,
+		NOW()
+	);
+END$$
+DELIMITER ;
+
+
+DROP TRIGGER IF EXISTS `roducdb`.`AUDITORIA_UPDATE_USUARIO`;
+DELIMITER $$
+USE `roducdb`$$
+CREATE TRIGGER `roducdb`.`AUDITORIA_UPDATE_USUARIO` BEFORE UPDATE ON `roducweb_usuario` FOR EACH ROW
+BEGIN
+	INSERT INTO roducweb_auditoria(
+		tabla,
+        accion,
+        datos_viejos,
+        datos_nuevos,
+        usuario,
+        fecha
+    )
+    VALUES(
+		'Asignatura_Usuario',
+        (IF(NEW.estado = 0 AND OLD.estado = 1, 'D', 'U')),
+		CONCAT('Codigo: ', OLD.cod_usuario, '| Nombre Usuario: ', OLD.nombre_usuario, '| Contraseña: ', OLD.contraseña, '| Nombres del usuario: ', OLD.nombres_del_usuario, '| Apellidos del Usuario: ', OLD.apellidos_del_usuario, '| Direccion Email: ', OLD.direccion_email, '| Estado: ', OLD.estado, '| Usuario Alta: ', OLD.alta_usuario, '| Fecha Alta: ', OLD.alta_fecha, '| Modif. Usuario: ', OLD.modif_usuario, '| Modif. Fecha: ', OLD.modif_fecha),
+		CONCAT('Codigo: ', NEW.cod_usuario, '| Nombre Usuario: ', NEW.nombre_usuario, '| Contraseña: ', NEW.contraseña, '| Nombres del usuario: ', NEW.nombres_del_usuario, '| Apellidos del Usuario: ', NEW.apellidos_del_usuario, '| Direccion Email: ', NEW.direccion_email, '| Estado: ', NEW.estado, '| Usuario Alta: ', NEW.alta_usuario, '| Fecha Alta: ', NEW.alta_fecha, '| Modif. Usuario: ', NEW.modif_usuario, '| Modif. Fecha: ', NEW.modif_fecha),
+        NEW.modif_usuario,
+        NOW()
+    );
+END$$
+DELIMITER ;
+
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/*AUDITORIA FACULTAD*/
+DROP TRIGGER IF EXISTS `roducdb`. `AUDITORIA_INSERT_FACULTAD`;
+DELIMITER $$
+USE `roducdb` $$
+CREATE TRIGGER `roducdb`.`AUDITORIA_INSERT_FACULTAD` BEFORE INSERT ON `roducweb_facultad` FOR EACH ROW
+BEGIN
+	INSERT INTO roducweb_auditoria(
+		tabla,
+		accion,
+		datos_viejos,
+		datos_nuevos,
+		usuario,
+		fecha
+	)
+	VALUES(
+		'Facultad',
+		'I',
+		NULL,
+		CONCAT('Codigo: ', (SELECT `AUTO_INCREMENT` FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'roducdb' AND TABLE_NAME = 'roducweb_facultad'), '| Descripcion: ', NEW.descripcion, '| Fecha Fundacion: ', NEW.fecha_fundacion, '| Estado: ', NEW.estado, '| Usuario Alta: ', NEW.alta_usuario, '| Fecha Alta: ', NEW.alta_fecha),
+		NEW.alta_fecha,
+		NOW()
+	);
+END$$
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS `roducdb`.`AUDITORIA_UPDATE_FACULTAD`;
+DELIMITER $$
+USE `roducdb`$$
+CREATE TRIGGER `roducdb`.`AUDITORIA_UPDATE_FACULTAD` BEFORE UPDATE ON `roducweb_facultad` FOR EACH ROW
+BEGIN
+	INSERT INTO roducweb_auditoria(
+		tabla,
+        accion,
+        datos_viejos,
+        datos_nuevos,
+        usuario,
+        fecha
+    )
+    VALUES(
+		'Facultad',
+        (IF(NEW.estado = 0 AND OLD.estado = 1, 'D', 'U')),
+		CONCAT('Codigo: ', OLD.cod_facultad, '| Descripcion: ', OLD.descripcion, '| Fecha Fundacion: ', OLD.fecha_fundacion, '| Estado: ', OLD.estado, '| Usuario Alta: ', OLD.alta_usuario, '| Fecha Alta: ', OLD.alta_fecha, '| Modif. Usuario: ', OLD.modif_usuario, '| Modif. Fecha: ', OLD.modif_fecha),
+		CONCAT('Codigo: ', NEW.cod_facultad, '| Descripcion: ', NEW.descripcion, '| Fecha Fundacion: ', NEW.fecha_fundacion, '| Estado: ', NEW.estado, '| Usuario Alta: ', NEW.alta_usuario, '| Fecha Alta: ', NEW.alta_fecha, '| Modif. Usuario: ', NEW.modif_usuario, '| Modif. Fecha: ', NEW.modif_fecha),
+        NEW.modif_usuario,
+        NOW()
+    );
+END$$
+DELIMITER ;
+
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/*AUDITORIA CARRERA*/
+DROP TRIGGER IF EXISTS `roducdb`. `AUDITORIA_INSERT_CARRERA`;
+DELIMITER $$
+USE `roducdb` $$
+CREATE TRIGGER `roducdb`.`AUDITORIA_INSERT_CARRERA` BEFORE INSERT ON `roducweb_carrera` FOR EACH ROW
+BEGIN
+	INSERT INTO roducweb_auditoria(
+		tabla,
+		accion,
+		datos_viejos,
+		datos_nuevos,
+		usuario,
+		fecha
+	)
+	VALUES(
+		'Carrera',
+		'I',
+		NULL,
+		CONCAT('Codigo: ', (SELECT `AUTO_INCREMENT` FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'roducdb' AND TABLE_NAME = 'roducweb_carrera'), '| Facultad: ', NEW.cod_facultad_id, '| Descripcion: ', NEW.descripcion, '| Duracion: ', NEW.duracion, '| Titulo Obtenido: ', NEW.titulo_obtenido, '| Estado: ', NEW.estado, '| Usuario Alta: ', NEW.alta_usuario, '| Fecha Alta: ', NEW.alta_fecha),
+		NEW.alta_fecha,
+		NOW()
+	);
+END$$
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS `roducdb`.`AUDITORIA_UPDATE_CARRERA`;
+DELIMITER $$
+USE `roducdb`$$
+CREATE TRIGGER `roducdb`.`AUDITORIA_UPDATE_CARRERA` BEFORE UPDATE ON `roducweb_carrera` FOR EACH ROW
+BEGIN
+	INSERT INTO roducweb_auditoria(
+		tabla,
+        accion,
+        datos_viejos,
+        datos_nuevos,
+        usuario,
+        fecha
+    )
+    VALUES(
+		'Carrera',
+        (IF(NEW.estado = 0 AND OLD.estado = 1, 'D', 'U')),
+		CONCAT('Codigo: ', OLD.cod_carrera, '| Facultad: ', OLD.cod_facultad_id, '| Descripcion: ', OLD.descripcion, '| Duracion: ', OLD.duracion, '| Titulo Obtenido: ', OLD.titulo_obtenido, '| Estado: ', OLD.estado, '| Usuario Alta: ', OLD.alta_usuario, '| Fecha Alta: ', OLD.alta_fecha, '| Modif. Usuario: ', OLD.modif_usuario, '| Modif. Fecha: ', OLD.modif_fecha),
+		CONCAT('Codigo: ', NEW.cod_carrera, '| Facultad: ', NEW.cod_facultad_id, '| Descripcion: ', NEW.descripcion, '| Duracion: ', NEW.duracion, '| Titulo Obtenido: ', NEW.titulo_obtenido, '| Estado: ', NEW.estado, '| Usuario Alta: ', NEW.alta_usuario, '| Fecha Alta: ', NEW.alta_fecha, '| Modif. Usuario: ', NEW.modif_usuario, '| Modif. Fecha: ', NEW.modif_fecha),
+        NEW.modif_usuario,
+        NOW()
+    );
+END$$
+DELIMITER ;
+
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/*AUDITORIA SEMESTRE*/
+DROP TRIGGER IF EXISTS `roducdb`. `AUDITORIA_INSERT_SEMESTRE`;
+DELIMITER $$
+USE `roducdb` $$
+CREATE TRIGGER `roducdb`.`AUDITORIA_INSERT_SEMESTRE` BEFORE INSERT ON `roducweb_semestre` FOR EACH ROW
+BEGIN
+	INSERT INTO roducweb_auditoria(
+		tabla,
+		accion,
+		datos_viejos,
+		datos_nuevos,
+		usuario,
+		fecha
+	)
+	VALUES(
+		'Semestre',
+		'I',
+		NULL,
+		CONCAT('Codigo: ', (SELECT `AUTO_INCREMENT` FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'roducdb' AND TABLE_NAME = 'roducweb_semestre'), '| Descripcion: ', NEW.descripcion, '| Fecha Inicio: ', NEW.fecha_inicio, '| Fecha Fin: ', NEW.fecha_fin, '| Estado: ', NEW.estado, '| Usuario Alta: ', NEW.alta_usuario, '| Fecha Alta: ', NEW.alta_fecha),
+		NEW.alta_fecha,
+		NOW()
+	);
+END$$
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS `roducdb`.`AUDITORIA_UPDATE_SEMESTRE`;
+DELIMITER $$
+USE `roducdb`$$
+CREATE TRIGGER `roducdb`.`AUDITORIA_UPDATE_SEMESTRE` BEFORE UPDATE ON `roducweb_semestre` FOR EACH ROW
+BEGIN
+	INSERT INTO roducweb_auditoria(
+		tabla,
+        accion,
+        datos_viejos,
+        datos_nuevos,
+        usuario,
+        fecha
+    )
+    VALUES(
+		'Semestre',
+        (IF(NEW.estado = 0 AND OLD.estado = 1, 'D', 'U')),
+		CONCAT('Codigo: ', OLD.cod_semestre, '| Descripcion: ', OLD.descripcion, '| Fecha Inicio: ', OLD.fecha_inicio, '| Fecha Fin: ', OLD.fecha_fin, '| Estado: ', OLD.estado, '| Usuario Alta: ', OLD.alta_usuario, '| Fecha Alta: ', OLD.alta_fecha, '| Modif. Usuario: ', OLD.modif_usuario, '| Modif. Fecha: ', OLD.modif_fecha),
+		CONCAT('Codigo: ', OLD.cod_semestre, '| Descripcion: ', NEW.descripcion, '| Fecha Inicio: ', NEW.fecha_inicio, '| Fecha Fin: ', NEW.fecha_fin, '| Estado: ', NEW.estado, '| Usuario Alta: ', NEW.alta_usuario, '| Fecha Alta: ', NEW.alta_fecha, '| Modif. Usuario: ', NEW.modif_usuario, '| Modif. Fecha: ', NEW.modif_fecha),
+        NEW.modif_usuario,
+        NOW()
+    );
+END$$
+DELIMITER ;
+
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/*AUDITORIA PLAN ESTUDIO*/
+DROP TRIGGER IF EXISTS `roducdb`. `AUDITORIA_INSERT_PLAN_ESTUDIO`;
+DELIMITER $$
+USE `roducdb` $$
+CREATE TRIGGER `roducdb`.`AUDITORIA_INSERT_PLAN_ESTUDIO` BEFORE INSERT ON `roducweb_plan_estudio` FOR EACH ROW
+BEGIN
+	INSERT INTO roducweb_auditoria(
+		tabla,
+		accion,
+		datos_viejos,
+		datos_nuevos,
+		usuario,
+		fecha
+	)
+	VALUES(
+		'Plan de Estudio',
+		'I',
+		NULL,
+		CONCAT('Codigo: ', (SELECT `AUTO_INCREMENT` FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'roducdb' AND TABLE_NAME = 'roducweb_plan_estudio'), '| Carrera: ', NEW.cod_carrera_id, '| Descripcion: ', NEW.descripcion, '| Estado: ', NEW.estado, '| Usuario Alta: ', NEW.alta_usuario, '| Fecha Alta: ', NEW.alta_fecha),
+		NEW.alta_fecha,
+		NOW()
+	);
+END$$
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS `roducdb`.`AUDITORIA_UPDATE_PLAN_ESTUDIO`;
+DELIMITER $$
+USE `roducdb`$$
+CREATE TRIGGER `roducdb`.`AUDITORIA_UPDATE_PLAN_ESTUDIO` BEFORE UPDATE ON `roducweb_plan_estudio` FOR EACH ROW
+BEGIN
+	INSERT INTO roducweb_auditoria(
+		tabla,
+        accion,
+        datos_viejos,
+        datos_nuevos,
+        usuario,
+        fecha
+    )
+    VALUES(
+		'Plan de Estudio',
+        (IF(NEW.estado = 0 AND OLD.estado = 1, 'D', 'U')),
+		CONCAT('Codigo: ', OLD.cod_plan_estudio, '| Carrera: ', OLD.cod_carrera_id, '| Descripcion: ', OLD.descripcion, '| Estado: ', OLD.estado, '| Usuario Alta: ', OLD.alta_usuario, '| Fecha Alta: ', OLD.alta_fecha, '| Modif. Usuario: ', OLD.modif_usuario, '| Modif. Fecha: ', OLD.modif_fecha),
+		CONCAT('Codigo: ', NEW.cod_plan_estudio, '| Carrera: ', NEW.cod_carrera_id, '| Descripcion: ', NEW.descripcion, '| Estado: ', NEW.estado, '| Usuario Alta: ', NEW.alta_usuario, '| Fecha Alta: ', NEW.alta_fecha, '| Modif. Usuario: ', NEW.modif_usuario, '| Modif. Fecha: ', NEW.modif_fecha),
+        NEW.modif_usuario,
+        NOW()
+    );
+END$$
+DELIMITER ;
+
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
