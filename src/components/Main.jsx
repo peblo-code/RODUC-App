@@ -2,6 +2,7 @@ import { StyleSheet, Alert } from 'react-native';
 import Home from '../pages/Home.jsx';
 import LoginInPage from '../pages/LogIn.jsx';
 import NewForm from './NewForm.jsx';
+import UserView from '../pages/UserView.jsx';
 import TouchIcon from './TouchIcon.jsx';
 import useUserContext from '../hooks/useUserContext.js';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -13,7 +14,7 @@ const Main = () => {
     const { user, closeSession } = useUserContext();  //recuperar datos del contexto
 
     const createTwoButtonAlert = () =>
-        Alert.alert('Cerrar Sesión', 'Estas seguro/a de cerrar tu sesión?', [
+        Alert.alert('Cerrar Sesión', '¿Estas seguro/a de cerrar tu sesión?', [
             {
                 text: 'Cancelar',
                 style: 'cancel',
@@ -55,6 +56,10 @@ const Main = () => {
                         <Stack.Screen
                             name='Nuevo Formulario'
                             component={NewForm}
+                            options={styles} />
+                        <Stack.Screen
+                            name='Mi Perfil'
+                            component={UserView}
                             options={styles} />
                     </Stack.Navigator>
             }

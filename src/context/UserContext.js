@@ -10,6 +10,7 @@ const initialState = {  //valores iniciales
     nombre_usuario: '',
     nombres_del_usuario: '',
     apellidos_del_usuario: '',
+    direccion_email: ''
 }
 
 const storeData = async (value) => {    //funcion para persistir datos

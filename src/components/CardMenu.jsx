@@ -43,6 +43,7 @@ export default function CardMenu({navigation}) {
                     iconName="user"
                     color="#0d3498"
                     title="Perfil"
+                    onPress={() => navigation.navigate('Mi Perfil')}
                 />
                 <CardButton
                     iconName="sign-out"

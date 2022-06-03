@@ -14,6 +14,8 @@ const theme = {
         secondary: '#586069',
         white: '#fefefe',
         red: '#ff0000',
+        speechBlue: '#3F48CC',
+        lightBlue: '#027d9c'
     },
     fontSizes: {
         minimal: 12,

@@ -8,7 +8,7 @@ import axios from 'axios';
 const isAndroid = Platform.OS === 'android';
 
 const NewForm = ({ navigation }) => {
-    const { user } = useUserContext();
+    const { user, URL } = useUserContext();
     const [facultades, setFacultades] = useState([]);
     const [carreras, setCarreras] = useState([]);
     const [asignaturas, setAsignaturas] = useState([]);
@@ -16,7 +16,6 @@ const NewForm = ({ navigation }) => {
     const [carreraItems, setCarreraItems] = useState([]);
     const [asignaturaPicker, setAsignaturaPicker] = useState('');
     const [carreraPicker, setCarreraPicker] = useState('');
-    const { URL } = useUserContext();
 
     useEffect(() => {
         axios.get(`${URL}/listaFacultades_Carreras/${user.cod_usuario}`)

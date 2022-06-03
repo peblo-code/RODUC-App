@@ -41,12 +41,6 @@ const Home = ({navigation}) => {
                 </StyledText>
                 <CardMenu navigation={navigation}/>
             </View>
-            {/* <View style={styles.btnNewForm}>
-                <Button 
-                    color={theme.appBar.primary} 
-                    title="Registrar nuevo formulario" 
-                    onPress={() => navigation.navigate('Nuevo Formulario')}/>
-            </View> */}
         </View>
 
     )
