@@ -1,5 +1,4 @@
 /*AUDITORIA ASIGNATURAS*/
-
 DROP TRIGGER IF EXISTS `roducdb`.`AUDITORIA_INSERT_ASIGNATURA`;
 DELIMITER $$
 USE `roducdb`$$
@@ -182,6 +181,7 @@ BEGIN
 		'I',
 		NULL,
 		CONCAT('Codigo: ', (SELECT `AUTO_INCREMENT` FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'roducdb' AND TABLE_NAME = 'roducweb_facultad'), '| Descripcion: ', NEW.descripcion, '| Fecha Fundacion: ', NEW.fecha_fundacion, '| Estado: ', NEW.estado, '| Usuario Alta: ', NEW.alta_usuario, '| Fecha Alta: ', NEW.alta_fecha),
+		NEW.alta_usuario,
 		NEW.alta_fecha,
 		NOW()
 	);
