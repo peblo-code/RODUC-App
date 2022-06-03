@@ -19,7 +19,7 @@ from django.utils.decorators import method_decorator
 def generar_saludo():
     hora_actual = int((time.strftime('%H', time.localtime())))
     if (hora_actual >= 0 and hora_actual < 12):
-        mensaje_bienvenida = 'Buenos Dias'
+        mensaje_bienvenida = 'Buenos Días'
     elif (hora_actual >= 12 and hora_actual < 19):
         mensaje_bienvenida = 'Buenas Tardes'
     else:
@@ -111,7 +111,7 @@ def agregar_usuario(request):
         usuario_nuevo.save()
         usuario_nuevo = Usuario.objects.filter(nombre_usuario=usuario_nuevo.nombre_usuario)
         usuario_nuevo = serializers.serialize("json", usuario_nuevo)
-        respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito",
+        respuesta = JsonResponse({"mensaje": "Registro Guardado con Éxito",
                                   "usuario": usuario_nuevo})
         return respuesta
 
@@ -132,7 +132,7 @@ def actualizar_usuario(request):
         usuario_actualizar.estado = 1
         usuario_actualizar.modif_usuario = request.session.get("usuario_conectado")
         usuario_actualizar.save()
-        respuesta = JsonResponse({"mensaje": "Registro Actualizado con Exito"})
+        respuesta = JsonResponse({"mensaje": "Registro Actualizado con Éxito"})
         return respuesta
 
 
@@ -143,7 +143,7 @@ def eliminar_usuario(request):
         usuario_eliminar.estado = 0
         usuario_eliminar.modif_usuario = request.session.get("usuario_conectado")
         usuario_eliminar.save()
-        respuesta = JsonResponse({"mensaje": "Registro Eliminado con Exito"})
+        respuesta = JsonResponse({"mensaje": "Registro Eliminado con Éxito"})
         return respuesta
 
 
@@ -166,7 +166,7 @@ def agregar_facultad(request):
             alta_usuario=request.session.get("usuario_conectado")
         )
         facultad_nueva.save()
-        respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
+        respuesta = JsonResponse({"mensaje": "Registro Guardado con Éxito"})
         return respuesta
 
 
@@ -185,7 +185,7 @@ def actualizar_facultad(request):
         facultad_actualizar.estado = 1
         facultad_actualizar.modif_usuario = request.session.get("usuario_conectado")
         facultad_actualizar.save()
-        respuesta = JsonResponse({"mensaje": "Registro Actualizado con Exito"})
+        respuesta = JsonResponse({"mensaje": "Registro Actualizado con Éxito"})
         return respuesta
 
 
@@ -197,7 +197,7 @@ def eliminar_facultad(request):
         facultad_eliminar.estado = 0
         facultad_eliminar.modif_usuario = request.session.get("usuario_conectado")
         facultad_eliminar.save()
-        respuesta = JsonResponse({"mensaje": "Registro Eliminado con Exito"})
+        respuesta = JsonResponse({"mensaje": "Registro Eliminado con Éxito"})
         return respuesta
 
 
@@ -223,7 +223,7 @@ def agregar_carrera(request):
             estado = 1
         )
         carrera_nueva.save()
-        respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
+        respuesta = JsonResponse({"mensaje": "Registro Guardado con Éxito"})
         return respuesta
 
 
@@ -243,7 +243,7 @@ def actualizar_carrera(request):
         carrera_actualizar.cod_facultad_id = request.POST.get("facultad")
         carrera_actualizar.modif_usuario = request.session.get("usuario_conectado")
         carrera_actualizar.save()
-        respuesta = JsonResponse({"mensaje": "Registro Actualizado con Exito"})
+        respuesta = JsonResponse({"mensaje": "Registro Actualizado con Éxito"})
         return respuesta
 
 @csrf_exempt
@@ -253,7 +253,7 @@ def eliminar_carrera(request):
         carrera_eliminar.estado = 0
         carrera_eliminar.modif_usuario = request.session.get("usuario_conectado")
         carrera_eliminar.save()
-        respuesta = JsonResponse({"mensaje": "Registro Eliminado con Exito"})
+        respuesta = JsonResponse({"mensaje": "Registro Eliminado con Éxito"})
         return respuesta
 
 def plan_estudio(request):
@@ -278,7 +278,7 @@ def agregar_plan(request):
             cod_carrera_id=request.POST.get("carrera")
         )
         nuevo_plan.save()
-        respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
+        respuesta = JsonResponse({"mensaje": "Registro Guardado con Éxito"})
         return respuesta
 
 
@@ -302,7 +302,7 @@ def actualizar_plan(request):
         plan_actualizar.cod_carrera_id = request.POST.get("carrera")
         plan_actualizar.modif_usuario = request.session.get("usuario_conectado")
         plan_actualizar.save()
-        respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
+        respuesta = JsonResponse({"mensaje": "Registro Guardado con Éxito"})
         return respuesta
 
 
@@ -313,7 +313,7 @@ def eliminar_plan(request):
         plan_eliminar.estado = 0
         plan_eliminar.modif_usuario = request.session.get("usuario_conectado")
         plan_eliminar.save()
-        respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
+        respuesta = JsonResponse({"mensaje": "Registro Eliminado con Éxito"})
         return respuesta
 
 
@@ -336,7 +336,7 @@ def agregar_semestre(request):
             estado = 1
         )
         nuevo_semestre.save()
-        respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
+        respuesta = JsonResponse({"mensaje": "Registro Guardado con Éxito"})
         return respuesta
 
 
@@ -356,7 +356,7 @@ def actualizar_semestre(request):
         semestre_actualizar.fecha_fin = request.POST.get("fecha_fin")
         semestre_actualizar.modif_usuario = request.session.get("usuario_conectado")
         semestre_actualizar.save()
-        respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
+        respuesta = JsonResponse({"mensaje": "Registro Guardado con Éxito"})
         return respuesta
 
 
@@ -367,7 +367,7 @@ def eliminar_semestre(request):
         semestre_eliminar.estado = 0
         semestre_eliminar.modif_usuario = request.session.get("usuario_conectado")
         semestre_eliminar.save()
-        respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
+        respuesta = JsonResponse({"mensaje": "Registro Eliminado con Éxito"})
         return respuesta
 
 
@@ -397,7 +397,7 @@ def agregar_asignatura(request):
         cod_semestre_id = request.POST.get("semestre")
     )
     asignatura_nueva.save()
-    respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
+    respuesta = JsonResponse({"mensaje": "Registro Guardado con Éxito"})
     return respuesta
 
 
@@ -419,7 +419,7 @@ def actualizar_asignatura(request):
         asignatura_actualizar.cod_semestre_id = request.POST.get("semestre")
         asignatura_actualizar.modif_usuario = request.session.get("usuario_conectado")
         asignatura_actualizar.save()
-        respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
+        respuesta = JsonResponse({"mensaje": "Registro Guardado con Éxito"})
         return respuesta
 
 
@@ -430,7 +430,7 @@ def eliminar_asignatura(request):
         asignatura_eliminar.estado = 0
         asignatura_eliminar.modif_usuario = request.session.get("usuario_conectado")
         asignatura_eliminar.save()
-        respuesta = JsonResponse({"mensaje": "Registro Guardado con Exito"})
+        respuesta = JsonResponse({"mensaje": "Registro Eliminado con Éxito"})
         return respuesta
 
 
@@ -489,7 +489,7 @@ def eliminar_rol(request):
         rol_eliminar.save()
         lista_roles = Usuario_Rol.objects.filter(estado = 1, cod_usuario_id = aux)
         lista_roles = serializers.serialize("json", lista_roles)
-        respuesta = JsonResponse({"mensaje": "Registro eliminado con exito.",
+        respuesta = JsonResponse({"mensaje": "Registro Eliminado con Éxito.",
                                   "lista_roles": lista_roles})
         return respuesta
 
