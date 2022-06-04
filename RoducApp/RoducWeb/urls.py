@@ -76,6 +76,10 @@ urlpatterns = [
 
     # CONTENIDOS
     path('contenido', views.contenido, name='contenido'),
+    path('agregar_contenido', views.agregar_contenido, name='agregar_contenido'),
+    path('detalle_contenido', views.detalle_contenido, name='detalle_contenido'),
+    path('actualizar_contenido', views.actualizar_contenido, name='actualizar_contenido'),
+    path('eliminar_contenido', views.eliminar_contenido, name='eliminar_contenido'),
 
     # TIPO DE CLASE
     path('tipo_clase', views.tipo_clase, name='tipo_clase'),

@@ -627,12 +627,67 @@ def contenido(request):
     lista_facultades = Facultad.objects.filter(estado=1)
     lista_carreras = Carrera.objects.filter(estado=1)
     lista_asignaturas = Asignatura.objects.filter(estado=1)
+    lista_planes = Plan_Estudio.objects.filter(estado=1)
+    lista_unidades = Unidad_Aprendizaje.objects.filter(estado=1)
+    lista_contenidos = Contenido.objects.filter(estado=1)
     return render(request, "contenido/contenido.html", {"lista_facultades": lista_facultades,
                                                         "lista_asignaturas": lista_asignaturas,
                                                         "lista_carreras": lista_carreras,
                                                         "mensaje_bienvenida": generar_saludo(),
                                                         "usuario_conectado": request.session.get("usuario_conectado"),
-                                                        "nombre_usuario": request.session.get("nombre_del_usuario")})
+                                                        "nombre_usuario": request.session.get("nombre_del_usuario"),
+                                                        "lista_planes": lista_planes,
+                                                        "lista_unidades": lista_unidades,
+                                                        "lista_contenidos": lista_contenidos})
+
+def detalle_contenido(request):
+    detalle = Contenido.objects.filter(estado = 1, cod_contenido = request.GET.get("codigo"))
+    unidad = Contenido.objects.get(estado = 1, cod_contenido = request.GET.get("codigo")).cod_unidad_aprendizaje_id
+    asignatura = Unidad_Aprendizaje.objects.get(cod_unidad_aprendizaje = unidad, estado = 1).cod_asignatura_id
+    carrera = Asignatura.objects.get(cod_asignatura = asignatura, estado = 1).cod_carrera_id
+    plan_estudio = Asignatura.objects.get(cod_asignatura = asignatura, estado = 1).cod_plan_estudio_id
+    facultad = Carrera.objects.get(cod_carrera = carrera, estado = 1).cod_facultad_id
+    detalle = serializers.serialize('json', detalle)
+    return JsonResponse({"detalle": detalle,
+                         "unidad": unidad,
+                         "asignatura": asignatura,
+                         "carrera": carrera,
+                         "facultad": facultad,
+                         "plan_estudio": plan_estudio})
+
+
+def actualizar_contenido(request):
+    contenido_actualizar = Contenido.objects.get(estado = 1, cod_contenido = request.POST.get("codigo"))
+    contenido_actualizar.descripcion = request.POST.get("descripcion")
+    contenido_actualizar.cod_unidad_aprendizaje_id = request.POST.get("unidad_aprendizaje")
+    contenido_actualizar.estado = 1
+    contenido_actualizar.modif_usuario = request.session.get("usuario_conectado")
+    contenido_actualizar.save()
+    respuesta = JsonResponse({"mensaje": "Registro Guardado con Éxito"})
+    return respuesta
+
+
+def agregar_contenido(request):
+    nuevo_contenido = Contenido(
+        descripcion = request.POST.get("descripcion"),
+        cod_unidad_aprendizaje_id = request.POST.get("unidad_aprendizaje"),
+        estado = 1,
+        alta_usuario = request.session.get("usuario_conectado")
+    )
+    nuevo_contenido.save()
+    respuesta = JsonResponse({"mensaje": "Registro Guardado con Éxito"})
+    return respuesta
+
+
+@csrf_exempt
+def eliminar_contenido(request):
+    if request.method == "POST":
+        contenido_eliminar = Contenido.objects.get(cod_contenido=request.POST.get("codigo"))
+        contenido_eliminar.estado = 0
+        contenido_eliminar.modif_usuario = request.session.get("usuario_conectado")
+        contenido_eliminar.save()
+        respuesta = JsonResponse({"mensaje": "Registro Eliminado con Éxito"})
+        return respuesta
 
 def tipo_clase(request):
     lista_tipo = Tipo_Clase.objects.filter(estado = 1)
