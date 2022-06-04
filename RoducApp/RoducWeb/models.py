@@ -138,3 +138,14 @@ class Tipo_Clase(models.Model):
     modif_usuario = models.CharField(max_length=45)
     modif_fecha = models.DateTimeField(auto_now=True)
 
+
+class Unidad_Aprendizaje(models.Model):
+    cod_unidad_aprendizaje = models.AutoField(primary_key=True)
+    numero_unidad = models.IntegerField()
+    descripcion = models.CharField(max_length=100)
+    cod_asignatura = models.ForeignKey(Asignatura, on_delete=models.CASCADE, blank=True)
+    estado = models.IntegerField()
+    alta_usuario = models.CharField(max_length=45)
+    alta_fecha = models.DateTimeField(auto_now_add=True)
+    modif_usuario = models.CharField(max_length=45)
+    modif_fecha = models.DateTimeField(auto_now=True)

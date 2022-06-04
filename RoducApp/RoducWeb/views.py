@@ -558,22 +558,43 @@ def recurso_auxiliar(request):
     return render(request, "recurso_auxiliar/recurso_auxiliar.html")
 
 def unidad_aprendizaje(request):
-    lista_facultades = Facultad.objects.filter(estado=1)
-    lista_carreras = Carrera.objects.filter(estado=1)
-    lista_asignaturas = Asignatura.objects.filter(estado=1)
-    return render(request, "unidad_aprendizaje/unidad_aprendizaje.html", {
-                                                     "lista_facultades": lista_facultades,
-                                                     "lista_asignaturas": lista_asignaturas,
-                                                     "lista_carreras": lista_carreras})
+    lista_facultades = Facultad.objects.filter(estado = 1)
+    lista_carreras = Carrera.objects.filter(estado = 1)
+    lista_asignaturas = Asignatura.objects.filter(estado = 1)
+    lista_unidad = Unidad_Aprendizaje.objects.filter(estado = 1)
+    return render(request, "unidad_aprendizaje/unidad_aprendizaje.html", {"lista_facultades": lista_facultades,
+                                                                          "lista_asignaturas": lista_asignaturas,
+                                                                          "lista_carreras": lista_carreras,
+                                                                          "lista_unidad": lista_unidad,
+                                                                          "mensaje_bienvenida": generar_saludo(),
+                                                                          "usuario_conectado": request.session.get("usuario_conectado"),
+                                                                          "nombre_usuario": request.session.get("nombre_del_usuario")})
+
+
+def agregar_unidad_aprendizaje(request):
+    if request.method == 'POST':
+        unidad_agregar = Unidad_Aprendizaje(
+            numero_unidad = request.POST.get("num_unidad"),
+            descripcion = request.POST.get("descripcion"),
+            cod_asignatura_id = request.POST.get("asignatura"),
+            estado = 1,
+            alta_usuario = request.session.get("usuario_conectado")
+        )
+        unidad_agregar.save()
+        respuesta = JsonResponse({"mensaje": "Registro Guardado con Éxito"})
+        return respuesta
+        
 
 def contenido(request):
     lista_facultades = Facultad.objects.filter(estado=1)
     lista_carreras = Carrera.objects.filter(estado=1)
     lista_asignaturas = Asignatura.objects.filter(estado=1)
-    return render(request, "contenido/contenido.html", {
-                                                     "lista_facultades": lista_facultades,
-                                                     "lista_asignaturas": lista_asignaturas,
-                                                     "lista_carreras": lista_carreras})
+    return render(request, "contenido/contenido.html", {"lista_facultades": lista_facultades,
+                                                        "lista_asignaturas": lista_asignaturas,
+                                                        "lista_carreras": lista_carreras,
+                                                        "mensaje_bienvenida": generar_saludo(),
+                                                        "usuario_conectado": request.session.get("usuario_conectado"),
+                                                        "nombre_usuario": request.session.get("nombre_del_usuario")})
 
 def tipo_clase(request):
     lista_tipo = Tipo_Clase.objects.filter(estado = 1)

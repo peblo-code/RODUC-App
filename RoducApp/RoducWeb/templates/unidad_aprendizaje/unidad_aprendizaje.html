@@ -31,7 +31,7 @@
                   <div class="form-group">
                     <label class="form-control-label" for="input-username">Nro. de Unidad</label>
                     <input required autocomplete="off" type="number" id="descripcion" class="form-control"
-                      placeholder="Ingrese el número de la Unidad de Aprendizaje..." name="descripcion" autofocus>
+                      placeholder="Ingrese el número de la Unidad de Aprendizaje..." name="num_unidad" autofocus>
                   </div>
                 </div>
                 <div class="col-lg-6">
@@ -46,9 +46,8 @@
                 <div class="col-lg-4">
                   <div class="form-group">
                     <label for="exampleFormControlSelect1" class="form-control-label">Facultad</label>
-                    <select class="form-control" id="" name="facultad"
-                      class="form-control">
-                      <option>Seleccione la facultad a la cual pertenece...</option>
+                    <select class="form-control" id="facultad" name="facultad" class="form-control">
+                      <option value="">Seleccione la facultad a la cual pertenece...</option>
                       {% for facultad in lista_facultades %}
                       <option value="{{facultad.cod_facultad}}">{{facultad.descripcion}}</option>
                       {% endfor %}
@@ -58,11 +57,10 @@
                 <div class="col-lg-4">
                   <div class="form-group">
                     <label class="form-control-label" for="input-username">Carrera</label>
-                    <select class="form-control" id="" name="facultad"
-                      class="form-control">
-                      <option>Seleccione la carrera a la cual pertenece...</option>
+                    <select class="form-control" id="carrera" name="carrera" class="form-control">
+                      <option value="">Seleccione la carrera a la cual pertenece...</option>
                       {% for carrera in lista_carreras %}
-                      <option value="{{facultad.cod_carrera}}">{{carrera.descripcion}}</option>
+                      <option value="{{carrera.cod_carrera}}" data-chained="{{carrera.cod_facultad_id}}">{{carrera.descripcion}}</option>
                       {% endfor %}
                     </select>
                   </div>
@@ -70,11 +68,10 @@
                 <div class="col-lg-4">
                   <div class="form-group">
                     <label class="form-control-label" for="input-username">Asignatura</label>
-                    <select class="form-control" id="" name="facultad"
-                      class="form-control">
-                      <option>Seleccione la asignatura a la cual pertenece...</option>
+                    <select class="form-control" id="asignatura" name="asignatura" class="form-control">
+                      <option value="">Seleccione la asignatura a la cual pertenece...</option>
                       {% for asignatura in lista_asignaturas %}
-                      <option value="{{facultad.cod_asignatura}}">{{asignatura.descripcion}}</option>
+                      <option value="{{asignatura.cod_asignatura}}" data-chained="{{asignatura.cod_carrera_id}}">{{asignatura.descripcion}}</option>
                       {% endfor %}
                     </select>
                   </div>
@@ -82,14 +79,21 @@
               </div>
             </div>
             <span><button type="submit" class="btn btn-success">Guardar</button></span>
-            <span><button type="button" class="btn btn-warning" id="BT_Listar" onclick="mostrarPlanes()">Listar</button></span>
+            <span><button type="button" class="btn btn-warning" id="BT_Listar"
+                onclick="mostrarPlanes()">Listar</button></span>
           </form>
         </div>
       </div>
     </div>
   </div>
 </div>
+{% endblock %}
 
+{% block extrajs %}
+<script>
+  $("#carrera").chained("#facultad");
+  $("#asignatura").chained("#carrera");
+</script>
 
 
 {% endblock %}
