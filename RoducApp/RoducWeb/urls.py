@@ -63,6 +63,10 @@ urlpatterns = [
 
     # METOLODOGIAS DE ENSEÑANZA
     path('metodologia_enseñanza', views.metodologia_enseñanza, name='metodologia_enseñanza'),
+    path('agregar_metodologia_enseñanza', views.agregar_metodologia_enseñanza, name='agregar_metodologia_enseñanza'),
+    path('detalle_metodologia_enseñanza', views.detalle_metodologia_enseñanza, name='detalle_metodologia_enseñanza'),
+    path('actualizar_metodologia_enseñanza', views.actualizar_metodologia_enseñanza, name='actualizar_metodologia_enseñanza'),
+    path('eliminar_metodologia_enseñanza', views.eliminar_metodologia_enseñanza, name='eliminar_metodologia_enseñanza'),
 
     # RECURSOS AUXILIARES
     path('recurso_auxiliar', views.recurso_auxiliar, name='recurso_auxiliar'),

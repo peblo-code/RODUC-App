@@ -551,9 +551,6 @@ def desvincular_asignatura(request):
 def cabecera(request):
     return render(request, "reporte/cabecera.html")
 
-def metodologia_enseñanza(request):
-    return render(request, "metodologia_enseñanza/metodologia_enseñanza.html")
-
 def recurso_auxiliar(request):
     return render(request, "recurso_auxiliar/recurso_auxiliar.html")
 
@@ -787,4 +784,50 @@ def tipo_eva(request):
 
 def trabajo_autonomo(request):
     return render(request, "trabajo_autonomo/trabajo_autonomo.html")
+
+
+def metodologia_enseñanza(request):
+    lista_metodologias = Metodologia_Enseñanza.objects.filter(estado = 1)
+    return render(request, "metodologia_enseñanza/metodologia_enseñanza.html", {"mensaje_bienvenida": generar_saludo(),
+                                                                                "usuario_conectado": request.session.get("usuario_conectado"),
+                                                                                "nombre_usuario": request.session.get("nombre_del_usuario"),
+                                                                                "lista_metodologias": lista_metodologias})
+
+def detalle_metodologia_enseñanza(request):
+    if request.method == 'GET':
+        detalle = Metodologia_Enseñanza.objects.filter(cod_metodologia_enseñanza=request.GET.get("codigo"))
+        detalle = serializers.serialize("json", detalle)
+        return JsonResponse({"detalle": detalle})
+
+
+def agregar_metodologia_enseñanza(request):
+    if request.method == 'POST':
+        nuevo_tipo = Metodologia_Enseñanza(
+            descripcion = request.POST.get("descripcion"),
+            estado = 1,
+            alta_usuario = request.session.get("usuario_conectado"),
+        )
+        nuevo_tipo.save()
+        respuesta = JsonResponse({"mensaje": "Registro Guardado con Éxito"})
+        return respuesta
+
+def actualizar_metodologia_enseñanza(request):
+    if request.method == 'POST':
+        actualizar_metodologia = Metodologia_Enseñanza.objects.get(estado = 1, cod_metodologia_enseñanza = request.POST.get("codigo"))
+        actualizar_metodologia.descripcion = request.POST.get("descripcion")
+        actualizar_metodologia.estado = 1
+        actualizar_metodologia.modif_usuario = request.session.get("usuario_conectado")
+        actualizar_metodologia.save()
+        respuesta = JsonResponse({"mensaje": "Registro Actualizado con Éxito"})
+        return respuesta
+
+@csrf_exempt
+def eliminar_metodologia_enseñanza(request):
+    if request.method == "POST":
+        instrumento_eliminar = Metodologia_Enseñanza.objects.get(cod_metodologia_enseñanza=request.POST.get("codigo"))
+        instrumento_eliminar.estado = 0
+        instrumento_eliminar.modif_usuario = request.session.get("usuario_conectado")
+        instrumento_eliminar.save()
+        respuesta = JsonResponse({"mensaje": "Registro Eliminado con Éxito"})
+        return respuesta
 

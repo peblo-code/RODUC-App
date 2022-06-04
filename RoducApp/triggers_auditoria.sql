@@ -638,3 +638,56 @@ DELIMITER ;
 /*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/*AUDITORIA METODOLOGIA_ENSEÑANZA*/
+DROP TRIGGER IF EXISTS `roducdb`. `AUDITORIA_INSERT_METODOLOGIA_ENSEÑANZA`;
+DELIMITER $$
+USE `roducdb` $$
+CREATE TRIGGER `roducdb`.`AUDITORIA_INSERT_METODOLOGIA_ENSEÑANZA` BEFORE INSERT ON `roducweb_metodologia_enseñanza` FOR EACH ROW
+BEGIN
+	INSERT INTO roducweb_auditoria(
+		tabla,
+		accion,
+		datos_viejos,
+		datos_nuevos,
+		usuario,
+		fecha
+	)
+	VALUES(
+		'Metodologia de Enseñanza',
+		'I',
+		NULL,
+		CONCAT('Codigo: ', (SELECT `AUTO_INCREMENT` FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'roducdb' AND TABLE_NAME = 'roducweb_metodologia_enseñanza'), '| Descripcion:', NEW.descripcion, '| Estado: ', NEW.estado, '| Usuario Alta: ', NEW.alta_usuario, '| Fecha Alta: ', NEW.alta_fecha),
+		NEW.alta_usuario,
+		NOW()
+	);
+END$$
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS `roducdb`.`AUDITORIA_UPDATE_METODOLOGIA_ENSEÑANZA`;
+DELIMITER $$
+USE `roducdb`$$
+CREATE TRIGGER `roducdb`.`AUDITORIA_UPDATE_METODOLOGIA_ENSEÑANZA` BEFORE UPDATE ON `roducweb_metodologia_enseñanza` FOR EACH ROW
+BEGIN
+	INSERT INTO roducweb_auditoria(
+		tabla,
+        accion,
+        datos_viejos,
+        datos_nuevos,
+        usuario,
+        fecha
+    )
+    VALUES(
+		'Metodologia de Enseñanza',
+        (IF(NEW.estado = 0 AND OLD.estado = 1, 'D', 'U')),
+		CONCAT('Codigo: ', OLD.cod_metodologia_enseñanza, '| Descripcion: ', OLD.descripcion, '| Estado: ', OLD.estado, '| Usuario Alta: ', OLD.alta_usuario, '| Fecha Alta: ', OLD.alta_fecha, '| Modif. Usuario: ', OLD.modif_usuario, '| Modif. Fecha: ', OLD.modif_fecha),
+		CONCAT('Codigo: ', NEW.cod_metodologia_enseñanza, '| Descripcion: ', NEW.descripcion, '| Estado: ', NEW.estado, '| Usuario Alta: ', NEW.alta_usuario, '| Fecha Alta: ', NEW.alta_fecha, '| Modif. Usuario: ', NEW.modif_usuario, '| Modif. Fecha: ', NEW.modif_fecha),
+        NEW.modif_usuario,
+        NOW()
+    );
+END$$
+DELIMITER ;
+
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
