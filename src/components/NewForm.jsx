@@ -1,21 +1,22 @@
-import { View, StyleSheet, Platform, Text } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { useEffect, useState } from 'react'
 import StyledText from './StyledText';
-import RNPickerSelect, { defaultStyles } from 'react-native-picker-select';
+import PickerSelect from './PickerSelect';
 import useUserContext from '../hooks/useUserContext.js';
 import axios from 'axios';
-
-const isAndroid = Platform.OS === 'android';
 
 const NewForm = ({ navigation }) => {
     const { user, URL } = useUserContext();
     const [facultades, setFacultades] = useState([]);
     const [carreras, setCarreras] = useState([]);
+    const [planes, setPlanes] = useState([]);
     const [asignaturas, setAsignaturas] = useState([]);
     const [asignaturaItems, setAsignaturaItems] = useState([]);
     const [carreraItems, setCarreraItems] = useState([]);
+    const [planItems, setPlanItems] = useState([]);
     const [asignaturaPicker, setAsignaturaPicker] = useState('');
     const [carreraPicker, setCarreraPicker] = useState('');
+    const [planPicker, setPlanPicker] = useState('');
 
     useEffect(() => {
         axios.get(`${URL}/listaFacultades_Carreras/${user.cod_usuario}`)
@@ -23,8 +24,10 @@ const NewForm = ({ navigation }) => {
             const resFacu = JSON.parse(response.data.lista_facultades);
             const resCarreras = JSON.parse(response.data.lista_carreras);
             const resAsignaturas = JSON.parse(response.data.lista_asignaturas);
+            const resPlanes = JSON.parse(response.data.lista_planes);
             setFacultades(resFacu.map(field => field));
             setCarreras(resCarreras.map(field => field));
+            setPlanes(resPlanes.map(field => field));
             setAsignaturas(resAsignaturas.map(field => field));
         })
         .catch((error) => {
@@ -32,70 +35,40 @@ const NewForm = ({ navigation }) => {
         });
     }, [])
 
+    useEffect(() => {
+        setCarreraItems(getItems(carreras, 'cod_facultad', carreraPicker));
+    }, [carreraPicker])
+
+    useEffect(() => {
+        setPlanItems(getItems(planes, 'cod_carrera', planPicker));
+    }, [planPicker])
+
+    useEffect(() => {
+        setAsignaturaItems(getItems(asignaturas, 'cod_plan_estudio', asignaturaPicker));
+    }, [asignaturaPicker])
+
     const FacultadItems = (facultades.map(facultad => ({
         label: facultad.fields.descripcion,
         value: facultad.pk,
         key: facultad.pk
     })));
 
-    const getCarreraItems = (carreras) => {
-        setCarreraItems([])
-        if(carreraPicker == undefined) {
-            return [{key: '', label: 'Seleccione una facultad', value: ''}];
-        }
-
+    const getItems = (items, cod, itemPicker) => {
         let arr = []
-        carreras.forEach(carrera => {
-            if(carrera.fields.cod_facultad == carreraPicker) {
+        items.forEach(item => {
+            if(item.fields[cod] == itemPicker) {
                 let obj = {
-                    label: carrera.fields.descripcion,
-                    value: carrera.pk,
-                    key: carrera.pk
+                    label: item.fields.descripcion,
+                    value: item.pk,
+                    key: item.pk
                 }
                 arr.push(obj);
 
                 return arr;
             }
         })
-
         return arr;
     }
-
-    const getAsignaturaItems = (asignaturas) => {
-        if(asignaturaPicker == undefined) {
-            return [{key: '', label: 'Seleccione una carrera', value: ''}];
-        }
-
-        let arr = []
-        asignaturas.forEach(asignatura => {
-            if(asignatura.fields.cod_carrera == asignaturaPicker) {
-                let obj = {
-                    label: asignatura.fields.descripcion,
-                    value: asignatura.pk,
-                    key: asignatura.pk
-                }
-                arr.push(obj);
-
-                return arr;
-            }
-        })
-
-        return arr;
-    }
-
-    useEffect(() => {
-        setCarreraItems(getCarreraItems(carreras));
-    }, [carreraPicker])
-
-    useEffect(() => {
-        setAsignaturaItems(getAsignaturaItems(asignaturas));
-    }, [asignaturaPicker])
-    
-    const placeholder = {
-        label: 'Seleccione una opción',
-        value: null,
-        color: '#9EA0A4',
-    };
     
     return(
         <View style={styles.form}>
@@ -106,31 +79,27 @@ const NewForm = ({ navigation }) => {
                 Nuevo Informe
             </StyledText>
             
-            <Text>Facultad</Text>
-            <RNPickerSelect
-                placeholder={placeholder}
+            <PickerSelect 
+                title="Facultad"
                 items={FacultadItems}
-                style={pickerSelectStyles}
-                useNativeAndroidPickerStyle={isAndroid}
-                onValueChange={(value) => setCarreraPicker(value)}
-            /> 
-
-            <Text>Carrera</Text>
-            <RNPickerSelect
-                placeholder={placeholder}
-                items={carreraItems}
-                style={pickerSelectStyles}
-                useNativeAndroidPickerStyle={isAndroid}
-                onValueChange={(value) => { setAsignaturaPicker(value) }}
+                onValueChange={ setCarreraPicker }
             />
 
-            <Text>Asignatura</Text>
-            <RNPickerSelect
-                placeholder={placeholder}
+            <PickerSelect 
+                title="Carrera"
+                items={carreraItems}
+                onValueChange={ setPlanPicker }
+            />
+
+            <PickerSelect 
+                title="Plan de Estudio"
+                items={planItems}
+                onValueChange={ setAsignaturaPicker }
+            />
+
+            <PickerSelect 
+                title="Asignatura"
                 items={asignaturaItems}
-                style={pickerSelectStyles}
-                useNativeAndroidPickerStyle={isAndroid}
-                onValueChange={(value) => console.log(value)}
             />
         </View>
     )
@@ -140,35 +109,10 @@ const styles = StyleSheet.create({
     form: {
         marginHorizontal: 12,
         marginVertical: 12,
-        //alignItems: 'center',
         flex: 1,
         height: '100%',
         gap: 12
     },
 })
-
-const pickerSelectStyles = StyleSheet.create({
-    inputIOS: {
-      fontSize: 16,
-      paddingVertical: 12,
-      paddingHorizontal: 10,
-      borderWidth: 1,
-      borderColor: 'red',
-      borderRadius: 4,
-      color: 'black',
-      paddingRight: 30, // to ensure the text is never behind the icon
-    },
-    inputAndroid: {
-      fontSize: 16,
-      paddingHorizontal: 10,
-      paddingVertical: 8,
-      borderWidth: 0.5,
-      borderColor: 'purple',
-      borderRadius: 8,
-      color: 'black',
-      paddingRight: 30, // to ensure the text is never behind the icon
-    },
-  });
-  
 
 export default NewForm;

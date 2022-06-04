@@ -22,7 +22,6 @@ const storeData = async (value) => {    //funcion para persistir datos
     }
 }
 
-
 const getData = async () => {   //funcion para recuperar datos
     try {
         const jsonValue = await AsyncStorage.getItem('@storage_Key')
