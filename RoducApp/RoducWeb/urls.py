@@ -90,6 +90,10 @@ urlpatterns = [
 
     # INSTRUMENTO DE EVALUACION
     path('instrumento_evaluacion', views.instrumento_evaluacion, name='instrumento_evaluacion'),
+    path('agregar_instrumento_evaluacion', views.agregar_instrumento_evaluacion, name='agregar_instrumento_evaluacion'),
+    path('detalle_instrumento_evaluacion', views.detalle_instrumento_evaluacion, name='detalle_instrumento_evaluacion'),
+    path('actualizar_instrumento_evaluacion', views.actualizar_instrumento_evaluacion, name='actualizar_instrumento_evaluacion'),
+    path('eliminar_instrumento_evaluacion', views.eliminar_instrumento_evaluacion, name='eliminar_instrumento_evaluacion'),
 
     # TIPO DE EVALUACION
     path('tipo_eva', views.tipo_eva, name='tipo_eva'),

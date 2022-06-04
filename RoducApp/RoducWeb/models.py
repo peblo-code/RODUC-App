@@ -157,3 +157,12 @@ class Contenido(models.Model):
     alta_fecha = models.DateTimeField(auto_now_add=True)
     modif_usuario = models.CharField(max_length=45)
     modif_fecha = models.DateTimeField(auto_now=True)
+
+class Instrumento_Evaluacion(models.Model):
+    cod_instrumento_evaluacion = models.AutoField(primary_key=True)
+    descripcion = models.CharField(max_length=100)
+    estado = models.IntegerField()
+    alta_usuario = models.CharField(max_length=45)
+    alta_fecha = models.DateTimeField(auto_now_add=True)
+    modif_usuario = models.CharField(max_length=45)
+    modif_fecha = models.DateTimeField(auto_now=True)

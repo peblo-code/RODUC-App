@@ -737,7 +737,50 @@ def eliminar_tipo_clase(request):
         
 
 def instrumento_evaluacion(request):
-    return render(request, "instrumento_evaluacion/instrumento_evaluacion.html")
+    lista_instrumentos = Instrumento_Evaluacion.objects.filter(estado = 1)
+    return render(request, "instrumento_evaluacion/instrumento_evaluacion.html", {"mensaje_bienvenida": generar_saludo(),
+                                                                                  "usuario_conectado": request.session.get("usuario_conectado"),
+                                                                                  "nombre_usuario": request.session.get("nombre_del_usuario"),
+                                                                                  "lista_instrumentos": lista_instrumentos})
+
+
+def detalle_instrumento_evaluacion(request):
+    if request.method == 'GET':
+        detalle = Instrumento_Evaluacion.objects.filter(cod_instrumento_evaluacion=request.GET.get("codigo"))
+        detalle = serializers.serialize("json", detalle)
+        return JsonResponse({"detalle": detalle})
+
+
+def agregar_instrumento_evaluacion(request):
+    if request.method == 'POST':
+        nuevo_tipo = Instrumento_Evaluacion(
+            descripcion = request.POST.get("descripcion"),
+            estado = 1,
+            alta_usuario = request.session.get("usuario_conectado"),
+        )
+        nuevo_tipo.save()
+        respuesta = JsonResponse({"mensaje": "Registro Guardado con Éxito"})
+        return respuesta
+
+def actualizar_instrumento_evaluacion(request):
+    if request.method == 'POST':
+        actualizar_instrumento = Instrumento_Evaluacion.objects.get(estado = 1, cod_instrumento_evaluacion = request.POST.get("codigo"))
+        actualizar_instrumento.descripcion = request.POST.get("descripcion")
+        actualizar_instrumento.estado = 1
+        actualizar_instrumento.modif_usuario = request.session.get("usuario_conectado")
+        actualizar_instrumento.save()
+        respuesta = JsonResponse({"mensaje": "Registro Actualizado con Éxito"})
+        return respuesta
+
+@csrf_exempt
+def eliminar_instrumento_evaluacion(request):
+    if request.method == "POST":
+        instrumento_eliminar = Instrumento_Evaluacion.objects.get(cod_instrumento_evaluacion=request.POST.get("codigo"))
+        instrumento_eliminar.estado = 0
+        instrumento_eliminar.modif_usuario = request.session.get("usuario_conectado")
+        instrumento_eliminar.save()
+        respuesta = JsonResponse({"mensaje": "Registro Eliminado con Éxito"})
+        return respuesta
 
 def tipo_eva(request):
     return render(request, "tipo_eva/tipo_eva.html")
