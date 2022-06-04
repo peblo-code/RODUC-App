@@ -427,7 +427,7 @@ DELIMITER ;
 /*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-/*AUDITORIA USUARIOS_ROL*/
+/*AUDITORIA TIPO_CLASE*/
 DROP TRIGGER IF EXISTS `roducdb`. `AUDITORIA_INSERT_TIPO_CLASE`;
 DELIMITER $$
 USE `roducdb` $$
@@ -470,6 +470,59 @@ BEGIN
         (IF(NEW.estado = 0 AND OLD.estado = 1, 'D', 'U')),
 		CONCAT('Codigo: ', OLD.cod_tipo_clase, '| Descripcion: ', OLD.descripcion, '| Estado: ', OLD.estado, '| Usuario Alta: ', OLD.alta_usuario, '| Fecha Alta: ', OLD.alta_fecha, '| Modif. Usuario: ', OLD.modif_usuario, '| Modif. Fecha: ', OLD.modif_fecha),
 		CONCAT('Codigo: ', NEW.cod_tipo_clase, '| Descripcion: ', NEW.descripcion,'| Estado: ', NEW.estado, '| Usuario Alta: ', NEW.alta_usuario, '| Fecha Alta: ', NEW.alta_fecha, '| Modif. Usuario: ', NEW.modif_usuario, '| Modif. Fecha: ', NEW.modif_fecha),
+        NEW.modif_usuario,
+        NOW()
+    );
+END$$
+DELIMITER ;
+
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/*AUDITORIA UNIDAD_APRENDIZAJE*/
+DROP TRIGGER IF EXISTS `roducdb`. `AUDITORIA_INSERT_UNIDAD_APRENDIZAJE`;
+DELIMITER $$
+USE `roducdb` $$
+CREATE TRIGGER `roducdb`.`AUDITORIA_INSERT_UNIDAD_APRENDIZAJE` BEFORE INSERT ON `roducweb_unidad_aprendizaje` FOR EACH ROW
+BEGIN
+	INSERT INTO roducweb_auditoria(
+		tabla,
+		accion,
+		datos_viejos,
+		datos_nuevos,
+		usuario,
+		fecha
+	)
+	VALUES(
+		'Unidad Aprendizaje',
+		'I',
+		NULL,
+		CONCAT('Codigo: ', (SELECT `AUTO_INCREMENT` FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'roducdb' AND TABLE_NAME = 'roducweb_unidad_aprendizaje'), '| Descripcion:', NEW.descripcion, '| Asignatura: ', NEW.cod_asignatura_id, '| Estado: ', NEW.estado, '| Usuario Alta: ', NEW.alta_usuario, '| Fecha Alta: ', NEW.alta_fecha),
+		NEW.alta_usuario,
+		NOW()
+	);
+END$$
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS `roducdb`.`AUDITORIA_UPDATE_UNIDAD_APRENDIZAJE`;
+DELIMITER $$
+USE `roducdb`$$
+CREATE TRIGGER `roducdb`.`AUDITORIA_UPDATE_UNIDAD_APRENDIZAJE` BEFORE UPDATE ON `roducweb_unidad_aprendizaje` FOR EACH ROW
+BEGIN
+	INSERT INTO roducweb_auditoria(
+		tabla,
+        accion,
+        datos_viejos,
+        datos_nuevos,
+        usuario,
+        fecha
+    )
+    VALUES(
+		'Unidad Aprendizaje',
+        (IF(NEW.estado = 0 AND OLD.estado = 1, 'D', 'U')),
+		CONCAT('Codigo: ', OLD.cod_unidad_aprendizaje, '| Descripcion: ', OLD.descripcion, '| Carrera: ', OLD.cod_asignatura_id, '| Estado: ', OLD.estado, '| Usuario Alta: ', OLD.alta_usuario, '| Fecha Alta: ', OLD.alta_fecha, '| Modif. Usuario: ', OLD.modif_usuario, '| Modif. Fecha: ', OLD.modif_fecha),
+		CONCAT('Codigo: ', NEW.cod_unidad_aprendizaje, '| Descripcion: ', NEW.descripcion, '| Carrera: ', NEW.cod_asignatura_id, '| Estado: ', NEW.estado, '| Usuario Alta: ', NEW.alta_usuario, '| Fecha Alta: ', NEW.alta_fecha, '| Modif. Usuario: ', NEW.modif_usuario, '| Modif. Fecha: ', NEW.modif_fecha),
         NEW.modif_usuario,
         NOW()
     );

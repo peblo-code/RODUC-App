@@ -18,7 +18,7 @@ from django.utils.decorators import method_decorator
 # funciones varias
 def generar_saludo():
     hora_actual = int((time.strftime('%H', time.localtime())))
-    if (hora_actual >= 0 and hora_actual < 12):
+    if (hora_actual >= 6 and hora_actual < 12):
         mensaje_bienvenida = 'Buenos Días'
     elif (hora_actual >= 12 and hora_actual < 19):
         mensaje_bienvenida = 'Buenas Tardes'
@@ -583,7 +583,41 @@ def agregar_unidad_aprendizaje(request):
         unidad_agregar.save()
         respuesta = JsonResponse({"mensaje": "Registro Guardado con Éxito"})
         return respuesta
-        
+
+
+def detalle_unidad_aprendizaje(request):
+    if request.method == 'GET':
+        detalle = Unidad_Aprendizaje.objects.filter(cod_unidad_aprendizaje=request.GET.get("codigo"))
+        carrera = Asignatura.objects.get(cod_asignatura = Unidad_Aprendizaje.objects.get(cod_unidad_aprendizaje = request.GET.get("codigo")).cod_asignatura_id).cod_carrera_id
+        facultad = Facultad.objects.get(cod_facultad = Carrera.objects.get(cod_carrera = carrera).cod_facultad_id).cod_facultad
+        detalle = serializers.serialize("json", detalle)
+        return JsonResponse({"detalle": detalle,
+                             "carrera": carrera,
+                             "facultad": facultad})
+
+
+def actualizar_unidad_aprendizaje(request):
+    if request.method == 'POST':
+        unidad_actualizar = Unidad_Aprendizaje.objects.get(estado = 1, cod_unidad_aprendizaje = request.POST.get("codigo"))
+        unidad_actualizar.descripcion = request.POST.get("descripcion")
+        unidad_actualizar.cod_asignatura_id = request.POST.get("asignatura")
+        unidad_actualizar.estado = 1
+        unidad_actualizar.modif_usuario = request.session.get("usuario_conectado")
+        unidad_actualizar.save()
+        respuesta = JsonResponse({"mensaje": "Registro Guardado con Éxito"})
+        return respuesta
+
+
+@csrf_exempt
+def eliminar_unidad_aprendizaje(request):
+    if request.method == "POST":
+        unidad_eliminar = Unidad_Aprendizaje.objects.get(cod_unidad_aprendizaje=request.POST.get("codigo"))
+        unidad_eliminar.estado = 0
+        unidad_eliminar.modif_usuario = request.session.get("usuario_conectado")
+        unidad_eliminar.save()
+        respuesta = JsonResponse({"mensaje": "Registro Eliminado con Éxito"})
+        return respuesta
+
 
 def contenido(request):
     lista_facultades = Facultad.objects.filter(estado=1)

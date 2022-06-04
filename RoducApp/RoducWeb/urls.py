@@ -69,6 +69,10 @@ urlpatterns = [
 
     # UNIDADES DE APRENDIZAJE
     path('unidad_aprendizaje', views.unidad_aprendizaje, name='unidad_aprendizaje'),
+    path('agregar_unidad_aprendizaje', views.agregar_unidad_aprendizaje, name='agregar_unidad_aprendizaje'),
+    path('detalle_unidad_aprendizaje', views.detalle_unidad_aprendizaje, name='detalle_unidad_aprendizaje'),
+    path('actualizar_unidad_aprendizaje', views.actualizar_unidad_aprendizaje, name='actualizar_unidad_aprendizaje'),
+    path('eliminar_unidad_aprendizaje', views.eliminar_unidad_aprendizaje, name='eliminar_unidad_aprendizaje'),
 
     # CONTENIDOS
     path('contenido', views.contenido, name='contenido'),
