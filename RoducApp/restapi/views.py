@@ -1,5 +1,6 @@
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
+from html5lib import serialize
 from rest_framework import generics
 from .serializers import *
 from RoducWeb.models import *
@@ -68,6 +69,10 @@ def listaFacultades_Carreras(request, user):
         lista_semestre = serializers.serialize('json', lista_semestre)
         lista_tipo_clase = Tipo_Clase.objects.filter(estado = 1)
         lista_tipo_clase = serializers.serialize('json', lista_tipo_clase)
+        lista_unidad = Unidad_Aprendizaje.objects.filter(estado = 1)
+        lista_unidad = serializers.serialize('json', lista_unidad)
+        lista_contenido = Contenido.objects.filter(estado = 1)
+        lista_contenido = serializers.serialize('json', lista_contenido)
         return JsonResponse({
             "lista_facultades": lista_facultades,
             "lista_carreras": lista_carreras,
@@ -75,6 +80,8 @@ def listaFacultades_Carreras(request, user):
             "lista_planes": lista_planes,
             "lista_semestre": lista_semestre,
             "lista_tipo_clase": lista_tipo_clase,
+            "lista_unidad": lista_unidad,
+            "lista_contenido": lista_contenido,
         })
 
         
