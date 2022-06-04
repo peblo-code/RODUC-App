@@ -75,6 +75,10 @@ urlpatterns = [
 
     # TIPO DE CLASE
     path('tipo_clase', views.tipo_clase, name='tipo_clase'),
+    path('agregar_tipo_clase', views.agregar_tipo_clase, name='agregar_tipo_clase'),
+    path('detalle_tipo_clase', views.detalle_tipo_clase, name='detalle_tipo_clase'),
+    path('actualizar_tipo_clase', views.actualizar_tipo_clase, name='actualizar_tipo_clase'),
+    path('eliminar_tipo_clase', views.eliminar_tipo_clase, name='eliminar_tipo_clase'),
 
     # INSTRUMENTO DE EVALUACION
     path('instrumento_evaluacion', views.instrumento_evaluacion, name='instrumento_evaluacion'),

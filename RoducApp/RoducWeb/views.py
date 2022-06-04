@@ -576,7 +576,51 @@ def contenido(request):
                                                      "lista_carreras": lista_carreras})
 
 def tipo_clase(request):
-    return render(request, "tipo_clase/tipo_clase.html")
+    lista_tipo = Tipo_Clase.objects.filter(estado = 1)
+    return render(request, "tipo_clase/tipo_clase.html", {"mensaje_bienvenida": generar_saludo(),
+                                                          "usuario_conectado": request.session.get("usuario_conectado"),
+                                                          "nombre_usuario": request.session.get("nombre_del_usuario"),
+                                                          "lista_tipo": lista_tipo})
+
+
+def detalle_tipo_clase(request):
+    if request.method == 'GET':
+        detalle = Tipo_Clase.objects.filter(cod_tipo_clase=request.GET.get("codigo"))
+        detalle = serializers.serialize("json", detalle)
+        return JsonResponse({"detalle": detalle})
+
+
+def agregar_tipo_clase(request):
+    if request.method == 'POST':
+        nuevo_tipo = Tipo_Clase(
+            descripcion = request.POST.get("descripcion"),
+            estado = 1,
+            alta_usuario = request.session.get("usuario_conectado"),
+        )
+        nuevo_tipo.save()
+        respuesta = JsonResponse({"mensaje": "Registro Guardado con Éxito"})
+        return respuesta
+
+def actualizar_tipo_clase(request):
+    if request.method == 'POST':
+        actualizar_tipo = Tipo_Clase.objects.get(estado = 1, cod_tipo_clase = request.POST.get("codigo"))
+        actualizar_tipo.descripcion = request.POST.get("descripcion")
+        actualizar_tipo.estado = 1
+        actualizar_tipo.modif_usuario = request.session.get("usuario_conectado")
+        actualizar_tipo.save()
+        respuesta = JsonResponse({"mensaje": "Registro Actualizado con Éxito"})
+        return respuesta
+
+@csrf_exempt
+def eliminar_tipo_clase(request):
+    if request.method == "POST":
+        tipo_clase_eliminar = Tipo_Clase.objects.get(cod_tipo_clase=request.POST.get("codigo"))
+        tipo_clase_eliminar.estado = 0
+        tipo_clase_eliminar.modif_usuario = request.session.get("usuario_conectado")
+        tipo_clase_eliminar.save()
+        respuesta = JsonResponse({"mensaje": "Registro Eliminado con Éxito"})
+        return respuesta
+        
 
 def instrumento_evaluacion(request):
     return render(request, "instrumento_evaluacion/instrumento_evaluacion.html")
