@@ -2,8 +2,6 @@ from tkinter import CASCADE
 from django.db import models
 
 # Create your models here.
-
-
 class Usuario(models.Model):
     cod_usuario = models.AutoField(primary_key=True)
     nombre_usuario = models.CharField(max_length=45)

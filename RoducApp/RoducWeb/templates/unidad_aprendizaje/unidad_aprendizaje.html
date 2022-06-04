@@ -43,7 +43,7 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-lg-4">
+                <div class="col-lg-3">
                   <div class="form-group">
                     <label for="exampleFormControlSelect1" class="form-control-label">Facultad</label>
                     <select class="form-control" id="facultad" name="facultad" class="form-control">
@@ -54,7 +54,7 @@
                     </select>
                   </div>
                 </div>
-                <div class="col-lg-4">
+                <div class="col-lg-3">
                   <div class="form-group">
                     <label class="form-control-label" for="input-username">Carrera</label>
                     <select class="form-control" id="carrera" name="carrera" class="form-control">
@@ -66,13 +66,25 @@
                     </select>
                   </div>
                 </div>
-                <div class="col-lg-4">
+                <div class="col-lg-3">
+                  <div class="form-group">
+                    <label class="form-control-label" for="input-username">Plan de Estudios</label>
+                    <select class="form-control" id="plan_estudio" name="plan_estudio" class="form-control">
+                      <option value="">Seleccione el plan de estudios...</option>
+                      {% for plan in lista_planes %}
+                      <option value="{{plan.cod_plan_estudio}}" data-chained="{{plan.cod_carrera_id}}">
+                        {{plan.descripcion}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+                <div class="col-lg-3">
                   <div class="form-group">
                     <label class="form-control-label" for="input-username">Asignatura</label>
                     <select class="form-control" id="asignatura" name="asignatura" class="form-control">
                       <option value="">Seleccione la asignatura a la cual pertenece...</option>
                       {% for asignatura in lista_asignaturas %}
-                      <option value="{{asignatura.cod_asignatura}}" data-chained="{{asignatura.cod_carrera_id}}">
+                      <option value="{{asignatura.cod_asignatura}}" data-chained="{{asignatura.cod_carrera_id}}+{{asignatura.cod_plan_estudio_id}}">
                         {{asignatura.descripcion}}</option>
                       {% endfor %}
                     </select>
@@ -81,8 +93,7 @@
               </div>
             </div>
             <span><button type="submit" class="btn btn-success">Guardar</button></span>
-            <span><button type="button" class="btn btn-warning" id="BT_Listar"
-                onclick="mostrarUnidades()">Listar</button></span>
+            <span><button type="button" class="btn btn-warning" id="BT_Listar" onclick="mostrarUnidades()">Listar</button></span>
           </form>
         </div>
       </div>
@@ -121,9 +132,9 @@
                     <td class="nombre">{{unidades.descripcion}}</td>
                     <td class="nombre">
                       {% for asignatura in lista_asignaturas %}
-                      {% if asignatura.cod_asignatura == unidades.cod_asignatura_id %}
-                      {{asignatura.descripcion}}
-                      {% endif %}
+                        {% if asignatura.cod_asignatura == unidades.cod_asignatura_id %}
+                          {{asignatura.descripcion}}
+                        {% endif %}
                       {% endfor %}
                     </td>
                     <!---BOTONES-->
@@ -150,9 +161,8 @@
 </div>
 
 <!---Modal-->
-<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document"  style="max-width: 75%">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="tituloModal"></h5>
@@ -183,7 +193,7 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-lg-4">
+              <div class="col-lg-3">
                 <div class="form-group">
                   <label for="exampleFormControlSelect1" class="form-control-label">Facultad</label>
                   <select class="form-control" id="updateFacultad" name="facultad" class="form-control">
@@ -194,7 +204,7 @@
                   </select>
                 </div>
               </div>
-              <div class="col-lg-4">
+              <div class="col-lg-3">
                 <div class="form-group">
                   <label class="form-control-label" for="input-username">Carrera</label>
                   <select class="form-control" id="updateCarrera" name="carrera" class="form-control">
@@ -206,13 +216,25 @@
                   </select>
                 </div>
               </div>
-              <div class="col-lg-4">
+              <div class="col-lg-3">
+                <div class="form-group">
+                  <label class="form-control-label" for="input-username">Plan de Estudios</label>
+                  <select class="form-control" id="updatePlan_estudio" name="plan_estudio" class="form-control">
+                    <option value="">Seleccione el plan de estudios...</option>
+                    {% for plan in lista_planes %}
+                    <option value="{{plan.cod_plan_estudio}}" data-chained="{{plan.cod_carrera_id}}">
+                      {{plan.descripcion}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="col-lg-3">
                 <div class="form-group">
                   <label class="form-control-label" for="input-username">Asignatura</label>
                   <select class="form-control" id="updateAsignatura" name="asignatura" class="form-control">
                     <option value="">Seleccione la asignatura a la cual pertenece...</option>
                     {% for asignatura in lista_asignaturas %}
-                    <option value="{{asignatura.cod_asignatura}}" data-chained="{{asignatura.cod_carrera_id}}">
+                    <option value="{{asignatura.cod_asignatura}}" data-chained="{{asignatura.cod_carrera_id}}+{{asignatura.cod_plan_estudio_id}}">
                       {{asignatura.descripcion}}</option>
                     {% endfor %}
                   </select>
@@ -231,7 +253,8 @@
 {% block extrajs %}
 <script>
   $("#carrera").chained("#facultad");
-  $("#asignatura").chained("#carrera");
+  $("#plan_estudio").chained("#carrera");
+  $("#asignatura").chained("#carrera,#plan_estudio");
 </script>
 
 <script>
@@ -290,9 +313,11 @@
           document.getElementById("updateDescripcion").value = detalle[0].fields.descripcion;
           document.getElementById("updateFacultad").value = data.facultad;
           document.getElementById("updateCarrera").value = data.carrera;
+          document.getElementById("updatePlan_estudio").value = data.plan_estudio;
           document.getElementById("updateAsignatura").value = detalle[0].fields.cod_asignatura;
           $("#updateCarrera").chained("#updateFacultad");
-          $("#updateAsignatura").chained("#updateCarrera");
+          $("#updatePlan_estudio").chained("#updateCarrera");
+          $("#updateAsignatura").chained("#updateCarrera,#updatePlan_estudio");
         }
     })
   }

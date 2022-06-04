@@ -562,10 +562,12 @@ def unidad_aprendizaje(request):
     lista_carreras = Carrera.objects.filter(estado = 1)
     lista_asignaturas = Asignatura.objects.filter(estado = 1)
     lista_unidad = Unidad_Aprendizaje.objects.filter(estado = 1)
+    lista_planes = Plan_Estudio.objects.filter(estado = 1)
     return render(request, "unidad_aprendizaje/unidad_aprendizaje.html", {"lista_facultades": lista_facultades,
                                                                           "lista_asignaturas": lista_asignaturas,
                                                                           "lista_carreras": lista_carreras,
                                                                           "lista_unidad": lista_unidad,
+                                                                          "lista_planes": lista_planes,
                                                                           "mensaje_bienvenida": generar_saludo(),
                                                                           "usuario_conectado": request.session.get("usuario_conectado"),
                                                                           "nombre_usuario": request.session.get("nombre_del_usuario")})
@@ -590,10 +592,12 @@ def detalle_unidad_aprendizaje(request):
         detalle = Unidad_Aprendizaje.objects.filter(cod_unidad_aprendizaje=request.GET.get("codigo"))
         carrera = Asignatura.objects.get(cod_asignatura = Unidad_Aprendizaje.objects.get(cod_unidad_aprendizaje = request.GET.get("codigo")).cod_asignatura_id).cod_carrera_id
         facultad = Facultad.objects.get(cod_facultad = Carrera.objects.get(cod_carrera = carrera).cod_facultad_id).cod_facultad
+        plan_estudio = Asignatura.objects.get(cod_asignatura = Unidad_Aprendizaje.objects.get(cod_unidad_aprendizaje = request.GET.get("codigo")).cod_asignatura_id).cod_plan_estudio_id
         detalle = serializers.serialize("json", detalle)
         return JsonResponse({"detalle": detalle,
                              "carrera": carrera,
-                             "facultad": facultad})
+                             "facultad": facultad,
+                             "plan_estudio": plan_estudio})
 
 
 def actualizar_unidad_aprendizaje(request):
