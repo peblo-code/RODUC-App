@@ -66,12 +66,15 @@ def listaFacultades_Carreras(request, user):
         lista_planes = serializers.serialize('json', lista_planes)
         lista_semestre = Semestre.objects.filter(estado = 1)
         lista_semestre = serializers.serialize('json', lista_semestre)
+        lista_tipo_clase = Tipo_Clase.objects.filter(estado = 1)
+        lista_tipo_clase = serializers.serialize('json', lista_tipo_clase)
         return JsonResponse({
             "lista_facultades": lista_facultades,
             "lista_carreras": lista_carreras,
             "lista_asignaturas": lista_asignaturas,
             "lista_planes": lista_planes,
             "lista_semestre": lista_semestre,
+            "lista_tipo_clase": lista_tipo_clase,
         })
 
         
