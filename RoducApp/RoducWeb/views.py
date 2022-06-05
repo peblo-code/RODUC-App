@@ -59,7 +59,7 @@ def login(request):
                     request.session["usuario_conectado"] = datos_usuario.nombre_usuario
                     request.session["nombre_del_usuario"] = datos_usuario.nombres_del_usuario
                     request.session["correo_usuario"] = datos_usuario.direccion_email
-                    auditar_sesion(request, 'Inicia Sesion')
+                    auditar_sesion(request, 'Inicio de sesión en Web')
                     return redirect("inicio")
                 else:
                     return render(request, "login.html", {"mensaje_error": "La contraseña ingresada es incorrecta."})
