@@ -70,6 +70,10 @@ urlpatterns = [
 
     # RECURSOS AUXILIARES
     path('recurso_auxiliar', views.recurso_auxiliar, name='recurso_auxiliar'),
+    path('agregar_recurso_auxiliar', views.agregar_recurso_auxiliar, name='agregar_recurso_auxiliar'),
+    path('detalle_recurso_auxiliar', views.detalle_recurso_auxiliar, name='detalle_recurso_auxiliar'),
+    path('actualizar_recurso_auxiliar', views.actualizar_recurso_auxiliar, name='actualizar_recurso_auxiliar'),
+    path('eliminar_recurso_auxiliar', views.eliminar_recurso_auxiliar, name='eliminar_recurso_auxiliar'),
 
     # UNIDADES DE APRENDIZAJE
     path('unidad_aprendizaje', views.unidad_aprendizaje, name='unidad_aprendizaje'),

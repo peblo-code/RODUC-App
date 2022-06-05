@@ -175,3 +175,12 @@ class Metodologia_Enseñanza(models.Model):
     alta_fecha = models.DateTimeField(auto_now_add=True)
     modif_usuario = models.CharField(max_length=45)
     modif_fecha = models.DateTimeField(auto_now=True)
+
+class Recursos_Auxiliar(models.Model):
+    cod_recurso_auxiliar = models.AutoField(primary_key=True)
+    descripcion = models.CharField(max_length=100)
+    estado = models.IntegerField()
+    alta_usuario = models.CharField(max_length=45)
+    alta_fecha = models.DateTimeField(auto_now_add=True)
+    modif_usuario = models.CharField(max_length=45)
+    modif_fecha = models.DateTimeField(auto_now=True)

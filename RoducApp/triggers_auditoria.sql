@@ -691,3 +691,56 @@ DELIMITER ;
 /*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/*AUDITORIA RECURSOS_AUXILIAR*/
+DROP TRIGGER IF EXISTS `roducdb`. `AUDITORIA_INSERT_RECURSOS_AUXILIAR`;
+DELIMITER $$
+USE `roducdb` $$
+CREATE TRIGGER `roducdb`.`AUDITORIA_INSERT_RECURSOS_AUXILIAR` BEFORE INSERT ON `roducweb_recursos_auxiliar` FOR EACH ROW
+BEGIN
+	INSERT INTO roducweb_auditoria(
+		tabla,
+		accion,
+		datos_viejos,
+		datos_nuevos,
+		usuario,
+		fecha
+	)
+	VALUES(
+		'Recuros Auxiliares',
+		'I',
+		NULL,
+		CONCAT('Codigo: ', (SELECT `AUTO_INCREMENT` FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'roducdb' AND TABLE_NAME = 'roducweb_recursos_auxiliar'), '| Descripcion:', NEW.descripcion, '| Estado: ', NEW.estado, '| Usuario Alta: ', NEW.alta_usuario, '| Fecha Alta: ', NEW.alta_fecha),
+		NEW.alta_usuario,
+		NOW()
+	);
+END$$
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS `roducdb`.`AUDITORIA_UPDATE_RECURSOS_AUXILIAR`;
+DELIMITER $$
+USE `roducdb`$$
+CREATE TRIGGER `roducdb`.`AUDITORIA_UPDATE_RECURSOS_AUXILIAR` BEFORE UPDATE ON `roducweb_recursos_auxiliar` FOR EACH ROW
+BEGIN
+	INSERT INTO roducweb_auditoria(
+		tabla,
+        accion,
+        datos_viejos,
+        datos_nuevos,
+        usuario,
+        fecha
+    )
+    VALUES(
+		'Recursos Auxiliares',
+        (IF(NEW.estado = 0 AND OLD.estado = 1, 'D', 'U')),
+		CONCAT('Codigo: ', OLD.cod_recurso_auxiliar, '| Descripcion: ', OLD.descripcion, '| Estado: ', OLD.estado, '| Usuario Alta: ', OLD.alta_usuario, '| Fecha Alta: ', OLD.alta_fecha, '| Modif. Usuario: ', OLD.modif_usuario, '| Modif. Fecha: ', OLD.modif_fecha),
+		CONCAT('Codigo: ', NEW.cod_recurso_auxiliar, '| Descripcion: ', NEW.descripcion, '| Estado: ', NEW.estado, '| Usuario Alta: ', NEW.alta_usuario, '| Fecha Alta: ', NEW.alta_fecha, '| Modif. Usuario: ', NEW.modif_usuario, '| Modif. Fecha: ', NEW.modif_fecha),
+        NEW.modif_usuario,
+        NOW()
+    );
+END$$
+DELIMITER ;
+
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
