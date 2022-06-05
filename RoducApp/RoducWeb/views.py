@@ -777,9 +777,6 @@ def eliminar_instrumento_evaluacion(request):
         respuesta = JsonResponse({"mensaje": "Registro Eliminado con Éxito"})
         return respuesta
 
-def tipo_eva(request):
-    return render(request, "tipo_eva/tipo_eva.html")
-
 def trabajo_autonomo(request):
     return render(request, "trabajo_autonomo/trabajo_autonomo.html")
 
@@ -871,5 +868,50 @@ def eliminar_recurso_auxiliar(request):
         instrumento_eliminar.estado = 0
         instrumento_eliminar.modif_usuario = request.session.get("usuario_conectado")
         instrumento_eliminar.save()
+        respuesta = JsonResponse({"mensaje": "Registro Eliminado con Éxito"})
+        return respuesta
+
+def tipo_eva(request):
+    lista_tipo = Tipo_Eva.objects.filter(estado = 1)
+    return render(request, "tipo_eva/tipo_eva.html", {"mensaje_bienvenida": generar_saludo(),
+                                                      "usuario_conectado": request.session.get("usuario_conectado"),
+                                                      "nombre_usuario": request.session.get("nombre_del_usuario"),
+                                                      "lista_tipo": lista_tipo})
+
+def detalle_tipo_eva(request):
+    if request.method == 'GET':
+        detalle = Tipo_Eva.objects.filter(cod_tipo_eva=request.GET.get("codigo"))
+        detalle = serializers.serialize("json", detalle)
+        return JsonResponse({"detalle": detalle})
+
+
+def agregar_tipo_eva(request):
+    if request.method == 'POST':
+        nuevo_tipo = Tipo_Eva(
+            descripcion = request.POST.get("descripcion"),
+            estado = 1,
+            alta_usuario = request.session.get("usuario_conectado"),
+        )
+        nuevo_tipo.save()
+        respuesta = JsonResponse({"mensaje": "Registro Guardado con Éxito"})
+        return respuesta
+
+def actualizar_tipo_eva(request):
+    if request.method == 'POST':
+        actualizar_tipo = Tipo_Eva.objects.get(estado = 1, cod_tipo_eva = request.POST.get("codigo"))
+        actualizar_tipo.descripcion = request.POST.get("descripcion")
+        actualizar_tipo.estado = 1
+        actualizar_tipo.modif_usuario = request.session.get("usuario_conectado")
+        actualizar_tipo.save()
+        respuesta = JsonResponse({"mensaje": "Registro Actualizado con Éxito"})
+        return respuesta
+
+@csrf_exempt
+def eliminar_tipo_eva(request):
+    if request.method == "POST":
+        tipo_clase_eliminar = Tipo_Eva.objects.get(cod_tipo_eva=request.POST.get("codigo"))
+        tipo_clase_eliminar.estado = 0
+        tipo_clase_eliminar.modif_usuario = request.session.get("usuario_conectado")
+        tipo_clase_eliminar.save()
         respuesta = JsonResponse({"mensaje": "Registro Eliminado con Éxito"})
         return respuesta

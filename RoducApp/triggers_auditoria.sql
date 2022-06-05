@@ -744,3 +744,56 @@ DELIMITER ;
 /*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/*AUDITORIA RECURSOS_AUXILIAR*/
+DROP TRIGGER IF EXISTS `roducdb`. `AUDITORIA_INSERT_TIPO_EVA`;
+DELIMITER $$
+USE `roducdb` $$
+CREATE TRIGGER `roducdb`.`AUDITORIA_INSERT_TIPO_EVA` BEFORE INSERT ON `roducweb_tipo_eva` FOR EACH ROW
+BEGIN
+	INSERT INTO roducweb_auditoria(
+		tabla,
+		accion,
+		datos_viejos,
+		datos_nuevos,
+		usuario,
+		fecha
+	)
+	VALUES(
+		'Tipo Evaluación',
+		'I',
+		NULL,
+		CONCAT('Codigo: ', (SELECT `AUTO_INCREMENT` FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'roducdb' AND TABLE_NAME = 'roducweb_tipo_eva'), '| Descripcion:', NEW.descripcion, '| Estado: ', NEW.estado, '| Usuario Alta: ', NEW.alta_usuario, '| Fecha Alta: ', NEW.alta_fecha),
+		NEW.alta_usuario,
+		NOW()
+	);
+END$$
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS `roducdb`.`AUDITORIA_UPDATE_TIPO_EVA`;
+DELIMITER $$
+USE `roducdb`$$
+CREATE TRIGGER `roducdb`.`AUDITORIA_UPDATE_TIPO_EVA` BEFORE UPDATE ON `roducweb_tipo_eva` FOR EACH ROW
+BEGIN
+	INSERT INTO roducweb_auditoria(
+		tabla,
+        accion,
+        datos_viejos,
+        datos_nuevos,
+        usuario,
+        fecha
+    )
+    VALUES(
+		'Tipo Evaluación',
+        (IF(NEW.estado = 0 AND OLD.estado = 1, 'D', 'U')),
+		CONCAT('Codigo: ', OLD.cod_tipo_eva, '| Descripcion: ', OLD.descripcion, '| Estado: ', OLD.estado, '| Usuario Alta: ', OLD.alta_usuario, '| Fecha Alta: ', OLD.alta_fecha, '| Modif. Usuario: ', OLD.modif_usuario, '| Modif. Fecha: ', OLD.modif_fecha),
+		CONCAT('Codigo: ', NEW.cod_tipo_eva, '| Descripcion: ', NEW.descripcion, '| Estado: ', NEW.estado, '| Usuario Alta: ', NEW.alta_usuario, '| Fecha Alta: ', NEW.alta_fecha, '| Modif. Usuario: ', NEW.modif_usuario, '| Modif. Fecha: ', NEW.modif_fecha),
+        NEW.modif_usuario,
+        NOW()
+    );
+END$$
+DELIMITER ;
+
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/

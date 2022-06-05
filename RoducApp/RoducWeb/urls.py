@@ -105,6 +105,10 @@ urlpatterns = [
 
     # TIPO DE EVALUACION
     path('tipo_eva', views.tipo_eva, name='tipo_eva'),
+    path('detalle_tipo_eva', views.detalle_tipo_eva, name='detalle_tipo_eva'),
+    path('agregar_tipo_eva', views.agregar_tipo_eva, name='agregar_tipo_eva'),
+    path('actualizar_tipo_eva', views.actualizar_tipo_eva, name='actualizar_tipo_eva'),
+    path('eliminar_tipo_eva', views.eliminar_tipo_eva, name='eliminar_tipo_eva'),
 
     # TRABAJO AUTÓNOMO
     path('trabajo_autonomo', views.trabajo_autonomo, name='trabajo_autonomo'),
