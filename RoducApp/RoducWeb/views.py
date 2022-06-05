@@ -915,3 +915,48 @@ def eliminar_tipo_eva(request):
         tipo_clase_eliminar.save()
         respuesta = JsonResponse({"mensaje": "Registro Eliminado con Éxito"})
         return respuesta
+
+def trabajo_autonomo(request):
+    lista_trabajos = Trabajo_Autonomo.objects.filter(estado = 1)
+    return render(request, "trabajo_autonomo/trabajo_autonomo.html", {"mensaje_bienvenida": generar_saludo(),
+                                                                      "usuario_conectado": request.session.get("usuario_conectado"),
+                                                                      "nombre_usuario": request.session.get("nombre_del_usuario"),
+                                                                      "lista_trabajos": lista_trabajos})
+
+def detalle_trabajo_autonomo(request):
+    if request.method == 'GET':
+        detalle = Trabajo_Autonomo.objects.filter(cod_trabajo_autonomo=request.GET.get("codigo"))
+        detalle = serializers.serialize("json", detalle)
+        return JsonResponse({"detalle": detalle})
+
+
+def agregar_trabajo_autonomo(request):
+    if request.method == 'POST':
+        nuevo_trabajo = Trabajo_Autonomo(
+            descripcion = request.POST.get("descripcion"),
+            estado = 1,
+            alta_usuario = request.session.get("usuario_conectado"),
+        )
+        nuevo_trabajo.save()
+        respuesta = JsonResponse({"mensaje": "Registro Guardado con Éxito"})
+        return respuesta
+
+def actualizar_trabajo_autonomo(request):
+    if request.method == 'POST':
+        actualizar_trabajo = Trabajo_Autonomo.objects.get(estado = 1, cod_trabajo_autonomo = request.POST.get("codigo"))
+        actualizar_trabajo.descripcion = request.POST.get("descripcion")
+        actualizar_trabajo.estado = 1
+        actualizar_trabajo.modif_usuario = request.session.get("usuario_conectado")
+        actualizar_trabajo.save()
+        respuesta = JsonResponse({"mensaje": "Registro Actualizado con Éxito"})
+        return respuesta
+
+@csrf_exempt
+def eliminar_trabajo_autonomo(request):
+    if request.method == "POST":
+        trabajo_eliminar = Trabajo_Autonomo.objects.get(cod_trabajo_autonomo=request.POST.get("codigo"))
+        trabajo_eliminar.estado = 0
+        trabajo_eliminar.modif_usuario = request.session.get("usuario_conectado")
+        trabajo_eliminar.save()
+        respuesta = JsonResponse({"mensaje": "Registro Eliminado con Éxito"})
+        return respuesta

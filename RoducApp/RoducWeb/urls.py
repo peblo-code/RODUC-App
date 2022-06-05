@@ -112,4 +112,8 @@ urlpatterns = [
 
     # TRABAJO AUTÓNOMO
     path('trabajo_autonomo', views.trabajo_autonomo, name='trabajo_autonomo'),
+    path('agregar_trabajo_autonomo', views.agregar_trabajo_autonomo, name='agregar_trabajo_autonomo'),
+    path('detalle_trabajo_autonomo', views.detalle_trabajo_autonomo, name='detalle_trabajo_autonomo'),
+    path('actualizar_trabajo_autonomo', views.actualizar_trabajo_autonomo, name='actualizar_trabajo_autonomo'),
+    path('eliminar_trabajo_autonomo', views.eliminar_trabajo_autonomo, name='eliminar_trabajo_autonomo'),
 ]
