@@ -5,6 +5,9 @@ import PickerSelect from './PickerSelect';
 import useUserContext from '../hooks/useUserContext.js';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import axios from 'axios';
+import Icon from 'react-native-vector-icons/MaterialIcons'
+import SectionedMultiSelect from 'react-native-sectioned-multi-select';
+
 
 const NewForm = ({ navigation }) => {
     const { user, URL } = useUserContext();
@@ -14,18 +17,25 @@ const NewForm = ({ navigation }) => {
     const [planes, setPlanes] = useState([]);
     const [asignaturas, setAsignaturas] = useState([]);
     const [unidades, setUnidades] = useState([]);
+    const [contenidos, setContenidos] = useState([])
+
     const [asignaturaItems, setAsignaturaItems] = useState([]);
     const [carreraItems, setCarreraItems] = useState([]);
     const [planItems, setPlanItems] = useState([]);
     const [unidadItems, setUnidadItems] = useState([]);
+    const [contenidoItems, setContenidoItems] = useState([])
+
     const [asignaturaPicker, setAsignaturaPicker] = useState('');
     const [carreraPicker, setCarreraPicker] = useState('');
     const [planPicker, setPlanPicker] = useState('');
     const [unidadPicker, setUnidadPicker] = useState('');
+    const [contenidoPicker, setContenidoPicker] = useState('')
+
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
     const [text, setText] = useState('Empty');
+    const [selectedItems, setSelectedItems] = useState([]);
 
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
@@ -53,12 +63,14 @@ const NewForm = ({ navigation }) => {
             const resAsignaturas = JSON.parse(response.data.lista_asignaturas);
             const resPlanes = JSON.parse(response.data.lista_planes);
             const resUnidades = JSON.parse(response.data.lista_unidad);
+            const resContenido = JSON.parse(response.data.lista_contenido)
             const resClases = JSON.parse(response.data.lista_tipo_clase);
             setFacultades(resFacu.map(field => field));
             setCarreras(resCarreras.map(field => field));
             setPlanes(resPlanes.map(field => field));
             setAsignaturas(resAsignaturas.map(field => field));
             setUnidades(resUnidades.map(field => field));
+            setContenidos(resContenido.map(field => field));
             setClases(resClases.map(field => field));
         })
         .catch((error) => {
@@ -81,6 +93,11 @@ const NewForm = ({ navigation }) => {
     useEffect(() => {
         setUnidadItems(getItems(unidades, 'cod_asignatura', unidadPicker));
     }, [unidadPicker])
+
+    useEffect(() => {
+        setContenidoItems(getMultiItems(contenidos, 'cod_unidad_aprendizaje', contenidoPicker))
+
+    }, [contenidoPicker])
 
     const FacultadItems = (facultades.map(facultad => ({
         label: facultad.fields.descripcion,
@@ -110,16 +127,44 @@ const NewForm = ({ navigation }) => {
         })
         return arr;
     }
+
+    const getMultiItems = (items, cod, itemPicker) => {
+        let arr = []
+        items.forEach(item => {
+            if(item.fields[cod] == itemPicker) {
+                let obj = {
+                    name: item.fields.descripcion,
+                    id: item.pk,
+                }
+                arr.push(obj);
+
+                return arr;
+            }
+        })
+
+        let result = [{
+            name: "Contenidos", 
+            id:0, 
+            children: arr
+        }];
+        console.log(result)
+        return result;
+    }
     
     return(
         <ScrollView>
             <View style={styles.form}>
+
                 <StyledText
                     fontSize="large"
                     fontWeight="bold"
                     color="primary">
                     Nuevo Informe
                 </StyledText>
+
+                <Text>{text}</Text>
+                <Button title='DatePicker' onPress={() => showMode('date')}/>
+                <Button title='TimePicker' onPress={() => showMode('time')}/>
                 
                 <PickerSelect 
                     title="Facultad"
@@ -153,10 +198,20 @@ const NewForm = ({ navigation }) => {
                 <PickerSelect 
                     title="Unidad de Aprendizaje"
                     items={ unidadItems }
+                    onValueChange={ setContenidoPicker }
                 />
-                <Text>{text}</Text>
-                <Button title='DatePicker' onPress={() => showMode('date')}/>
-                <Button title='TimePicker' onPress={() => showMode('time')}/>
+
+                <SectionedMultiSelect
+                    items={contenidoItems}
+                    IconRenderer={Icon}
+                    uniqueKey="id"
+                    subKey="children"
+                    selectText="Seleccione los contenidos"
+                    showDropDowns={true}
+                    readOnlyHeadings={true}
+                    onSelectedItemsChange={setSelectedItems}
+                    selectedItems={selectedItems}
+                />
 
                 {show && (
                     <DateTimePicker
