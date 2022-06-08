@@ -40,6 +40,10 @@ class FacultadRetrieveAPIView(generics.RetrieveAPIView):
     queryset = Facultad.objects.all()
     serializer_class = FacultadListSerializer
 
+class Cabecera_PlanillaCreateAPIView(generics.CreateAPIView):
+    queryset = Cabecera_Planilla.objects.all()
+    serializer_class = Cabecera_PlanillaSerializer
+
 #FUNCIONES
 def validarSesion(request, user):
     if request.method == 'GET':
