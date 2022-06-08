@@ -90,14 +90,15 @@ const NewForm = ({ navigation }) => {
         setAsignaturaItems(getItems(asignaturas, 'cod_plan_estudio', asignaturaPicker));
     }, [asignaturaPicker])
 
-    useEffect(() => {
+/*     useEffect(() => {
         setUnidadItems(getItems(unidades, 'cod_asignatura', unidadPicker));
-    }, [unidadPicker])
+    }, [unidadPicker]) */
 
     useEffect(() => {
-        setContenidoItems(getMultiItems(contenidos, 'cod_unidad_aprendizaje', contenidoPicker))
-
-    }, [contenidoPicker])
+        const items = [unidades, contenidos];
+        const cod = ['cod_asignatura', 'cod_unidad_aprendizaje']
+        setContenidoItems(getMultiItems(items, cod, unidadPicker))
+    }, [unidadPicker])
 
     const FacultadItems = (facultades.map(facultad => ({
         label: facultad.fields.descripcion,
@@ -129,26 +130,35 @@ const NewForm = ({ navigation }) => {
     }
 
     const getMultiItems = (items, cod, itemPicker) => {
+        //contenido de la unidad
+        const getSubItems = (subItemCod) => {
+            let arrItems = [];
+            items[1].forEach(subItem => {
+                if(subItem.fields[cod[1]] == subItemCod) {
+                    let obj1 = {
+                        name: subItem.fields.descripcion,
+                        id: subItem.pk,
+                    }
+                    arrItems.push(obj1);
+                }
+            })
+            return arrItems;
+        }
+
+        //titulo de la unidad
         let arr = []
-        items.forEach(item => {
-            if(item.fields[cod] == itemPicker) {
+        items[0].forEach(item => {
+            if(item.fields[cod[0]] == itemPicker) {
                 let obj = {
                     name: item.fields.descripcion,
-                    id: item.pk,
+                    id: item.fields.descripcion,
+                    children: getSubItems(item.pk)
                 }
                 arr.push(obj);
-
                 return arr;
             }
         })
-
-        let result = [{
-            name: "Contenidos", 
-            id:0, 
-            children: arr
-        }];
-        console.log(result)
-        return result;
+        return arr;
     }
     
     return(
@@ -193,12 +203,6 @@ const NewForm = ({ navigation }) => {
                 <PickerSelect 
                     title="Tipo de Clase"
                     items={ ClaseItems }
-                />
-
-                <PickerSelect 
-                    title="Unidad de Aprendizaje"
-                    items={ unidadItems }
-                    onValueChange={ setContenidoPicker }
                 />
 
                 <SectionedMultiSelect
