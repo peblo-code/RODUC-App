@@ -116,4 +116,7 @@ urlpatterns = [
     path('detalle_trabajo_autonomo', views.detalle_trabajo_autonomo, name='detalle_trabajo_autonomo'),
     path('actualizar_trabajo_autonomo', views.actualizar_trabajo_autonomo, name='actualizar_trabajo_autonomo'),
     path('eliminar_trabajo_autonomo', views.eliminar_trabajo_autonomo, name='eliminar_trabajo_autonomo'),
+
+    # REPORTES
+    path('reporte', views.reporte, name='reporte'),
 ]
