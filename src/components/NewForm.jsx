@@ -1,5 +1,4 @@
-import { View, StyleSheet, Button, Platform, ScrollView } from 'react-native';
-import CheckBox from 'react-native-checkbox';
+import { View, StyleSheet, Button, Platform, ScrollView, Alert } from 'react-native';
 import { useEffect, useState } from 'react'
 import StyledText from './StyledText';
 import PickerSelect from './PickerSelect';
@@ -8,6 +7,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
+import { CheckBox } from '@rneui/themed';
 
 
 const NewForm = ({ navigation }) => {
@@ -26,6 +26,13 @@ const NewForm = ({ navigation }) => {
     const [unidadItems, setUnidadItems] = useState([]);
     const [contenidoItems, setContenidoItems] = useState([])
 
+    const [selectedFacultad, setSelectedFacultad] = useState('');
+    const [selectedCarrera, setSelectedCarrera] = useState('');
+    const [selectedPlan, setSelectedPlan] = useState('');
+    const [selectedAsignatura, setSelectedAsignatura] = useState('');
+    const [selectedClase, setSelectedClase] = useState('');
+    const selects = [selectedFacultad, selectedCarrera, selectedPlan, selectedAsignatura, selectedClase];
+
     const [asignaturaPicker, setAsignaturaPicker] = useState('');
     const [carreraPicker, setCarreraPicker] = useState('');
     const [planPicker, setPlanPicker] = useState('');
@@ -38,9 +45,9 @@ const NewForm = ({ navigation }) => {
     const [selectedDate, setSelectedDate] = useState('Seleccionar Fecha');
     const [selectedStartTime, setSelectedStartTime] = useState('Seleccionar Hora Inicio');
     const [selectedEndTime, setSelectedEndTime] = useState('Seleccionar Hora Fin');
-    const [selectedItems, setSelectedItems] = useState([]);
     const [isStartTime, setIsStartTime] = useState(false);
-    const [toggleCheckBox, setToggleCheckBox] = useState(false)
+    const [check1, setCheck1] = useState(false)
+    const [isDisabled, setIsDisabled] = useState(true)
 
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
@@ -93,7 +100,6 @@ const NewForm = ({ navigation }) => {
     }, [])
 
     useEffect(() => {
-        setCarreraItems(0)
         setCarreraItems(getItems(carreras, 'cod_facultad', carreraPicker));
     }, [carreraPicker])
 
@@ -110,6 +116,17 @@ const NewForm = ({ navigation }) => {
         const cod = ['cod_asignatura', 'cod_unidad_aprendizaje']
         setContenidoItems(getMultiItems(items, cod, unidadPicker))
     }, [unidadPicker])
+
+    useEffect(() => {
+        if(selectedDate != 'Seleccionar Fecha' && selectedStartTime != 'Seleccionar Hora Inicio' && selectedEndTime != 'Seleccionar Hora Fin') {
+            if(selects.every(item => item == 0 || item != null)) {
+                setIsDisabled(false);
+            }
+            else {
+                setIsDisabled(true);
+            }
+        }
+    }, [selects])
 
     const FacultadItems = (facultades.map(facultad => ({
         label: facultad.fields.descripcion,
@@ -171,6 +188,32 @@ const NewForm = ({ navigation }) => {
         })
         return arr;
     }
+
+    const alertEvaluacion = () => {
+        const info = !check1 ? ['Activar Evaluación', '¿Desea que el tipo de clase sea "Evaluación"?'] : ['Desactivar Evaluación', '¿Desea desactivar el tipo de clase "Evaluación"?'];
+        Alert.alert(info[0], info[1], [
+            {
+                text: 'Cancelar',
+                style: 'cancel',
+            },
+            { text: 'Sí!', onPress: () => {
+                setCheck1(!check1); 
+                !check1 ? setSelectedClase(0) : setSelectedClase(null);
+            }},
+        ]);
+    }
+
+    const alertSubmit = () => {
+        Alert.alert('Confirmar', '¿Desea guardar la cabecera del informe?', [
+            {
+                text: 'Cancelar',
+                style: 'cancel',
+            },
+            { text: 'Sí!', onPress: () => {
+                setIsDisabled(true);
+            }},
+        ]);
+    }
     
     return(
         <ScrollView>
@@ -179,17 +222,17 @@ const NewForm = ({ navigation }) => {
                 fontWeight="bold"
                 color="primary"
                 align="center"
-                style={{ marginTop: 10}}>
+                style={{ marginTop: 10 }}>
                 Informe de Clase
             </StyledText>
             <View style={styles.form}>
-                <View style={{ flexDirection:'row', justifyContent:'center', alignItems:'center'}}>
+                <View style={{ flexDirection:'row', justifyContent:'center', alignItems:'center' }}>
                     <View>
                     <StyledText align="center" fontWeight="bold">{selectedDate}</StyledText>
                         <StyledText align="center" fontWeight="bold">{selectedStartTime}</StyledText>
                         <StyledText align="center" fontWeight="bold">{selectedEndTime}</StyledText>
                     </View>
-                    <View style={{marginLeft: 8, justifyContent:'space-between', height: 120}}>
+                    <View style={{ marginLeft: 8, justifyContent:'space-between', height: 120 }}>
                         <Button title='Fecha de Clase' onPress={() => showMode('date')}/>
                         <Button title='Hora de Entrada' onPress={() => { showMode('time'); setIsStartTime(true) }}/>
                         <Button title='Hora de Salida' onPress={() => { showMode('time'); setIsStartTime(false) }}/>
@@ -199,46 +242,57 @@ const NewForm = ({ navigation }) => {
                 <PickerSelect 
                     title="Facultad"
                     items={ FacultadItems }
-                    onValueChange={ setCarreraPicker }
+                    selectedValue={ selectedFacultad }
+                    setPicker={ setCarreraPicker }
+                    setSelected={ setSelectedFacultad }
                 />
 
                 <PickerSelect 
                     title="Carrera"
                     items={ carreraItems }
-                    onValueChange={ setPlanPicker }
+                    selectedValue={ selectedCarrera }
+                    setPicker={ setPlanPicker }
+                    setSelected={ setSelectedCarrera }
                 />
 
                 <PickerSelect 
                     title="Plan de Estudio"
                     items={ planItems }
-                    onValueChange={ setAsignaturaPicker }
+                    selectedValue={ selectedPlan }
+                    setPicker={ setAsignaturaPicker }
+                    setSelected={ setSelectedPlan }
                 />
-
-                <View>
-                <CheckBox
-                    label='Label'
-                    checked={true}
-                    onChange={(checked) => console.log('I am checked', checked)}
-                />
-                </View>
 
                 <PickerSelect 
                     title="Asignatura"
                     items={ asignaturaItems }
-                    onValueChange={ setUnidadPicker }
+                    selectedValue={ selectedAsignatura }
+                    setPicker={ setUnidadPicker }
+                    setSelected={ setSelectedAsignatura }
                 />
 
-                <PickerSelect 
+                <CheckBox
+                    center
+                    title="¿Usar evaluación como tipo de clase?"
+                    checked={ check1 }
+                    onPress={ () => alertEvaluacion() }
+                />
+
+                { !check1 ? <PickerSelect 
                     title="Tipo de Clase"
                     items={ ClaseItems }
-                />
+                    selectedValue={ selectedClase }
+                    setSelected={ setSelectedClase }
+                /> : null }
 
-                <StyledText
-                    fontSize="subheading"
-                    fontWeight="bold"
-                    color="secondary">Contenido de la Clase</StyledText>
+                <Button 
+                    title='Continuar'
+                    onPress={ () => {
+                        alertSubmit();
+                    }}
+                    disabled={ isDisabled }/>
 
-                <SectionedMultiSelect
+                {/* <SectionedMultiSelect
                     items={ contenidoItems }
                     IconRenderer={ Icon }
                     uniqueKey="id"
@@ -251,9 +305,9 @@ const NewForm = ({ navigation }) => {
                     selectedText=""
                     showDropDowns={ true }
                     readOnlyHeadings={ true }
-                    onSelectedItemsChange={setSelectedItems }
+                    onSelectedItemsChange={ setSelectedItems }
                     selectedItems={ selectedItems }
-                />
+                /> */}
 
                 {show && (
                     <DateTimePicker

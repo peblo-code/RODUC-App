@@ -2,11 +2,9 @@ import RNPickerSelect, { defaultStyles } from 'react-native-picker-select';
 import { StyleSheet, View } from 'react-native';  
 import StyledText from './StyledText';
 import theme from '../theme';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-export default function PickerSelect({ title, items, onValueChange }) {
-
-    const [selectedValue, setSelectedValue] = useState('');
+export default function PickerSelect({ title, items, selectedValue, setPicker, setSelected }) {
 
     const placeholder = {
         label: 'Seleccione una opción',
@@ -51,11 +49,10 @@ export default function PickerSelect({ title, items, onValueChange }) {
                 useNativeAndroidPickerStyle={ false }
                 value={ selectedValue }
                 onValueChange={ (value) => { 
-                    onValueChange ? onValueChange(value) : console.log(value) 
-                    setSelectedValue(value)
+                    setPicker ? setPicker(value) : console.log(value)
+                    setSelected ? setSelected(value) : console.log(value)
                 }}
             />
         </View> 
     )
-    
 }
