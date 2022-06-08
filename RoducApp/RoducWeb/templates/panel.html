@@ -45,6 +45,9 @@
                 <span class="nav-link-text">Usuarios</span>
               </a>
             </li>
+            <h6 class="navbar-heading text-muted" style="padding-left: 1.5rem; padding-bottom: 0; padding-top: 1rem;">
+              <span class="docs-normal">Facultad</span>
+            </h6>
             <li class="nav-item">
               <a class="nav-link " href={% url 'facultad' %} style="padding: 1rem;">
                 <img src={% static 'assets/img/facultad.png' %} width="25" style = "margin-right: 10px; ">
@@ -69,22 +72,34 @@
                 <span class="nav-link-text">Semestres</span>
               </a>
             </li>
+            <h6 class="navbar-heading text-muted" style="padding-left: 1.5rem; padding-bottom: 0; padding-top: 1rem;">
+              <span class="docs-normal">Asignaturas</span>
+            </h6>
             <li class="nav-item">
               <a class="nav-link " href={% url 'asignatura' %} style="padding: 1rem;">
                 <img src={% static 'assets/img/asignatura.png' %} width="25" style = "margin-right: 10px; ">
                 <span class="nav-link-text">Asignaturas</span>
               </a>
             </li>
-          </ul>
-          <!-- Divider -->
-          <hr class="my-3">
-          <ul class="navbar-nav">
             <li class="nav-item">
               <a class="nav-link " href={% url 'contenido' %} style="padding: 1rem;">
                 <img src={% static 'assets/img/contenido.png' %} width="25" style = "margin-right: 10px; ">
                 <span class="nav-link-text">Contenidos</span>
               </a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link " href={% url 'unidad_aprendizaje' %} style="padding: 1rem;">
+                <img src={% static 'assets/img/unidad_aprendizaje.png' %} width="25" style = "margin-right: 10px; ">
+                <span class="nav-link-text">Unidades de Aprendizaje</span>
+              </a>
+            </li>
+          </ul>
+          <!-- Divider -->
+          <hr class="my-3">
+          <h6 class="navbar-heading p-0 text-muted">
+            <span class="docs-normal">Parámetros Varios</span>
+          </h6>
+          <ul class="navbar-nav">
             <li class="nav-item">
               <a class="nav-link " href={% url 'instrumento_evaluacion' %} style="padding: 1rem;">
                 <img src={% static 'assets/img/instrumento_evaluacion.png' %} width="25" style = "margin-right: 10px; ">
@@ -122,9 +137,9 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link " href={% url 'unidad_aprendizaje' %} style="padding: 1rem;">
-                <img src={% static 'assets/img/unidad_aprendizaje.png' %} width="25" style = "margin-right: 10px; ">
-                <span class="nav-link-text">Unidades de Aprendizaje</span>
+              <a class="nav-link " href={% url 'reporte' %} style="padding: 1rem;">
+                <img src={% static 'assets/img/reporte.png' %} width="25" style = "margin-right: 10px; ">
+                <span class="nav-link-text">Reportes</span>
               </a>
             </li>
           </ul>

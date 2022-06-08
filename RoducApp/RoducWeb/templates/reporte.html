@@ -1,0 +1,87 @@
+{% extends "panel.html" %}
+{% block titulo %}Inicio - Roduc{% endblock %}
+
+{% block formularios %}
+{% load static %}
+<div class="col-md-12 mb-2 mb-xl-3">
+    <h1><strong>Página</strong> de Reportes - <strong> RODUC</strong></h1>
+    <div class="tab-content">
+        <div class="row py-4">
+            
+            <div class="col-sm-4 mb-3 mb-md-0">
+                <div class="card text-center h-100">
+                    <a class="card-body d-flex flex-column btn btn-lg btn-outline-primary" href="{%url 'usuario' %}">
+                        <div>
+                            
+                            <span class="display-4" style="align-items: center;">Usuarios</span>
+                        </div>
+                    </a>
+                    
+                </div>
+            </div>
+            <div class="col-sm-4 mb-3 mb-md-0">
+                <div class="card text-center h-100">
+                    <a class="card-body d-flex flex-column btn btn-lg btn-outline-primary" href="{%url 'facultad' %}">
+                        <div>
+                            
+                            <span class="display-4">Facultades</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-sm-4 mb-3 mb-md-0">
+                <div class="card text-center h-100">
+                    <a class="card-body d-flex flex-column btn btn-lg btn-outline-primary" href="{%url 'carrera' %}">
+                        <div>
+                        
+                            <span class="display-4">Carreras</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-md-12 mb-2 mb-xl-3">
+    <div class="tab-content">
+        <div class="row">
+            
+            <div class="col-sm-4 mb-3 mb-md-0">
+                <div class="card text-center h-100">
+                    <a class="card-body d-flex flex-column btn btn-lg btn-outline-primary" href="{%url 'plan_estudio' %}">
+                        <div>
+                        
+                            <span class="display-4">Planes de Estudio</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-sm-4 mb-3 mb-md-0">
+                <div class="card text-center h-100">
+                    <a class="card-body d-flex flex-column btn btn-lg btn-outline-primary" href="{%url 'semestre' %}">
+                        <div>
+                            
+                            <span class="display-4">Semestres</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-sm-4 mb-3 mb-md-0">
+                <div class="card text-center h-100">
+                    <a class="card-body d-flex flex-column btn btn-lg btn-outline-primary" href="{%url 'asignatura' %}">
+                        <div>
+                            
+                            <span class="display-4">Asignaturas</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div> 
+</div>
+{% endblock %}
+
+{% block extrajs %}
+
+{% endblock %}
