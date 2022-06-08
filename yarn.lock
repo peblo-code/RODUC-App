@@ -9224,6 +9224,13 @@
   dependencies:
     "prop-types" "^15.7.2"
 
+"react-native-checkbox@^2.0.0":
+  "integrity" "sha512-XTI7iZ0KuPYyNCvcg4p4eC5ZenuBkfraFUzec17Vao6DsIcn5AOUKkc6KSwLPVksJyWWlPc832M/HTvni5qk7A=="
+  "resolved" "https://registry.npmjs.org/react-native-checkbox/-/react-native-checkbox-2.0.0.tgz"
+  "version" "2.0.0"
+  dependencies:
+    "prop-types" "^15.5.10"
+
 "react-native-codegen@^0.0.17":
   "integrity" "sha512-7GIEUmAemH9uWwB6iYXNNsPoPgH06pxzGRmdBzK98TgFBdYJZ7CBuZFPMe4jmHQTPOkQazKZ/w5O6/71JBixmw=="
   "resolved" "https://registry.npmjs.org/react-native-codegen/-/react-native-codegen-0.0.17.tgz"

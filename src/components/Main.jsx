@@ -54,7 +54,7 @@ const Main = () => {
                             component={LoginInPage}
                             options={styles} />
                         <Stack.Screen
-                            name='Nuevo Formulario'
+                            name='Nuevo Informe'
                             component={NewForm}
                             options={styles} />
                         <Stack.Screen

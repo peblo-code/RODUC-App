@@ -1,9 +1,12 @@
 import RNPickerSelect, { defaultStyles } from 'react-native-picker-select';
-import { StyleSheet, Platform, Text } from 'react-native';  
+import { StyleSheet, View } from 'react-native';  
+import StyledText from './StyledText';
+import theme from '../theme';
+import { useState } from 'react';
 
 export default function PickerSelect({ title, items, onValueChange }) {
 
-    const isAndroid = Platform.OS === 'android';
+    const [selectedValue, setSelectedValue] = useState('');
 
     const placeholder = {
         label: 'Seleccione una opción',
@@ -17,7 +20,7 @@ export default function PickerSelect({ title, items, onValueChange }) {
           paddingVertical: 12,
           paddingHorizontal: 10,
           borderWidth: 1,
-          borderColor: 'red',
+          borderColor: theme.colors.speechBlue,
           borderRadius: 4,
           color: 'black',
           paddingRight: 30, // to ensure the text is never behind the icon
@@ -27,7 +30,7 @@ export default function PickerSelect({ title, items, onValueChange }) {
           paddingHorizontal: 10,
           paddingVertical: 8,
           borderWidth: 0.5,
-          borderColor: 'purple',
+          borderColor: theme.colors.primary,
           borderRadius: 8,
           color: 'black',
           paddingRight: 30, // to ensure the text is never behind the icon
@@ -35,16 +38,24 @@ export default function PickerSelect({ title, items, onValueChange }) {
     });
 
     return(
-        <>
-            <Text>{ title }</Text>
+        <View style={{marginBottom: 10}}>
+            <StyledText
+                fontSize="subheading"
+                fontWeight="bold"
+                color="secondary"
+            >{ title }</StyledText>
             <RNPickerSelect
                 placeholder={ placeholder }
                 items={ items }
                 style={ pickerSelectStyles }
-                useNativeAndroidPickerStyle={ isAndroid }
-                onValueChange={ (value) => onValueChange ? onValueChange(value) : console.log(value) }
+                useNativeAndroidPickerStyle={ false }
+                value={ selectedValue }
+                onValueChange={ (value) => { 
+                    onValueChange ? onValueChange(value) : console.log(value) 
+                    setSelectedValue(value)
+                }}
             />
-        </> 
+        </View> 
     )
     
 }

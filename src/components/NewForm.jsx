@@ -1,4 +1,5 @@
-import { View, StyleSheet, Button, Text, Platform, ScrollView } from 'react-native';
+import { View, StyleSheet, Button, Platform, ScrollView } from 'react-native';
+import CheckBox from 'react-native-checkbox';
 import { useEffect, useState } from 'react'
 import StyledText from './StyledText';
 import PickerSelect from './PickerSelect';
@@ -34,18 +35,31 @@ const NewForm = ({ navigation }) => {
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
-    const [text, setText] = useState('Empty');
+    const [selectedDate, setSelectedDate] = useState('Seleccionar Fecha');
+    const [selectedStartTime, setSelectedStartTime] = useState('Seleccionar Hora Inicio');
+    const [selectedEndTime, setSelectedEndTime] = useState('Seleccionar Hora Fin');
     const [selectedItems, setSelectedItems] = useState([]);
+    const [isStartTime, setIsStartTime] = useState(false);
+    const [toggleCheckBox, setToggleCheckBox] = useState(false)
 
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
+        const fTimeDescription = isStartTime ? 'Hora de Inicio: ' : 'Hora de Fin: ';
         setShow(Platform.OS === 'ios');
         setDate(currentDate);
 
         let tempDate = new Date(currentDate);
-        let fDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear();
-        let fTime = 'Hours: ' + tempDate.getHours() + ' Minutes: ' + tempDate.getMinutes();
-        setText(fDate + '\n' + fTime);
+        let fDate = 'Fecha de clase: ' + tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear();
+        let fTime = fTimeDescription + tempDate.getHours() + ':' + tempDate.getMinutes();
+        setSelectedDate(fDate);
+        if(mode != 'date') {
+            if(isStartTime) {
+                setSelectedStartTime(fTime);
+            }
+            else {
+                setSelectedEndTime(fTime);
+            }
+        }
 
         console.log(fDate + ' (' + fTime + ')');
     };
@@ -79,6 +93,7 @@ const NewForm = ({ navigation }) => {
     }, [])
 
     useEffect(() => {
+        setCarreraItems(0)
         setCarreraItems(getItems(carreras, 'cod_facultad', carreraPicker));
     }, [carreraPicker])
 
@@ -89,10 +104,6 @@ const NewForm = ({ navigation }) => {
     useEffect(() => {
         setAsignaturaItems(getItems(asignaturas, 'cod_plan_estudio', asignaturaPicker));
     }, [asignaturaPicker])
-
-/*     useEffect(() => {
-        setUnidadItems(getItems(unidades, 'cod_asignatura', unidadPicker));
-    }, [unidadPicker]) */
 
     useEffect(() => {
         const items = [unidades, contenidos];
@@ -163,18 +174,27 @@ const NewForm = ({ navigation }) => {
     
     return(
         <ScrollView>
+            <StyledText
+                fontSize="large"
+                fontWeight="bold"
+                color="primary"
+                align="center"
+                style={{ marginTop: 10}}>
+                Informe de Clase
+            </StyledText>
             <View style={styles.form}>
-
-                <StyledText
-                    fontSize="large"
-                    fontWeight="bold"
-                    color="primary">
-                    Nuevo Informe
-                </StyledText>
-
-                <Text>{text}</Text>
-                <Button title='DatePicker' onPress={() => showMode('date')}/>
-                <Button title='TimePicker' onPress={() => showMode('time')}/>
+                <View style={{ flexDirection:'row', justifyContent:'center', alignItems:'center'}}>
+                    <View>
+                    <StyledText align="center" fontWeight="bold">{selectedDate}</StyledText>
+                        <StyledText align="center" fontWeight="bold">{selectedStartTime}</StyledText>
+                        <StyledText align="center" fontWeight="bold">{selectedEndTime}</StyledText>
+                    </View>
+                    <View style={{marginLeft: 8, justifyContent:'space-between', height: 120}}>
+                        <Button title='Fecha de Clase' onPress={() => showMode('date')}/>
+                        <Button title='Hora de Entrada' onPress={() => { showMode('time'); setIsStartTime(true) }}/>
+                        <Button title='Hora de Salida' onPress={() => { showMode('time'); setIsStartTime(false) }}/>
+                    </View>
+                </View>
                 
                 <PickerSelect 
                     title="Facultad"
@@ -194,6 +214,14 @@ const NewForm = ({ navigation }) => {
                     onValueChange={ setAsignaturaPicker }
                 />
 
+                <View>
+                <CheckBox
+                    label='Label'
+                    checked={true}
+                    onChange={(checked) => console.log('I am checked', checked)}
+                />
+                </View>
+
                 <PickerSelect 
                     title="Asignatura"
                     items={ asignaturaItems }
@@ -205,26 +233,36 @@ const NewForm = ({ navigation }) => {
                     items={ ClaseItems }
                 />
 
+                <StyledText
+                    fontSize="subheading"
+                    fontWeight="bold"
+                    color="secondary">Contenido de la Clase</StyledText>
+
                 <SectionedMultiSelect
-                    items={contenidoItems}
-                    IconRenderer={Icon}
+                    items={ contenidoItems }
+                    IconRenderer={ Icon }
                     uniqueKey="id"
                     subKey="children"
                     selectText="Seleccione los contenidos"
-                    showDropDowns={true}
-                    readOnlyHeadings={true}
-                    onSelectedItemsChange={setSelectedItems}
-                    selectedItems={selectedItems}
+                    confirmText="Listo"
+                    searchPlaceholderText="Buscar contenidos"
+                    noItemsComponent={ () => <StyledText align="center" style={{marginTop:20}}>No hay contenidos</StyledText> }
+                    noResultsComponent={ () => <StyledText align="center" style={{marginTop:20}}>No hay resultados</StyledText> }
+                    selectedText=""
+                    showDropDowns={ true }
+                    readOnlyHeadings={ true }
+                    onSelectedItemsChange={setSelectedItems }
+                    selectedItems={ selectedItems }
                 />
 
                 {show && (
                     <DateTimePicker
                         testID="dateTimePicker"
-                        value={date}
-                        mode={mode}
-                        is24Hour={true}
+                        value={ date }
+                        mode={ mode }
+                        is24Hour={ true }
                         display="default"
-                        onChange={onChange}
+                        onChange={ onChange }
                     />)
                 }
             
@@ -239,7 +277,20 @@ const styles = StyleSheet.create({
         marginVertical: 12,
         flex: 1,
         height: '100%',
-        gap: 12
+        gap: 12,
+        backgroundColor: '#fff',
+        paddingVertical: 12,
+        paddingHorizontal: 12,
+        marginBottom: 12,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.23,
+        shadowRadius: 2.62,
+        elevation: 4,
+        borderRadius: 12
     },
 })
 

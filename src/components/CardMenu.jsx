@@ -29,8 +29,8 @@ export default function CardMenu({navigation}) {
                 <CardButton 
                     iconName="file-text-o"
                     color="#0d3498"
-                    title="Nuevo Formulario"
-                    onPress={() => navigation.navigate('Nuevo Formulario')}
+                    title="Nuevo Informe"
+                    onPress={() => navigation.navigate('Nuevo Informe')}
                 />
                 <CardButton 
                     iconName="history"
