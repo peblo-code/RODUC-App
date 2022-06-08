@@ -46,9 +46,9 @@ export default function CardMenu({navigation}) {
                     onPress={() => navigation.navigate('Mi Perfil')}
                 />
                 <CardButton
-                    iconName="sign-out"
+                    iconName="info-circle"
                     color="#0d3498"
-                    title="Cerrar Sesión"
+                    title="Acerda De"
                 />
             </View>
         </View>

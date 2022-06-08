@@ -42,9 +42,9 @@ const NewForm = ({ navigation }) => {
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
-    const [selectedDate, setSelectedDate] = useState('Seleccionar Fecha');
-    const [selectedStartTime, setSelectedStartTime] = useState('Seleccionar Hora Inicio');
-    const [selectedEndTime, setSelectedEndTime] = useState('Seleccionar Hora Fin');
+    const [selectedDate, setSelectedDate] = useState('Complete la fecha!');
+    const [selectedStartTime, setSelectedStartTime] = useState('Complete Hora de Inicio!');
+    const [selectedEndTime, setSelectedEndTime] = useState('Complete Hora de Fin!');
     const [isStartTime, setIsStartTime] = useState(false);
     const [check1, setCheck1] = useState(false)
     const [isDisabled, setIsDisabled] = useState(true)
@@ -118,7 +118,7 @@ const NewForm = ({ navigation }) => {
     }, [unidadPicker])
 
     useEffect(() => {
-        if(selectedDate != 'Seleccionar Fecha' && selectedStartTime != 'Seleccionar Hora Inicio' && selectedEndTime != 'Seleccionar Hora Fin') {
+        if(selectedDate != 'Complete la fecha!' && selectedStartTime != 'Complete Hora de Inicio!' && selectedEndTime != 'Complete Hora de Fin!') {
             if(selects.every(item => item == 0 || item != null)) {
                 setIsDisabled(false);
             }
@@ -228,9 +228,9 @@ const NewForm = ({ navigation }) => {
             <View style={styles.form}>
                 <View style={{ flexDirection:'row', justifyContent:'center', alignItems:'center' }}>
                     <View>
-                    <StyledText align="center" fontWeight="bold">{selectedDate}</StyledText>
-                        <StyledText align="center" fontWeight="bold">{selectedStartTime}</StyledText>
-                        <StyledText align="center" fontWeight="bold">{selectedEndTime}</StyledText>
+                    <StyledText align="center" fontWeight="bold" color="primary">{selectedDate}</StyledText>
+                        <StyledText align="center" fontWeight="bold" color="primary">{selectedStartTime}</StyledText>
+                        <StyledText align="center" fontWeight="bold" color="primary">{selectedEndTime}</StyledText>
                     </View>
                     <View style={{ marginLeft: 8, justifyContent:'space-between', height: 120 }}>
                         <Button title='Fecha de Clase' onPress={() => showMode('date')}/>
