@@ -5,13 +5,15 @@ import PickerSelect from './PickerSelect';
 import useUserContext from '../hooks/useUserContext.js';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import axios from 'axios';
-import Icon from 'react-native-vector-icons/MaterialIcons'
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 import { CheckBox } from '@rneui/themed';
 
 
 const NewForm = ({ navigation }) => {
+    //Context
     const { user, URL } = useUserContext();
+
+    //Estados para almacenar los datos de la API
     const [facultades, setFacultades] = useState([]);
     const [carreras, setCarreras] = useState([]);
     const [clases, setClases] = useState([]);
@@ -20,25 +22,42 @@ const NewForm = ({ navigation }) => {
     const [unidades, setUnidades] = useState([]);
     const [contenidos, setContenidos] = useState([])
 
+    //Variable que contiene las listas de la API y su correspondiente estado
+    const listsAndSetters = [
+        { list: 'lista_facultades', setter: setFacultades },
+        { list: 'lista_carreras', setter: setCarreras },
+        { list: 'lista_planes', setter: setPlanes },
+        { list: 'lista_asignaturas', setter: setAsignaturas },
+        { list: 'lista_unidad', setter: setUnidades },
+        { list: 'lista_contenido', setter: setContenidos },
+        { list: 'lista_tipo_clase', setter: setClases },
+    ]
+
+    //Estados para cargar los datos del formulario
     const [asignaturaItems, setAsignaturaItems] = useState([]);
     const [carreraItems, setCarreraItems] = useState([]);
     const [planItems, setPlanItems] = useState([]);
     const [unidadItems, setUnidadItems] = useState([]);
     const [contenidoItems, setContenidoItems] = useState([])
 
+    //Estados para almacenar los datos del formulario
     const [selectedFacultad, setSelectedFacultad] = useState('');
     const [selectedCarrera, setSelectedCarrera] = useState('');
     const [selectedPlan, setSelectedPlan] = useState('');
     const [selectedAsignatura, setSelectedAsignatura] = useState('');
     const [selectedClase, setSelectedClase] = useState('');
+
+    //Variable para verificar si todos los campos estan llenos
     const selects = [selectedFacultad, selectedCarrera, selectedPlan, selectedAsignatura, selectedClase];
 
+    //Estados para relacionar los pickers del formulario
     const [asignaturaPicker, setAsignaturaPicker] = useState('');
     const [carreraPicker, setCarreraPicker] = useState('');
     const [planPicker, setPlanPicker] = useState('');
     const [unidadPicker, setUnidadPicker] = useState('');
     const [contenidoPicker, setContenidoPicker] = useState('')
 
+    //Estados para almacenar horarios y fecha
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
@@ -46,9 +65,18 @@ const NewForm = ({ navigation }) => {
     const [selectedStartTime, setSelectedStartTime] = useState('Complete Hora de Inicio!');
     const [selectedEndTime, setSelectedEndTime] = useState('Complete Hora de Fin!');
     const [isStartTime, setIsStartTime] = useState(false);
+
+    //Estados para determinar a donde se dirige el usuario
     const [check1, setCheck1] = useState(false)
     const [isDisabled, setIsDisabled] = useState(true)
 
+    //Funcion para obtener una lista especifica de la API
+    const getAPIData = (response, list, setList) => {
+        const res = JSON.parse(response.data[list])
+        setList(res.map(field => field))
+    }
+
+    //Funcion para elegir fecha
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
         const fTimeDescription = isStartTime ? 'Hora de Inicio: ' : 'Hora de Fin: ';
@@ -58,7 +86,9 @@ const NewForm = ({ navigation }) => {
         let tempDate = new Date(currentDate);
         let fDate = 'Fecha de clase: ' + tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear();
         let fTime = fTimeDescription + tempDate.getHours() + ':' + tempDate.getMinutes();
+
         setSelectedDate(fDate);
+
         if(mode != 'date') {
             if(isStartTime) {
                 setSelectedStartTime(fTime);
@@ -67,10 +97,9 @@ const NewForm = ({ navigation }) => {
                 setSelectedEndTime(fTime);
             }
         }
-
-        console.log(fDate + ' (' + fTime + ')');
     };
 
+    //Funcion para elegir hora o fecha
     const showMode = (currentMode) => {
         setShow(true);
         setMode(currentMode);
@@ -79,20 +108,7 @@ const NewForm = ({ navigation }) => {
     useEffect(() => {
         axios.get(`${URL}/listaFacultades_Carreras/${user.cod_usuario}`)
         .then((response) => {
-            const resFacu = JSON.parse(response.data.lista_facultades);
-            const resCarreras = JSON.parse(response.data.lista_carreras);
-            const resAsignaturas = JSON.parse(response.data.lista_asignaturas);
-            const resPlanes = JSON.parse(response.data.lista_planes);
-            const resUnidades = JSON.parse(response.data.lista_unidad);
-            const resContenido = JSON.parse(response.data.lista_contenido)
-            const resClases = JSON.parse(response.data.lista_tipo_clase);
-            setFacultades(resFacu.map(field => field));
-            setCarreras(resCarreras.map(field => field));
-            setPlanes(resPlanes.map(field => field));
-            setAsignaturas(resAsignaturas.map(field => field));
-            setUnidades(resUnidades.map(field => field));
-            setContenidos(resContenido.map(field => field));
-            setClases(resClases.map(field => field));
+            listsAndSetters.map(detail => getAPIData(response, detail.list, detail.setter))
         })
         .catch((error) => {
             console.log(error);
@@ -127,19 +143,23 @@ const NewForm = ({ navigation }) => {
             }
         }
     }, [selects])
+    //Carga individual de los pickers que no tienen relaciones con otros
 
+    //Carga de facultades
     const FacultadItems = (facultades.map(facultad => ({
         label: facultad.fields.descripcion,
         value: facultad.pk,
         key: facultad.pk
     })));
 
+    //Carga de clases
     const ClaseItems = (clases.map(clase => ({
         label: clase.fields.descripcion,
         value: clase.pk,
         key: clase.pk
     })));
 
+    //Funcion para carga de pickers
     const getItems = (items, cod, itemPicker) => {
         let arr = []
         items.forEach(item => {
@@ -157,6 +177,7 @@ const NewForm = ({ navigation }) => {
         return arr;
     }
 
+    //Funcion para carga de picker multiple
     const getMultiItems = (items, cod, itemPicker) => {
         //contenido de la unidad
         const getSubItems = (subItemCod) => {
@@ -189,6 +210,7 @@ const NewForm = ({ navigation }) => {
         return arr;
     }
 
+    //Alerta para activar o desactivar modo evaluacion
     const alertEvaluacion = () => {
         const info = !check1 ? ['Activar Evaluación', '¿Desea que el tipo de clase sea "Evaluación"?'] : ['Desactivar Evaluación', '¿Desea desactivar el tipo de clase "Evaluación"?'];
         Alert.alert(info[0], info[1], [
@@ -203,6 +225,7 @@ const NewForm = ({ navigation }) => {
         ]);
     }
 
+    //Alerta para guardar la cabecera
     const alertSubmit = () => {
         Alert.alert('Confirmar', '¿Desea guardar la cabecera del informe?', [
             {
@@ -290,7 +313,18 @@ const NewForm = ({ navigation }) => {
                     onPress={ () => {
                         alertSubmit();
                     }}
-                    disabled={ isDisabled }/>
+                    disabled={ isDisabled }
+                />
+
+                { isDisabled ? 
+                    <StyledText 
+                        fontWeight="bold"
+                        fontSize="body"
+                        align="center"
+                        color="red">
+                            Todos los campos deben ser rellenados!
+                    </StyledText> : null 
+                }
 
                 {/* <SectionedMultiSelect
                     items={ contenidoItems }
