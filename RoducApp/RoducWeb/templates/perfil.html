@@ -450,12 +450,12 @@
   <script>
     function asignarMateria(materia, carrera, rol, flag){
       if (flag == 2){
-        titulo = "Desvinculacion de Profesor"
-        texto = "Esta a punto de desvincular al profesor de la asignatura. Desea continuar?"
+        titulo = "Desvinculación de Profesor"
+        texto = "¿Está a punto de desvincular al profesor de la asignatura. ¿Desea continuar?"
         url = "{% url 'desvincular_asignatura' %}"
       } else {
-        titulo = "Asignacion de Profesor"
-        texto = "Esta a punto asignar al profesor una asignatura. Desea continuar?"
+        titulo = "Asignación de Profesor"
+        texto = "¿Está a punto asignar al profesor una asignatura. ¿Desea continuar?"
         url = "{% url 'asignar_asignatura' %}"
       }
       Swal.fire({
@@ -505,8 +505,8 @@
 <script>
   function eliminar_rol(codigo){
       Swal.fire({
-          title: 'Eliminacion de rol',
-          text: 'Esta seguro de eliminar el registro?',
+          title: 'Eliminación de rol',
+          text: '¿Está seguro de eliminar el registro?',
           icon: 'question',
           showCancelButton: true,
           confirmButtonText: 'Confirmar',
