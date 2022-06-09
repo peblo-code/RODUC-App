@@ -2,12 +2,13 @@ import { StyleSheet, Alert } from 'react-native';
 import Home from '../pages/Home.jsx';
 import LoginInPage from '../pages/LogIn.jsx';
 import NewForm from './NewForm.jsx';
+import HistoryList from './HistoryList.jsx';
+import About from '../pages/About.jsx';
 import UserView from '../pages/UserView.jsx';
 import TouchIcon from './TouchIcon.jsx';
 import useUserContext from '../hooks/useUserContext.js';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
-import HistoryList from './HistoryList.jsx';
 
 const Stack = createNativeStackNavigator();
 
@@ -65,6 +66,10 @@ const Main = () => {
                         <Stack.Screen
                             name='Mi Perfil'
                             component={UserView}
+                            options={styles} />
+                            <Stack.Screen
+                            name='Acerca de'
+                            component={About}
                             options={styles} />
                     </Stack.Navigator>
             }

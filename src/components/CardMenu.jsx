@@ -50,6 +50,7 @@ export default function CardMenu({navigation}) {
                     iconName="info-circle"
                     color="#0d3498"
                     title="Acerda De"
+                    onPress={() => navigation.navigate('Acerca de')}
                 />
             </View>
         </View>
