@@ -205,7 +205,7 @@ class Trabajo_Autonomo(models.Model):
 
 class Cabecera_Planilla(models.Model):
     cod_cabecera_planilla = models.AutoField(primary_key=True)
-    cod_tipo_clase = models.ForeignKey(Tipo_Clase, on_delete= models.CASCADE, blank=True)
+    cod_tipo_clase = models.ForeignKey(Tipo_Clase, on_delete= models.CASCADE, blank=True, null=True)
     cod_asignatura = models.ForeignKey(Asignatura, on_delete=models.CASCADE, blank=True)
     cod_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, blank=True)
     fecha_clase = models.DateField(auto_now=False)

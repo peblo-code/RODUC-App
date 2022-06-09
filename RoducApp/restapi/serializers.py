@@ -91,7 +91,4 @@ class Cabecera_PlanillaSerializer(serializers.ModelSerializer):
             'evaluacion',
             'estado',
             'alta_usuario',
-            'alta_fecha',
-            'modif_usuario',
-            'modif_fecha',
         ]

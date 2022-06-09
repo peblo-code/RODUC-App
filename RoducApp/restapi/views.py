@@ -116,6 +116,8 @@ def listaFacultades_Carreras(request, user):
             "lista_metodologia": lista_metodologia,
         })
 
-        
-    
-
+def historialReportes(request, user):
+    if request.method == 'GET':
+        lista_cabeceras = Cabecera_Planilla.objects.filter(estado = 1, cod_usuario_id = user).order_by('-fecha_clase')
+        lista_cabeceras = serializers.serialize('json', lista_cabeceras)
+        return JsonResponse({"lista_cabeceras": lista_cabeceras})
