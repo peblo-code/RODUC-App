@@ -982,7 +982,7 @@ def registro_de_operaciones_diarias(request, cod_cabecera):
     datos_semestre = Semestre.objects.get(cod_semestre = datos_asignatura.cod_semestre_id)
     datos_usuario = Usuario.objects.get(cod_usuario = datos_registro.cod_usuario_id)
     datos_clase = Tipo_Clase.objects.get(cod_tipo_clase = datos_registro.cod_tipo_clase_id)
-    lista_unidades = Unidad_Aprendizaje.objects.filter(estado  = 1, cod_asignatura_id = datos_asignatura.cod_asignatura)
+    lista_unidades = Unidad_Aprendizaje.objects.raw('SELECT DISTINCT u.cod_unidad_aprendizaje, u.descripcion FROM roducweb_contenido AS c, roducweb_contenidos_dados AS cd, roducweb_cabecera_planilla as ca, roducweb_unidad_aprendizaje AS u WHERE c.cod_contenido = cd.cod_contenido_id AND c.cod_unidad_aprendizaje_id = u.cod_unidad_aprendizaje AND cd.cod_cabecera_planilla_id = ca.cod_cabecera_planilla AND ca.cod_cabecera_planilla = ' + str(cod_cabecera))
     contenidos = Contenido.objects.raw('SELECT c.cod_contenido, c.descripcion, c.cod_unidad_aprendizaje_id FROM roducweb_contenido AS c, roducweb_contenidos_dados AS cd WHERE c.cod_contenido = cd.cod_contenido_id AND cd.cod_cabecera_planilla_id = ' + str(cod_cabecera))
     return render(request, "reportes/registro_de_operaciones_diarias.html", {"datos_asignatura": datos_asignatura,
                                                                              "datos_carrera": datos_carrera,
