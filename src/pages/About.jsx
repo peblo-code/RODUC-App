@@ -35,7 +35,7 @@ export default function UserView() {
                     style={{ marginBottom: 20 }}
                 >
                     Es una aplicación móvil destinada al registro de actividades del docente. 
-                    La misma fue desarrollada por alumnos de cuarto año de Ingeniería.
+                    La misma fue desarrollada por alumnos de cuarto año de Ingeniería Informática.
                 </StyledText>
                 <StyledText
                     color="speechBlue"
