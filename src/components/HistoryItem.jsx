@@ -1,14 +1,15 @@
 import { View, StyleSheet } from 'react-native';
 import StyledText from './StyledText.jsx';
-import RepositoryStats from './RepositoryStats.jsx';
+import RepositoryStats from './HistoryStats.jsx';
 import theme from '../theme.js';
 
-const RepositoryItemHeader = ({ carrera, asignatura, curso, plan }) => (
+const RepositoryItemHeader = ({ carrera, asignatura, curso, plan, tipo_clase }) => (
     <View style={{ flexDirection: 'row', paddingBottom: 2 }}>
         <View style={{ flex: 1 }}>
             <StyledText fontWeight='bold' align="center">{carrera}</StyledText>
             <StyledText color='secondary' align="center">{asignatura}</StyledText>
-            <View style={{flexDirection:'row', justifyContent:'center'}}>
+            <View style={{flexDirection:'row', justifyContent:'space-between'}}>
+                <StyledText style={styles.tipo_clase}>{tipo_clase}</StyledText>
                 <StyledText style={styles.curso}>{curso}</StyledText>
                 <StyledText style={styles.plan}>{plan}</StyledText>
             </View>
@@ -29,21 +30,29 @@ const styles = StyleSheet.create({
         padding: 20,
         paddingVertical: 5
     },
-    curso: {
+    tipo_clase: {
         padding: 4,
         color: theme.colors.white,
         backgroundColor: theme.colors.primary,
-        alignSelf: 'flex-start',
+        alignSelf: 'center',
         borderRadius: 4,
         marginVertical: 4,
         overflow: 'hidden',
-        marginRight: 15
+    },
+    curso: {
+        padding: 4,
+        color: theme.colors.white,
+        backgroundColor: theme.colors.secondary,
+        alignSelf: 'center',
+        borderRadius: 4,
+        marginVertical: 4,
+        overflow: 'hidden',
     },
     plan: {
         padding: 4,
         color: theme.colors.white,
-        backgroundColor: theme.colors.secondary,
-        alignSelf: 'flex-start',
+        backgroundColor: theme.colors.lightBlue,
+        alignSelf: 'center',
         borderRadius: 4,
         marginVertical: 4,
         overflow: 'hidden',

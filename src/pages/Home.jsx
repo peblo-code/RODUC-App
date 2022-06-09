@@ -1,6 +1,5 @@
 import { View, StyleSheet, Button } from 'react-native';
 import useUserContext from '../hooks/useUserContext';
-import RepositoryList from '../components/RepositoryList';
 import StyledText from '../components/StyledText';
 import theme from '../theme';
 import CardMenu from '../components/CardMenu';
