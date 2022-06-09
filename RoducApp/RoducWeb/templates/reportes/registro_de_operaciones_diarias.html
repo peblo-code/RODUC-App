@@ -60,20 +60,50 @@
             </section>
         </section>
         <section class="row py-2" style="border-bottom:solid; border-width: .5px; width: auto;">
-            <section style="padding-left: 10px; width: 100%; padding-right: 10px;">
-                <h3>UNIDAD DE APRENDIZAJE</h3>
+            <section class="col">
+                <h3>UNIDAD DE APRENDIZAJE</h3> 
                 {% for unidades in lista_unidades %}
                     <span class="card-title">{{unidades.descripcion}}</span> 
                 {% endfor %}
+            </section>
+            <section class="col" style="text-align: right;">
                 <h3>CONTENIDOS</h3>
                 {% for contenido in contenidos %}
                     <span class="card-title">{{contenido.descripcion}}</span> <br>   
                 {% endfor %}
             </section>
         </section>
+        <section class="row py-2" style="border-bottom:solid; border-width: .5px; width: auto;">
+            <section class="col" style="margin-left: 8px; border-right: solid; border-width: .5px;">
+                <h3>METODOLOGÍA DE ENSEÑANZA</h3>
+                {% for meto in lista_metodologia %}
+                    <span class="card-title">{{meto.descripcion}}</span> <br>
+                {% empty %}
+                    <span class="card-title">Sin metodología de aprendizaje</span> <br>
+                {% endfor %}
+            </section>
+            <section class="col" style="margin-left: 8px; border-right: solid; border-width: .5px;">
+                <h3>RECURSOS AUXILIARES</h3>
+                {% for recursos in lista_recurso %}
+                    <span class="card-title">{{recursos.descripcion}}</span> <br>
+                {% empty %}
+                    <span class="card-title">Sin recursos auxiliares</span> <br>
+                {% endfor %}
+            </section>
+            <section class="col" style="margin-left: 8px;">
+                <h3>TRABAJOS AUTONÓMOS</h3>
+                {% for trabajo in lista_trabajo %}
+                    <span class="card-title">{{trabajo.descripcion}}</span> <br>
+                {% empty %}
+                <span class="card-title">Sin trabajo autónomo</span> <br>
+                {% endfor %}
+            </section>
+        </section>
+        <section class="row py-2" style="display: flex; justify-content: center;">
+            <h4>ADECUACIONES REALIZADAS PARA EL DESARROLLO DE LA CLASE EN CASO DE ALUMNOS CON NECESIDADES EDUCATIVAS ESPECIALES</h4> 
+            <p>__________________________________________________________________________________________________________________________________________</p>           
+            <p>__________________________________________________________________________________________________________________________________________</p>           
+        </section>
     </section>
 </section>
-
-
-
 {% endblock %}

@@ -984,6 +984,9 @@ def registro_de_operaciones_diarias(request, cod_cabecera):
     datos_clase = Tipo_Clase.objects.get(cod_tipo_clase = datos_registro.cod_tipo_clase_id)
     lista_unidades = Unidad_Aprendizaje.objects.raw('SELECT DISTINCT u.cod_unidad_aprendizaje, u.descripcion FROM roducweb_contenido AS c, roducweb_contenidos_dados AS cd, roducweb_cabecera_planilla as ca, roducweb_unidad_aprendizaje AS u WHERE c.cod_contenido = cd.cod_contenido_id AND c.cod_unidad_aprendizaje_id = u.cod_unidad_aprendizaje AND cd.cod_cabecera_planilla_id = ca.cod_cabecera_planilla AND ca.cod_cabecera_planilla = ' + str(cod_cabecera))
     contenidos = Contenido.objects.raw('SELECT c.cod_contenido, c.descripcion, c.cod_unidad_aprendizaje_id FROM roducweb_contenido AS c, roducweb_contenidos_dados AS cd WHERE c.cod_contenido = cd.cod_contenido_id AND cd.cod_cabecera_planilla_id = ' + str(cod_cabecera))
+    lista_metodologia = Metodologia_Enseñanza.objects.raw('SELECT m.cod_metodologia_enseñanza, m.descripcion FROM roducweb_cabecera_planilla AS c, roducweb_metodologia_enseñanza AS m, roducweb_metodologia_utilizada AS mu WHERE c.cod_cabecera_planilla = mu.cod_cabecera_planilla_id AND mu.cod_metodologia_enseñanza_id = m.cod_metodologia_enseñanza AND c.cod_cabecera_planilla = ' + str(cod_cabecera))
+    lista_recurso = Recursos_Auxiliar.objects.raw('SELECT ra.cod_recurso_auxiliar, ra.descripcion FROM roducweb_recursos_auxiliar AS ra, roducweb_recursos_utilizados AS ru, roducweb_cabecera_planilla AS c WHERE c.cod_cabecera_planilla = ru.cod_cabecera_planilla_id and ru.cod_recurso_auxiliar_id = ra.cod_recurso_auxiliar and c.cod_cabecera_planilla = ' + str(cod_cabecera))
+    lista_trabajo = Trabajo_Autonomo.objects.raw('SELECT t.cod_trabajo_autonomo, t.descripcion FROM roducweb_trabajo_autonomo AS t, roducweb_trabajos_utilizados AS tu, roducweb_cabecera_planilla AS c where c.cod_cabecera_planilla = tu.cod_trabajo_autonomo_id and tu.cod_trabajo_autonomo_id = t.cod_trabajo_autonomo and c.cod_cabecera_planilla = ' + str(cod_cabecera))
     return render(request, "reportes/registro_de_operaciones_diarias.html", {"datos_asignatura": datos_asignatura,
                                                                              "datos_carrera": datos_carrera,
                                                                              "datos_semestre": datos_semestre,
@@ -991,4 +994,7 @@ def registro_de_operaciones_diarias(request, cod_cabecera):
                                                                              "datos_usuario": datos_usuario,
                                                                              "datos_clase": datos_clase,
                                                                              "lista_unidades": lista_unidades,
-                                                                             "contenidos": contenidos})
+                                                                             "contenidos": contenidos,
+                                                                             "lista_metodologia": lista_metodologia,
+                                                                             "lista_recurso": lista_recurso,
+                                                                             "lista_trabajo": lista_trabajo})
