@@ -92,3 +92,15 @@ class Cabecera_PlanillaSerializer(serializers.ModelSerializer):
             'estado',
             'alta_usuario',
         ]
+
+class Evaluaciones_Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = Evaluaciones
+        fields = [
+            'cod_evaluacion',
+            'cod_cabecera_planilla',
+            'cod_tipo_eva',
+            'cod_instrumento_evaluacion',
+            'estado',
+            'alta_usuario',
+        ]

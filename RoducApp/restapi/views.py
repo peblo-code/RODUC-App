@@ -44,6 +44,10 @@ class Cabecera_PlanillaCreateAPIView(generics.CreateAPIView):
     queryset = Cabecera_Planilla.objects.all()
     serializer_class = Cabecera_PlanillaSerializer
 
+class EvaluacionesCreateAPIView(generics.CreateAPIView):
+    queryset = Evaluaciones.objects.all()
+    serializer_class = Evaluaciones_Serializer
+
 #FUNCIONES
 def validarSesion(request, user):
     if request.method == 'GET':
