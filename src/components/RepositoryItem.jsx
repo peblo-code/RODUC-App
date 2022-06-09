@@ -1,17 +1,17 @@
-import { View, StyleSheet, Image } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import StyledText from './StyledText.jsx';
 import RepositoryStats from './RepositoryStats.jsx';
 import theme from '../theme.js';
 
-const RepositoryItemHeader = ({ ownerAvatarUrl, fullName, description, language }) => (
+const RepositoryItemHeader = ({ ownerAvatarUrl, fullName, cod_asignatura, curso, plan }) => (
     <View style={{ flexDirection: 'row', paddingBottom: 2 }}>
-        <View style={{ paddingRight: 10 }}>
-            <Image style={styles.image} source={{ uri: ownerAvatarUrl}}/>
-        </View>
         <View style={{ flex: 1 }}>
-            <StyledText fontWeight='bold'>{fullName}</StyledText>
-            <StyledText color='secondary'>{description}</StyledText>
-            <StyledText style={styles.language}>{language}</StyledText>
+            <StyledText fontWeight='bold' align="center">{fullName}</StyledText>
+            <StyledText color='secondary' align="center">{cod_asignatura}</StyledText>
+            <View style={{flexDirection:'row', justifyContent:'center'}}>
+                <StyledText style={styles.curso}>{curso}</StyledText>
+                <StyledText style={styles.plan}>{plan}</StyledText>
+            </View>
         </View>
     </View>
 )
@@ -29,11 +29,20 @@ const styles = StyleSheet.create({
         padding: 20,
         paddingVertical: 5
     },
-
-    language: {
+    curso: {
         padding: 4,
         color: theme.colors.white,
         backgroundColor: theme.colors.primary,
+        alignSelf: 'flex-start',
+        borderRadius: 4,
+        marginVertical: 4,
+        overflow: 'hidden',
+        marginRight: 15
+    },
+    plan: {
+        padding: 4,
+        color: theme.colors.white,
+        backgroundColor: theme.colors.secondary,
         alignSelf: 'flex-start',
         borderRadius: 4,
         marginVertical: 4,

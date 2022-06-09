@@ -36,6 +36,7 @@ export default function CardMenu({navigation}) {
                     iconName="history"
                     color="#0d3498"
                     title="Historial"
+                    onPress={() => navigation.navigate('Historial')}
                 />
             </View>
             <View style={styles.rowContainer}>

@@ -7,6 +7,7 @@ import TouchIcon from './TouchIcon.jsx';
 import useUserContext from '../hooks/useUserContext.js';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
+import RepositoryList from './RepositoryList.jsx';
 
 const Stack = createNativeStackNavigator();
 
@@ -56,6 +57,10 @@ const Main = () => {
                         <Stack.Screen
                             name='Nuevo Informe'
                             component={NewForm}
+                            options={styles} />
+                        <Stack.Screen
+                            name='Historial'
+                            component={RepositoryList}
                             options={styles} />
                         <Stack.Screen
                             name='Mi Perfil'

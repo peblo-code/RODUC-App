@@ -64,9 +64,9 @@ const NewForm = ({ navigation }) => {
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
-    const [selectedDate, setSelectedDate] = useState('Complete la fecha!');
-    const [selectedStartTime, setSelectedStartTime] = useState('Complete Hora de Inicio!');
-    const [selectedEndTime, setSelectedEndTime] = useState('Complete Hora de Fin!');
+    const [selectedDate, setSelectedDate] = useState('Completar!');
+    const [selectedStartTime, setSelectedStartTime] = useState('Completar!');
+    const [selectedEndTime, setSelectedEndTime] = useState('Completar!');
     const [isStartTime, setIsStartTime] = useState(false);
 
     //Estados para determinar a donde se dirige el usuario
@@ -75,7 +75,7 @@ const NewForm = ({ navigation }) => {
 
     const submitForm = () => {
         axios.post(`${URL}/crear_cabecera`, {
-            cod_tipo_clase: selectedClase,
+            cod_tipo_clase: check1 ? null : selectedClase,
             cod_asignatura: selectedAsignatura,
             cod_usuario: user.cod_usuario,
             fecha_clase: selectedDate,
@@ -84,6 +84,14 @@ const NewForm = ({ navigation }) => {
             fecha_vencimiento: semestreItems,
             evaluacion: check1 ? 1 : 0,
             estado: 1,
+            alta_usuario: user.nombre_usuario,
+        })
+        .then(res => {
+            Alert.alert('Exito!', 'Informe de la Clase creada con exito!')
+            navigation.navigate('Inicio')
+        })
+        .catch(err => {
+            Alert.alert('Error!', 'No se pudo crear informe de la clase')
         })
     }
 
@@ -96,13 +104,19 @@ const NewForm = ({ navigation }) => {
     //Funcion para elegir fecha
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
-        const fTimeDescription = isStartTime ? 'Hora de Inicio: ' : 'Hora de Fin: ';
         setShow(Platform.OS === 'ios');
         setDate(currentDate);
 
+        const addZero = (num) => {
+            if (num < 10) {
+                return `0${num}`
+            }
+            return num
+        }
+
         let tempDate = new Date(currentDate);
-        let fDate = 'Fecha de clase: ' + tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear();
-        let fTime = fTimeDescription + tempDate.getHours() + ':' + tempDate.getMinutes();
+        let fDate = addZero(tempDate.getFullYear()) + '-' + addZero((tempDate.getMonth() + 1)) + '-' + addZero(tempDate.getDate());
+        let fTime = addZero(tempDate.getHours()) + ':' + addZero(tempDate.getMinutes());
 
         setSelectedDate(fDate);
 
@@ -143,18 +157,19 @@ const NewForm = ({ navigation }) => {
 
     useEffect(() => {
         setAsignaturaItems(getItems(asignaturas, 'cod_plan_estudio', asignaturaPicker));
-        
+    }, [asignaturaPicker])
+
+    useEffect(() => {
         semestres.forEach((semestre) => {
             asignaturas.map((asignatura) => {
-                if(asignatura.pk == asignaturaPicker) {
+                if(asignatura.pk == selectedAsignatura) {
                     if(asignatura.fields.cod_semestre == semestre.pk) {
-                        console.log(semestre.pk)
-                        setSelectedAsignatura(semestre.pk)
+                        setSemestresItems(semestre.fields.fecha_fin)
                     }
                 }
             })
         })
-    }, [asignaturaPicker])
+    }, [selectedAsignatura])
 
     useEffect(() => {
         const items = [unidades, contenidos];
@@ -163,7 +178,7 @@ const NewForm = ({ navigation }) => {
     }, [unidadPicker])
 
     useEffect(() => {
-        if(selectedDate != 'Complete la fecha!' && selectedStartTime != 'Complete Hora de Inicio!' && selectedEndTime != 'Complete Hora de Fin!') {
+        if(selectedDate != 'Completar!' && selectedStartTime != 'Completar!' && selectedEndTime != 'Completar!') {
             if(selects.every(item => item == 0 || item != null)) {
                 setIsDisabled(false);
             }
@@ -263,6 +278,7 @@ const NewForm = ({ navigation }) => {
             },
             { text: 'Sí!', onPress: () => {
                 setIsDisabled(true);
+                submitForm();
             }},
         ]);
     }
@@ -275,14 +291,14 @@ const NewForm = ({ navigation }) => {
                 color="primary"
                 align="center"
                 style={{ marginTop: 10 }}>
-                Informe de Clase
+                Informe de la Clase
             </StyledText>
             <View style={styles.form}>
                 <View style={{ flexDirection:'row', justifyContent:'center', alignItems:'center' }}>
                     <View>
-                    <StyledText align="center" fontWeight="bold" color="primary">{selectedDate}</StyledText>
-                        <StyledText align="center" fontWeight="bold" color="primary">{selectedStartTime}</StyledText>
-                        <StyledText align="center" fontWeight="bold" color="primary">{selectedEndTime}</StyledText>
+                    <StyledText align="center" fontWeight="bold" color="primary">Fecha de clase: {selectedDate.split('-').reverse().join('/')}</StyledText>
+                        <StyledText align="center" fontWeight="bold" color="primary">Hora de Inicio: {selectedStartTime}</StyledText>
+                        <StyledText align="center" fontWeight="bold" color="primary">Hora de Fin: {selectedEndTime}</StyledText>
                     </View>
                     <View style={{ marginLeft: 8, justifyContent:'space-between', height: 120 }}>
                         <Button title='Fecha de Clase' onPress={() => showMode('date')}/>
