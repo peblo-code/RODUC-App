@@ -20,7 +20,8 @@ const NewForm = ({ navigation }) => {
     const [planes, setPlanes] = useState([]);
     const [asignaturas, setAsignaturas] = useState([]);
     const [unidades, setUnidades] = useState([]);
-    const [contenidos, setContenidos] = useState([])
+    const [contenidos, setContenidos] = useState([]);
+    const [semestres, setSemestres] = useState([]);
 
     //Variable que contiene las listas de la API y su correspondiente estado
     const listsAndSetters = [
@@ -31,6 +32,7 @@ const NewForm = ({ navigation }) => {
         { list: 'lista_unidad', setter: setUnidades },
         { list: 'lista_contenido', setter: setContenidos },
         { list: 'lista_tipo_clase', setter: setClases },
+        { list: 'lista_semestre', setter: setSemestres },
     ]
 
     //Estados para cargar los datos del formulario
@@ -39,6 +41,7 @@ const NewForm = ({ navigation }) => {
     const [planItems, setPlanItems] = useState([]);
     const [unidadItems, setUnidadItems] = useState([]);
     const [contenidoItems, setContenidoItems] = useState([])
+    const [semestreItems, setSemestresItems] = useState([]);
 
     //Estados para almacenar los datos del formulario
     const [selectedFacultad, setSelectedFacultad] = useState('');
@@ -69,6 +72,20 @@ const NewForm = ({ navigation }) => {
     //Estados para determinar a donde se dirige el usuario
     const [check1, setCheck1] = useState(false)
     const [isDisabled, setIsDisabled] = useState(true)
+
+    const submitForm = () => {
+        axios.post(`${URL}/crear_cabecera`, {
+            cod_tipo_clase: selectedClase,
+            cod_asignatura: selectedAsignatura,
+            cod_usuario: user.cod_usuario,
+            fecha_clase: selectedDate,
+            hora_entrada: selectedStartTime,
+            hora_salida: selectedEndTime,
+            fecha_vencimiento: semestreItems,
+            evaluacion: check1 ? 1 : 0,
+            estado: 1,
+        })
+    }
 
     //Funcion para obtener una lista especifica de la API
     const getAPIData = (response, list, setList) => {
@@ -109,6 +126,7 @@ const NewForm = ({ navigation }) => {
         axios.get(`${URL}/listaFacultades_Carreras/${user.cod_usuario}`)
         .then((response) => {
             listsAndSetters.map(detail => getAPIData(response, detail.list, detail.setter))
+            
         })
         .catch((error) => {
             console.log(error);
@@ -125,6 +143,17 @@ const NewForm = ({ navigation }) => {
 
     useEffect(() => {
         setAsignaturaItems(getItems(asignaturas, 'cod_plan_estudio', asignaturaPicker));
+        
+        semestres.forEach((semestre) => {
+            asignaturas.map((asignatura) => {
+                if(asignatura.pk == asignaturaPicker) {
+                    if(asignatura.fields.cod_semestre == semestre.pk) {
+                        console.log(semestre.pk)
+                        setSelectedAsignatura(semestre.pk)
+                    }
+                }
+            })
+        })
     }, [asignaturaPicker])
 
     useEffect(() => {
