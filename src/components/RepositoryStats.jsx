@@ -11,15 +11,15 @@ const RepositoryStats = (props) => {
     return(
         <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
             <View>
-                <StyledText align='center' fontWeight='bold'>{parseThousands(props.stargazersCount)}</StyledText>
+                <StyledText align='center' fontWeight='bold'>{parseThousands(props.fecha)}</StyledText>
                 <StyledText align='center'>Fecha de Clase</StyledText>
             </View>
             <View>
-                <StyledText align='center' fontWeight='bold'>{parseThousands(props.forksCount)}</StyledText>
+                <StyledText align='center' fontWeight='bold'>{parseThousands(props.horaInicio)}</StyledText>
                 <StyledText align='center'>Hora de Inicio</StyledText>
             </View>
             <View>
-                <StyledText align='center' fontWeight='bold'>{parseThousands(props.reviewCount)}</StyledText>
+                <StyledText align='center' fontWeight='bold'>{parseThousands(props.horaFin)}</StyledText>
                 <StyledText align='center'>Hora de Fin</StyledText>
             </View>
         </View>

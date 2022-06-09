@@ -3,11 +3,11 @@ import StyledText from './StyledText.jsx';
 import RepositoryStats from './RepositoryStats.jsx';
 import theme from '../theme.js';
 
-const RepositoryItemHeader = ({ ownerAvatarUrl, fullName, cod_asignatura, curso, plan }) => (
+const RepositoryItemHeader = ({ carrera, asignatura, curso, plan }) => (
     <View style={{ flexDirection: 'row', paddingBottom: 2 }}>
         <View style={{ flex: 1 }}>
-            <StyledText fontWeight='bold' align="center">{fullName}</StyledText>
-            <StyledText color='secondary' align="center">{cod_asignatura}</StyledText>
+            <StyledText fontWeight='bold' align="center">{carrera}</StyledText>
+            <StyledText color='secondary' align="center">{asignatura}</StyledText>
             <View style={{flexDirection:'row', justifyContent:'center'}}>
                 <StyledText style={styles.curso}>{curso}</StyledText>
                 <StyledText style={styles.plan}>{plan}</StyledText>
