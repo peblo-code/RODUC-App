@@ -1,3 +1,4 @@
+from pyexpat import model
 from rest_framework import serializers
 from RoducWeb.models import *
 
@@ -73,4 +74,24 @@ class Auditoria_SesionesSerializer(serializers.ModelSerializer):
             'nombre_usuario',
             'fecha',
             'informacion',
+        ]
+
+class Cabecera_PlanillaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cabecera_Planilla
+        fields = [
+            'cod_cabecera_planilla',
+            'cod_tipo_clase',
+            'cod_asignatura',
+            'cod_usuario',
+            'fecha_clase',
+            'hora_entrada',
+            'hora_salida',
+            'fecha_vencimiento',
+            'evaluacion',
+            'estado',
+            'alta_usuario',
+            'alta_fecha',
+            'modif_usuario',
+            'modif_fecha',
         ]
