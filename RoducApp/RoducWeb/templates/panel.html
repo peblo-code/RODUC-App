@@ -45,7 +45,10 @@
                 <span class="nav-link-text">Usuarios</span>
               </a>
             </li>
-            <h6 class="navbar-heading text-muted" style="padding-left: 1.5rem; padding-bottom: 0; padding-top: 1rem;">
+          </ul>
+          <hr class="my-3">
+          <ul class="navbar-nav">
+            <h6 class="navbar-heading text-muted" style="padding-left: 1.5rem; padding-bottom: 0; padding-top: 0;">
               <span class="docs-normal">Facultad</span>
             </h6>
             <li class="nav-item">
@@ -72,7 +75,10 @@
                 <span class="nav-link-text">Semestres</span>
               </a>
             </li>
-            <h6 class="navbar-heading text-muted" style="padding-left: 1.5rem; padding-bottom: 0; padding-top: 1rem;">
+          </ul>
+          <hr class="my-3">
+          <ul class="navbar-nav">
+            <h6 class="navbar-heading text-muted" style="padding-left: 1.5rem; padding-bottom: 0; padding-top: 0;">
               <span class="docs-normal">Asignaturas</span>
             </h6>
             <li class="nav-item">
@@ -82,15 +88,15 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link " href={% url 'contenido' %} style="padding: 1rem;">
-                <img src={% static 'assets/img/contenido.png' %} width="25" style = "margin-right: 10px; ">
-                <span class="nav-link-text">Contenidos</span>
-              </a>
-            </li>
-            <li class="nav-item">
               <a class="nav-link " href={% url 'unidad_aprendizaje' %} style="padding: 1rem;">
                 <img src={% static 'assets/img/unidad_aprendizaje.png' %} width="25" style = "margin-right: 10px; ">
                 <span class="nav-link-text">Unidades de Aprendizaje</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link " href={% url 'contenido' %} style="padding: 1rem;">
+                <img src={% static 'assets/img/contenido.png' %} width="25" style = "margin-right: 10px; ">
+                <span class="nav-link-text">Contenidos</span>
               </a>
             </li>
           </ul>
@@ -136,6 +142,12 @@
                 <span class="nav-link-text">Trabajos Autónomos</span>
               </a>
             </li>
+          </ul>
+          <hr class="my-3">
+          <ul class="navbar-nav">
+            <h6 class="navbar-heading text-muted" style="padding-left: 1.5rem; padding-bottom: 0; padding-top: 0;">
+              <span class="docs-normal">Reportes</span>
+            </h6>
             <li class="nav-item">
               <a class="nav-link " href={% url 'reporte' %} style="padding: 1rem;">
                 <img src={% static 'assets/img/reporte.png' %} width="25" style = "margin-right: 10px; ">
