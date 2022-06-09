@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block titulo %}Reporte - Roduc{% endblock %}
+{% block extracss %}
+<style type="text/css">
+    html {page-break-after: avoid;}
+    table { page-break-inside:auto }
+    tr    { page-break-inside:avoid; page-break-after:auto;}
+    thead { display:table-header-group }
+    tfoot { display:table-footer-group }
+    div   { page-break-inside:avoid; }
+    html, body { height: auto; }
+    td{display:column;}
+</style>
+{% endblock %}
+{% block cuerpo %}
+
+{% load static %}
+
+<section class=" row py-3">
+    <section class="container" style="display: flex; justify-content: center; flex-direction: column; align-items: center;">
+        <section class="row">
+            <section>
+                <img src="{%static 'assets/img/escudo_uni.png'%}" width="200" height="140">
+            </section>
+        </section>
+        <section class="row" style="padding-top: 10px;">
+            <strong>Carrera de {{datos_carrera.descripcion}}</strong>
+        </section>
+        <section class="row" style="padding-top: 10px;">
+            <strong>Registro de Operaciones Diarias del Docente - Por Cátedra</strong>
+        </section>
+    </section>
+    <hr width=1500>
+</section>
+
+<section class="row">
+    <section class="container" style="border:solid; border-width: .5px;">
+        <section class="row py-2" style="border-bottom: solid; border-width: .5px; width: auto;">
+            <section style="padding-left: 10px; width: 100%; padding-right: 10px;">
+                <h4><strong>Asignatura:</strong> {{datos_asignatura.descripcion}}</h4>
+                <h4 style="float:right;"><strong>Fecha:</strong> {{datos_registro.fecha_clase}}</h4>
+                <h4><strong>Semestre:</strong> {{datos_semestre.descripcion}}</h4>
+            </section>
+        </section>
+        <section class="row py-2" style="border-bottom: solid; border-width: .5px; width: auto;">
+            <section style="padding-left: 10px; width: 100%; padding-right: 10px; padding-top: 10px;">
+                <h4 style="float:right;"><strong>Firma:</strong>___________________________</h4>
+                <h4><strong>Profesor Titular:</strong> {{datos_usuario.nombres_del_usuario}} {{datos_usuario.apellidos_del_usuario}}</h4>
+            </section>
+        </section>
+        <section class="row py-2" style="border-bottom: solid; border-width: .5px; width: auto;">
+            <section style="padding-left: 10px; width: 100%; padding-right: 10px;">
+                <h4 style="float: right;"><strong>Hora de Salida:</strong> {{datos_registro.hora_salida}}</h4>
+                <h4><strong>Hora de Entrada:</strong> {{datos_registro.hora_entrada}}</h4>
+            </section>
+        </section>
+        <section class="row py-2" style="border-bottom:solid; border-width: .5px; width: auto;">
+            <section style="padding-left: 10px; width: 100%; padding-right: 10px;">
+                <h4><strong>Clase:</strong> {{datos_clase.descripcion}}</h4>
+            </section>
+        </section>
+        <section class="row py-2" style="border-bottom:solid; border-width: .5px; width: auto;">
+            <section style="padding-left: 10px; width: 100%; padding-right: 10px;">
+                {% for unidades in lista_unidades %}
+                    {% for contenido in contenidos %}
+                        {% if contenido.cod_unidad_aprendizaje_id == unidades.cod_unidad_aprendizaje %}
+                            <h4><strong>Unidad de Aprendizaje:</strong> {{unidades.descripcion}} </h4>    
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+                <h3>CONTENIDOS</h3>
+                {% for contenido in contenidos %}
+                    <h4>{{contenido.descripcion}} </h4>   
+                {% endfor %}
+            </section>
+        </section>
+    </section>
+</section>
+
+
+
+{% endblock %}

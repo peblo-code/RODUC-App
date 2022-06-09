@@ -1,29 +1,24 @@
 {% extends "panel.html" %}
-{% block titulo %}Inicio - Roduc{% endblock %}
+{% block titulo %}Reportes - Roduc{% endblock %}
 
 {% block formularios %}
 {% load static %}
 <div class="col-md-12 mb-2 mb-xl-3">
-    <h1><strong>Página</strong> de Reportes - <strong> RODUC</strong></h1>
     <div class="tab-content">
-        <div class="row py-4">
-            
+        <div class="row py-4" style="display: flex; align-items: center;">
             <div class="col-sm-4 mb-3 mb-md-0">
                 <div class="card text-center h-100">
-                    <a class="card-body d-flex flex-column btn btn-lg btn-outline-primary" href="{%url 'usuario' %}">
+                    <button class="card-body d-flex flex-column btn btn-lg btn-outline-primary" onclick="mostrarRegistros()">
                         <div>
-                            
-                            <span class="display-4" style="align-items: center;">Usuarios</span>
+                            <span class="display-4" style="align-items: center;">Operaciones Diarias</span>
                         </div>
-                    </a>
-                    
+                    </button>
                 </div>
             </div>
             <div class="col-sm-4 mb-3 mb-md-0">
                 <div class="card text-center h-100">
                     <a class="card-body d-flex flex-column btn btn-lg btn-outline-primary" href="{%url 'facultad' %}">
                         <div>
-                            
                             <span class="display-4">Facultades</span>
                         </div>
                     </a>
@@ -33,7 +28,6 @@
                 <div class="card text-center h-100">
                     <a class="card-body d-flex flex-column btn btn-lg btn-outline-primary" href="{%url 'carrera' %}">
                         <div>
-                        
                             <span class="display-4">Carreras</span>
                         </div>
                     </a>
@@ -44,13 +38,12 @@
 </div>
 <div class="col-md-12 mb-2 mb-xl-3">
     <div class="tab-content">
-        <div class="row">
-            
+        <div class="row" style="display: flex; align-items: center;">
             <div class="col-sm-4 mb-3 mb-md-0">
                 <div class="card text-center h-100">
-                    <a class="card-body d-flex flex-column btn btn-lg btn-outline-primary" href="{%url 'plan_estudio' %}">
+                    <a class="card-body d-flex flex-column btn btn-lg btn-outline-primary"
+                        href="{%url 'plan_estudio' %}">
                         <div>
-                        
                             <span class="display-4">Planes de Estudio</span>
                         </div>
                     </a>
@@ -60,7 +53,6 @@
                 <div class="card text-center h-100">
                     <a class="card-body d-flex flex-column btn btn-lg btn-outline-primary" href="{%url 'semestre' %}">
                         <div>
-                            
                             <span class="display-4">Semestres</span>
                         </div>
                     </a>
@@ -70,18 +62,106 @@
                 <div class="card text-center h-100">
                     <a class="card-body d-flex flex-column btn btn-lg btn-outline-primary" href="{%url 'asignatura' %}">
                         <div>
-                            
                             <span class="display-4">Asignaturas</span>
                         </div>
                     </a>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+
+<!---Modal de Registro de Operaciones Diarias-->
+<div class="modal fade" id="registrosModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="tituloModal">Registros de Operaciones diarias del sistema</h5>
+                <button type="button" class="close" href="" aria-label="Close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive py-2" style="overflow: hidden;">
+                    <div class="dataTables_wrapper dt-bootrstrap4">
+                        <table class="table table-flush dataTable align-items-center table-hover" id="datos">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col" class="sort" data-sort="id">Fecha de Clase</th>
+                                    <th scope="col" class="sort" data-sort="rol">Asignatura</th>
+                                    <th scope="col" class="sort" data-sort="rol">Curso</th>
+                                    <th scope="col" class="sort" data-sort="curso">Profesor</th>
+                                    <th scope="col">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tfoot class="thead-light">
+                                <tr>
+                                    <th scope="col">Fecha de Clase</th>
+                                    <th scope="col">Asignatura</th>
+                                    <th scope="col">Curso</th>
+                                    <th scope="col">Profesor</th>
+                                    <th scope="col">Acciones</th>
+                                </tr>
+                            </tfoot>
+                            <tbody class="list" id="cuerpoTabla">
+                                {% for registros in lista_registros %}
+                                <tr>
+                                    <td>{{registros.fecha_clase}}</td>
+                                    <td>
+                                        {% for asignatura in lista_asignaturas %}
+                                        {% if registros.cod_asignatura_id == asignatura.cod_asignatura %}
+                                        {{asignatura.descripcion}}
+                                        {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                    <td>
+                                        {% for asignatura in lista_asignaturas %}
+                                            {% if registros.cod_asignatura_id == asignatura.cod_asignatura %}
+                                                {% if asignatura.curso == 1 %}
+                                                    Primer Curso
+                                                {% elif asignatura.curso == 2 %}
+                                                    Segundo Curso
+                                                {% elif asignatura.curso == 3 %}
+                                                    Tercer Curso
+                                                {% elif asignatura.curso == 4 %}
+                                                    Cuarto Curso
+                                                {% elif asignatura.curso == 5 %}
+                                                    Quinto Curso
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                    <td>
+                                        {% for usuario in lista_usuarios %}
+                                            {% if usuario.cod_usuario == registros.cod_usuario_id %}
+                                                {{usuario.apellidos_del_usuario}}, {{usuario.nombres_del_usuario}}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                    <td>
+                                        <a type="button" href="{% url 'registro_de_operaciones_diarias' registros.cod_cabecera_planilla %}" target="_blank" class="btn btn-success btn-sm">Imprimir</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
-    </div> 
+    </div>
 </div>
+
+
+
 {% endblock %}
 
 {% block extrajs %}
-
+<script>
+    function mostrarRegistros(){
+        $('#registrosModal').modal('show');
+    }
+</script>
 {% endblock %}

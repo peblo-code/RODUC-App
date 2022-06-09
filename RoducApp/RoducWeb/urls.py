@@ -119,4 +119,5 @@ urlpatterns = [
 
     # REPORTES
     path('reporte', views.reporte, name='reporte'),
+    path('registro_de_operaciones_diarias/<int:cod_cabecera>', views.registro_de_operaciones_diarias, name='registro_de_operaciones_diarias'),
 ]

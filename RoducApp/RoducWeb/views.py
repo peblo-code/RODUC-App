@@ -963,8 +963,32 @@ def eliminar_trabajo_autonomo(request):
 
 def reporte(request):
     mensaje_bienvenida = generar_saludo()
+    lista_registros = Cabecera_Planilla.objects.filter(estado = 1).order_by('-fecha_clase')
+    lista_usuarios = Usuario.objects.filter(estado = 1)
+    lista_asignaturas = Asignatura.objects.filter(estado = 1)
     return render(request, "reporte.html", {"usuario_conectado": request.session.get("usuario_conectado"),
                                            "nombre_usuario": request.session.get("nombre_del_usuario"),
                                            "direccion_email": request.session.get("correo_usuario"),
                                            "inicio": 'S',
-                                           "mensaje_bienvenida": mensaje_bienvenida})
+                                           "mensaje_bienvenida": mensaje_bienvenida,
+                                           "lista_registros": lista_registros,
+                                           "lista_usuarios": lista_usuarios,
+                                           "lista_asignaturas": lista_asignaturas})
+
+def registro_de_operaciones_diarias(request, cod_cabecera):
+    datos_registro = Cabecera_Planilla.objects.get(estado = 1, cod_cabecera_planilla = cod_cabecera)
+    datos_asignatura = Asignatura.objects.get(cod_asignatura = datos_registro.cod_asignatura_id)
+    datos_carrera = Carrera.objects.get(cod_carrera = datos_asignatura.cod_carrera_id)
+    datos_semestre = Semestre.objects.get(cod_semestre = datos_asignatura.cod_semestre_id)
+    datos_usuario = Usuario.objects.get(cod_usuario = datos_registro.cod_usuario_id)
+    datos_clase = Tipo_Clase.objects.get(cod_tipo_clase = datos_registro.cod_tipo_clase_id)
+    lista_unidades = Unidad_Aprendizaje.objects.filter(estado  = 1, cod_asignatura_id = datos_asignatura.cod_asignatura)
+    contenidos = Contenido.objects.raw('SELECT c.cod_contenido, c.descripcion, c.cod_unidad_aprendizaje_id FROM roducweb_contenido AS c, roducweb_contenidos_dados AS cd WHERE c.cod_contenido = cd.cod_contenido_id AND cd.cod_cabecera_planilla_id = ' + str(cod_cabecera))
+    return render(request, "reportes/registro_de_operaciones_diarias.html", {"datos_asignatura": datos_asignatura,
+                                                                             "datos_carrera": datos_carrera,
+                                                                             "datos_semestre": datos_semestre,
+                                                                             "datos_registro": datos_registro,
+                                                                             "datos_usuario": datos_usuario,
+                                                                             "datos_clase": datos_clase,
+                                                                             "lista_unidades": lista_unidades,
+                                                                             "contenidos": contenidos})
