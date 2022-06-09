@@ -981,7 +981,10 @@ def registro_de_operaciones_diarias(request, cod_cabecera):
     datos_carrera = Carrera.objects.get(cod_carrera = datos_asignatura.cod_carrera_id)
     datos_semestre = Semestre.objects.get(cod_semestre = datos_asignatura.cod_semestre_id)
     datos_usuario = Usuario.objects.get(cod_usuario = datos_registro.cod_usuario_id)
-    datos_clase = Tipo_Clase.objects.get(cod_tipo_clase = datos_registro.cod_tipo_clase_id)
+    if datos_registro.evaluacion == 0:
+        datos_clase = Tipo_Clase.objects.get(cod_tipo_clase = datos_registro.cod_tipo_clase_id)
+    else:
+        datos_clase = "Vacio"
     lista_unidades = Unidad_Aprendizaje.objects.raw('SELECT DISTINCT u.cod_unidad_aprendizaje, u.descripcion FROM roducweb_contenido AS c, roducweb_contenidos_dados AS cd, roducweb_cabecera_planilla as ca, roducweb_unidad_aprendizaje AS u WHERE c.cod_contenido = cd.cod_contenido_id AND c.cod_unidad_aprendizaje_id = u.cod_unidad_aprendizaje AND cd.cod_cabecera_planilla_id = ca.cod_cabecera_planilla AND ca.cod_cabecera_planilla = ' + str(cod_cabecera))
     contenidos = Contenido.objects.raw('SELECT c.cod_contenido, c.descripcion, c.cod_unidad_aprendizaje_id FROM roducweb_contenido AS c, roducweb_contenidos_dados AS cd WHERE c.cod_contenido = cd.cod_contenido_id AND cd.cod_cabecera_planilla_id = ' + str(cod_cabecera))
     lista_metodologia = Metodologia_Enseñanza.objects.raw('SELECT m.cod_metodologia_enseñanza, m.descripcion FROM roducweb_cabecera_planilla AS c, roducweb_metodologia_enseñanza AS m, roducweb_metodologia_utilizada AS mu WHERE c.cod_cabecera_planilla = mu.cod_cabecera_planilla_id AND mu.cod_metodologia_enseñanza_id = m.cod_metodologia_enseñanza AND c.cod_cabecera_planilla = ' + str(cod_cabecera))
