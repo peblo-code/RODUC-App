@@ -999,7 +999,7 @@ def registro_de_operaciones_diarias(request, cod_cabecera):
 																				"contenidos": contenidos,
 																				"lista_metodologia": lista_metodologia,
 																				"lista_recurso": lista_recurso,
-																				"lista_trabajo": lista_trabajo,})
+																				"lista_trabajo": lista_trabajo})
     else:
 		#Hacer for de lista_evaluaciones e ir enmascarando con lista de instrumentos y tipo evaluacion para la descripcion en el reporte.
 	    datos_clase = "Evaluación"
@@ -1007,10 +1007,11 @@ def registro_de_operaciones_diarias(request, cod_cabecera):
 	    lista_instrumentos = Instrumento_Evaluacion.objects.all()
 	    lista_tipo_eva = Tipo_Eva.objects.all()
 	    return render(request, "reportes/reporte_evaluacion_operacion_diaria.html", {"lista_evaluaciones": lista_evaluaciones,
-																							"lista_instrumentos": lista_instrumentos,
-																							"lista_tipo_eva": lista_tipo_eva,
-																							"datos_asignatura": datos_asignatura,
-																							"datos_carrera": datos_carrera,
-																							"datos_semestre": datos_semestre,
-																							"datos_registro": datos_registro,
-																							"datos_usuario": datos_usuario,}) 
+																					 "lista_instrumentos": lista_instrumentos,
+																					 "lista_tipo_eva": lista_tipo_eva,
+																					 "datos_asignatura": datos_asignatura,
+																					 "datos_carrera": datos_carrera,
+																					 "datos_semestre": datos_semestre,
+																					 "datos_registro": datos_registro,
+																					 "datos_usuario": datos_usuario,
+                                                                                     "datos_clase": datos_clase}) 

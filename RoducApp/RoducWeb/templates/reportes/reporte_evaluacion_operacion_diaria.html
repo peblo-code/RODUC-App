@@ -56,18 +56,18 @@
         </section>
         <section class="row py-2" style="border-bottom:solid; border-width: .5px; width: auto;">
             <section style="padding-left: 10px; width: 100%; padding-right: 10px;">
-                <h4><strong>Clase:</strong> {{datos_clase.descripcion}}</h4>
+                <h4><strong>Clase:</strong> {{datos_clase}}</h4>
             </section>
         </section>
-        <section class="row py-2" style="border-bottom:solid; border-width: .5px; width: auto;">
+        <section class="row py-2">
             <section class="col">
-                <h3>UNIDAD DE APRENDIZAJE</h3> 
+                <h3>TIPO DE EVALUACIÓN</h3> 
                 {% for unidades in lista_unidades %}
                     <span class="card-title">{{unidades.descripcion}}</span> 
                 {% endfor %}
             </section>
             <section class="col" style="text-align: right;">
-                <h3>CONTENIDOS</h3>
+                <h3>INSTRUMENTO DE EVALUACIÓN</h3>
                 {% for contenido in contenidos %}
                     <span class="card-title">{{contenido.descripcion}}</span> <br>   
                 {% endfor %}
@@ -75,4 +75,12 @@
         </section>
     </section>
 </section>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+$(document).ready(function(){
+    window.print();
+})
+</script>
 {% endblock %}

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block titulo %}Reporte - Roduc{% endblock %}
+{% block titulo %}Registro de Operaciones Diarias - Roduc{% endblock %}
 {% block extracss %}
 <style type="text/css">
     html {page-break-after: avoid;}
@@ -107,3 +107,12 @@
     </section>
 </section>
 {% endblock %}
+
+
+{% block extrajs %}
+<script>
+    $(document).ready(function(){
+        window.print();
+    })
+</script>
+{% endblock%}
