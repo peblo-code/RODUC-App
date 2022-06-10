@@ -48,6 +48,22 @@ class EvaluacionesCreateAPIView(generics.CreateAPIView):
     queryset = Evaluaciones.objects.all()
     serializer_class = Evaluaciones_Serializer
 
+class Contenidos_DadosCreateAPIView(generics.CreateAPIView):
+    queryset = Contenidos_Dados.objects.all()
+    serializer_class = Contenidos_DadosSerializer
+
+class Recursos_UtilizadosCreateAPIView(generics.CreateAPIView):
+    queryset = Recursos_Utilizados.objects.all()
+    serializer_class = Recursos_UtilizadosSerializer
+
+class Trabajos_UtilitizadosCreateAPIView(generics.CreateAPIView):
+    queryset = Trabajos_Utilizados.objects.all()
+    serializer_class = Trabajos_UtilizadosSerializer
+
+class Metodologia_UtilizadaCreateAPIView(generics.CreateAPIView):
+    queryset = Metodologia_Utilizada.objects.all()
+    serializer_class = Metodologia_UtilizadaSerializer
+
 #FUNCIONES
 def validarSesion(request, user):
     if request.method == 'GET':
