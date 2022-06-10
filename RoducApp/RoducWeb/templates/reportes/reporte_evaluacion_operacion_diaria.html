@@ -62,14 +62,22 @@
         <section class="row py-2">
             <section class="col">
                 <h3>TIPO DE EVALUACIÓN</h3> 
-                {% for unidades in lista_unidades %}
-                    <span class="card-title">{{unidades.descripcion}}</span> 
+                {% for evaluacion in lista_evaluaciones %}
+                    {% for tipo in lista_tipo_eva %}
+                        {% if tipo.cod_tipo_eva == evaluacion.cod_tipo_eva_id %}
+                            <span class="card-title">{{tipo.descripcion}}</span> <br>
+                        {% endif %}
+                    {% endfor %}
                 {% endfor %}
             </section>
             <section class="col" style="text-align: right;">
                 <h3>INSTRUMENTO DE EVALUACIÓN</h3>
-                {% for contenido in contenidos %}
-                    <span class="card-title">{{contenido.descripcion}}</span> <br>   
+                {% for evaluacion in lista_evaluaciones %}
+                    {% for instrumento in lista_instrumentos %}
+                        {% if instrumento.cod_instrumento_evaluacion == evaluacion.cod_instrumento_evaluacion_id %}
+                            <span class="card-title">{{instrumento.descripcion}}</span> <br>
+                        {% endif %}
+                    {% endfor %}
                 {% endfor %}
             </section>
         </section>

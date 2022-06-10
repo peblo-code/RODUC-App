@@ -17,7 +17,7 @@
             </div>
             <div class="col-sm-4 mb-3 mb-md-0">
                 <div class="card text-center h-100">
-                    <button class="card-body d-flex flex-column btn btn-lg btn-outline-primary" style="align-items: center;">
+                    <button onclick="mostrarAnalisis()"  class="card-body d-flex flex-column btn btn-lg btn-outline-primary" style="align-items: center;">
                         <div>
                             <span class="display-4">Análisis de Asignatura</span>
                         </div>
@@ -120,6 +120,78 @@
     </div>
 </div>
 
+<!--Modal Analisis-->
+<div class="modal fade" id="modalAnalisis" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document"  style="max-width: 75%">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="tituloModal">Análisis de Asignatura</h5>
+          <button type="button" class="close" href="" aria-label="Close" data-dismiss="modal">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form role="form" action='#' method="POST" onsubmit="updateUnidad(this)" id="form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <h6 class="heading-small text-muted mb-4">Complete el formulario para ejecutar el análisis de la materia.</h6>
+            <div class="pl-lg-0">
+              <div class="row">
+                <div class="col-lg-3">
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1" class="form-control-label">Facultad</label>
+                    <select class="form-control" id="updateFacultad" name="facultad" class="form-control">
+                      <option value="">Seleccione la facultad a la cual pertenece...</option>
+                      {% for facultad in lista_facultades %}
+                      <option value="{{facultad.cod_facultad}}">{{facultad.descripcion}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+                <div class="col-lg-3">
+                  <div class="form-group">
+                    <label class="form-control-label" for="input-username">Carrera</label>
+                    <select class="form-control" id="updateCarrera" name="carrera" class="form-control">
+                      <option value="">Seleccione la carrera a la cual pertenece...</option>
+                      {% for carrera in lista_carreras %}
+                      <option value="{{carrera.cod_carrera}}" data-chained="{{carrera.cod_facultad_id}}">
+                        {{carrera.descripcion}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+                <div class="col-lg-3">
+                  <div class="form-group">
+                    <label class="form-control-label" for="input-username">Plan de Estudios</label>
+                    <select class="form-control" id="updatePlan_estudio" name="plan_estudio" class="form-control">
+                      <option value="">Seleccione el plan de estudios...</option>
+                      {% for plan in lista_planes %}
+                      <option value="{{plan.cod_plan_estudio}}" data-chained="{{plan.cod_carrera_id}}">
+                        {{plan.descripcion}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+                <div class="col-lg-3">
+                  <div class="form-group">
+                    <label class="form-control-label" for="input-username">Asignatura</label>
+                    <select class="form-control" id="updateAsignatura" name="asignatura" class="form-control">
+                      <option value="">Seleccione la asignatura a la cual pertenece...</option>
+                      {% for asignatura in lista_asignaturas %}
+                      <option value="{{asignatura.cod_asignatura}}" data-chained="{{asignatura.cod_carrera_id}}+{{asignatura.cod_plan_estudio_id}}">
+                        {{asignatura.descripcion}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <span><button type="submit" class="btn btn-success">Ejecutar</button></span>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
 
 {% endblock %}
@@ -128,6 +200,14 @@
 <script>
     function mostrarRegistros(){
         $('#registrosModal').modal('show');
+    }
+</script>
+<script>
+    function mostrarAnalisis(){
+        $('#modalAnalisis').modal('show');
+        $("#updateCarrera").chained("#updateFacultad");
+        $("#updatePlan_estudio").chained("#updateCarrera");
+        $("#updateAsignatura").chained("#updateCarrera,#updatePlan_estudio");
     }
 </script>
 {% endblock %}

@@ -34,6 +34,14 @@ def auditar_sesion(request, info):
         informacion=info
     )
     nueva_sesion.save()
+
+#verificador de sesion
+def sesion_verificar(request):
+    if request.session.get("usuario_conectado"):
+        return 1
+    else:
+        return 0
+    
 ###########################################################################################
 
 # Create your views here.
@@ -70,11 +78,16 @@ def login(request):
 
 
 def cerrar_sesion(request):
-    request.session.flush()
-    return redirect("login")
+    if request.session.get("usuario_conectado"):
+        request.session.flush()
+        return redirect("login")
+    else:
+        return redirect('./')
 
 
 def inicio(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     mensaje_bienvenida = generar_saludo()
     return render(request, "inicio.html", {"usuario_conectado": request.session.get("usuario_conectado"),
                                            "nombre_usuario": request.session.get("nombre_del_usuario"),
@@ -84,6 +97,8 @@ def inicio(request):
 
 
 def usuario(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     mensaje_bienvenida = generar_saludo()
     lista_usuarios = Usuario.objects.filter(estado=1)
     lista_roles = Rol_Usuario.objects.filter(estado=1)
@@ -98,6 +113,8 @@ def usuario(request):
 
 
 def agregar_usuario(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == 'POST':
         usuario_nuevo = Usuario(
             nombre_usuario=request.POST.get('username'),
@@ -117,6 +134,8 @@ def agregar_usuario(request):
 
 
 def detalle_usuario(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == 'GET':
         detalle = Usuario.objects.filter(cod_usuario=request.GET.get("codigo"))
         detalle = serializers.serialize("json", detalle)
@@ -124,6 +143,8 @@ def detalle_usuario(request):
 
 
 def actualizar_usuario(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == "POST":
         usuario_actualizar = Usuario.objects.get(cod_usuario=request.POST.get("codigo"))
         usuario_actualizar.nombres_del_usuario = request.POST.get("nombres")
@@ -138,6 +159,8 @@ def actualizar_usuario(request):
 
 @csrf_exempt
 def eliminar_usuario(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == "POST":
         usuario_eliminar = Usuario.objects.get(cod_usuario=request.POST.get("codigo"))
         usuario_eliminar.estado = 0
@@ -148,6 +171,8 @@ def eliminar_usuario(request):
 
 
 def facultad(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     mensaje_bienvenida = generar_saludo()
     lista_facultad = Facultad.objects.filter(estado=1)
     return render(request, "facultad/facultad.html", {"usuario_conectado": request.session.get("usuario_conectado"),
@@ -158,6 +183,8 @@ def facultad(request):
 
 
 def agregar_facultad(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == 'POST':
         facultad_nueva = Facultad(
             descripcion=request.POST.get('descripcion'),
@@ -171,6 +198,8 @@ def agregar_facultad(request):
 
 
 def detalle_facultad(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == 'GET':
         detalle = Facultad.objects.filter(cod_facultad=request.GET.get("codigo"))
         detalle = serializers.serialize("json", detalle)
@@ -178,6 +207,8 @@ def detalle_facultad(request):
 
 
 def actualizar_facultad(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == 'POST':
         facultad_actualizar = Facultad.objects.get(cod_facultad=request.POST.get("codigo"))
         facultad_actualizar.descripcion = request.POST.get("nombre")
@@ -191,6 +222,8 @@ def actualizar_facultad(request):
 
 @csrf_exempt
 def eliminar_facultad(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == "POST":
         print(request.POST.get("codigo"))
         facultad_eliminar = Facultad.objects.get(cod_facultad=request.POST.get("codigo"))
@@ -202,6 +235,8 @@ def eliminar_facultad(request):
 
 
 def carrera(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     lista_carreras = Carrera.objects.filter(estado = 1)
     lista_facultades = Facultad.objects.filter(estado = 1)
     return render(request, "carrera/carrera.html", {"usuario_conectado": request.session.get("usuario_conectado"),
@@ -213,6 +248,8 @@ def carrera(request):
 
 
 def agregar_carrera(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == "POST":
         carrera_nueva = Carrera(
             descripcion = request.POST.get("descripcion"),
@@ -228,6 +265,8 @@ def agregar_carrera(request):
 
 
 def detalle_carrera(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == 'GET':
         detalle = Carrera.objects.filter(cod_carrera=request.GET.get("codigo"))
         detalle = serializers.serialize("json", detalle)
@@ -235,6 +274,8 @@ def detalle_carrera(request):
 
 
 def actualizar_carrera(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == "POST":
         carrera_actualizar = Carrera.objects.get(cod_carrera = request.POST.get("codigo"))
         carrera_actualizar.descripcion = request.POST.get("descripcion")
@@ -248,6 +289,8 @@ def actualizar_carrera(request):
 
 @csrf_exempt
 def eliminar_carrera(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == "POST":
         carrera_eliminar = Carrera.objects.get(cod_carrera = request.POST.get("codigo"))
         carrera_eliminar.estado = 0
@@ -257,6 +300,8 @@ def eliminar_carrera(request):
         return respuesta
 
 def plan_estudio(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     lista_carreras = Carrera.objects.filter(estado=1)
     lista_facultades = Facultad.objects.filter(estado=1)
     lista_planes = Plan_Estudio.objects.filter(estado=1)
@@ -270,6 +315,8 @@ def plan_estudio(request):
 
 
 def agregar_plan(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == "POST":
         nuevo_plan = Plan_Estudio(
             descripcion=request.POST.get("descripcion"),
@@ -283,6 +330,8 @@ def agregar_plan(request):
 
 
 def detalle_plan(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == 'GET':
         detalle = Plan_Estudio.objects.filter(cod_plan_estudio=request.GET.get("codigo"))
         carrera = Plan_Estudio.objects.get(cod_plan_estudio=request.GET.get("codigo")).cod_carrera_id
@@ -295,6 +344,8 @@ def detalle_plan(request):
 
 
 def actualizar_plan(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == "POST":
         plan_actualizar = Plan_Estudio.objects.get(
             cod_plan_estudio=request.POST.get("codigo"))
@@ -308,6 +359,8 @@ def actualizar_plan(request):
 
 @csrf_exempt
 def eliminar_plan(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == "POST":
         plan_eliminar = Plan_Estudio.objects.get(cod_plan_estudio=request.POST.get("codigo"))
         plan_eliminar.estado = 0
@@ -318,6 +371,8 @@ def eliminar_plan(request):
 
 
 def semestre(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     lista_semestre = Semestre.objects.filter(estado=1)
     return render(request, "semestre/semestre.html", {"lista_semestre": lista_semestre,
                                                       "mensaje_bienvenida": generar_saludo(),
@@ -327,6 +382,8 @@ def semestre(request):
 
 
 def agregar_semestre(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == 'POST':
         nuevo_semestre = Semestre(
             descripcion=request.POST.get("descripcion"),
@@ -341,6 +398,8 @@ def agregar_semestre(request):
 
 
 def detalle_semestre(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == 'GET':
         detalle = Semestre.objects.filter(cod_semestre=request.GET.get("codigo"))
         detalle = serializers.serialize("json", detalle)
@@ -348,6 +407,8 @@ def detalle_semestre(request):
 
 
 def actualizar_semestre(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == 'POST':
         print(request.POST.get("codigo"))
         semestre_actualizar = Semestre.objects.get(cod_semestre=request.POST.get("codigo"))
@@ -362,6 +423,8 @@ def actualizar_semestre(request):
 
 @csrf_exempt
 def eliminar_semestre(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == "POST":
         semestre_eliminar = Semestre.objects.get(cod_semestre=request.POST.get("codigo"))
         semestre_eliminar.estado = 0
@@ -372,6 +435,8 @@ def eliminar_semestre(request):
 
 
 def asignatura(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     lista_carreras = Carrera.objects.filter(estado = 1)
     lista_planes = Plan_Estudio.objects.filter(estado = 1)
     lista_semestres = Semestre.objects.filter(estado = 1)
@@ -386,6 +451,8 @@ def asignatura(request):
 
 
 def agregar_asignatura(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     asignatura_nueva = Asignatura(
         descripcion = request.POST.get("descripcion"),
         horas_catedra = request.POST.get("horas"),
@@ -402,6 +469,8 @@ def agregar_asignatura(request):
 
 
 def detalle_asignatura(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == 'GET':
         detalle = Asignatura.objects.filter(cod_asignatura=request.GET.get("codigo"))
         detalle = serializers.serialize("json", detalle)
@@ -409,6 +478,8 @@ def detalle_asignatura(request):
 
 
 def actualizar_asignatura(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == "POST":
         asignatura_actualizar = Asignatura.objects.get(cod_asignatura = request.POST.get("codigo"))
         asignatura_actualizar.descripcion = request.POST.get("descripcion")
@@ -425,6 +496,8 @@ def actualizar_asignatura(request):
 
 @csrf_exempt
 def eliminar_asignatura(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == "POST":
         asignatura_eliminar = Asignatura.objects.get(cod_asignatura=request.POST.get("codigo"))
         asignatura_eliminar.estado = 0
@@ -436,6 +509,8 @@ def eliminar_asignatura(request):
 
 
 def perfil(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     usuario = request.GET.get("codigoPerfil")
     datos_usuario = Usuario.objects.get(cod_usuario=usuario)
     lista_roles = Rol_Usuario.objects.filter(estado=1)
@@ -451,6 +526,8 @@ def perfil(request):
 
 
 def asignar_rol(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == "POST":
         respuesta = ''
         if Usuario_Rol.objects.filter(estado=1, cod_rol_usuario_id=request.POST.get("rol"), cod_carrera_id=request.POST.get("carrera"), cod_usuario_id=request.POST.get("codigo")).exists():
@@ -477,6 +554,8 @@ def asignar_rol(request):
 
 @csrf_exempt
 def eliminar_rol(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == 'POST':
         rol = request.POST.get("codigo")
         if Asignatura_Usuario.objects.filter(estado = 1, cod_usuario_rol_id = rol).exists():
@@ -496,6 +575,8 @@ def eliminar_rol(request):
 
 
 def detalleAsignaturasCarrera(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     cod_carrera = request.GET.get('carrera')
     usuario = request.GET.get('codigo')
     lista_asignaturas = Asignatura.objects.filter(estado = 1, cod_carrera_id = cod_carrera)
@@ -511,6 +592,8 @@ def detalleAsignaturasCarrera(request):
 
 @csrf_exempt      
 def asignar_asignatura(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == "POST":
         if Asignatura_Usuario.objects.filter(cod_asignatura_id = request.POST.get("asignatura"), cod_usuario_rol_id = request.POST.get("codigo")).exists():
             reasignar = Asignatura_Usuario.objects.get(cod_asignatura_id = request.POST.get("asignatura"), cod_usuario_rol_id = request.POST.get("codigo"))
@@ -536,6 +619,8 @@ def asignar_asignatura(request):
 
 @csrf_exempt      
 def desvincular_asignatura(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == "POST":
         desasignar = Asignatura_Usuario.objects.get(estado = 1, cod_asignatura_id = request.POST.get("asignatura"), cod_usuario_rol_id = request.POST.get("codigo"))
         desasignar.estado = 0
@@ -549,10 +634,14 @@ def desvincular_asignatura(request):
         return respuesta
 
 def cabecera(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     return render(request, "reporte/cabecera.html")
 
 
 def unidad_aprendizaje(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     lista_facultades = Facultad.objects.filter(estado = 1)
     lista_carreras = Carrera.objects.filter(estado = 1)
     lista_asignaturas = Asignatura.objects.filter(estado = 1)
@@ -569,6 +658,8 @@ def unidad_aprendizaje(request):
 
 
 def agregar_unidad_aprendizaje(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == 'POST':
         unidad_agregar = Unidad_Aprendizaje(
             numero_unidad = request.POST.get("num_unidad"),
@@ -583,6 +674,8 @@ def agregar_unidad_aprendizaje(request):
 
 
 def detalle_unidad_aprendizaje(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == 'GET':
         detalle = Unidad_Aprendizaje.objects.filter(cod_unidad_aprendizaje=request.GET.get("codigo"))
         carrera = Asignatura.objects.get(cod_asignatura = Unidad_Aprendizaje.objects.get(cod_unidad_aprendizaje = request.GET.get("codigo")).cod_asignatura_id).cod_carrera_id
@@ -596,6 +689,8 @@ def detalle_unidad_aprendizaje(request):
 
 
 def actualizar_unidad_aprendizaje(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == 'POST':
         unidad_actualizar = Unidad_Aprendizaje.objects.get(estado = 1, cod_unidad_aprendizaje = request.POST.get("codigo"))
         unidad_actualizar.descripcion = request.POST.get("descripcion")
@@ -609,6 +704,8 @@ def actualizar_unidad_aprendizaje(request):
 
 @csrf_exempt
 def eliminar_unidad_aprendizaje(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == "POST":
         unidad_eliminar = Unidad_Aprendizaje.objects.get(cod_unidad_aprendizaje=request.POST.get("codigo"))
         unidad_eliminar.estado = 0
@@ -619,6 +716,8 @@ def eliminar_unidad_aprendizaje(request):
 
 
 def contenido(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     lista_facultades = Facultad.objects.filter(estado=1)
     lista_carreras = Carrera.objects.filter(estado=1)
     lista_asignaturas = Asignatura.objects.filter(estado=1)
@@ -636,6 +735,8 @@ def contenido(request):
                                                         "lista_contenidos": lista_contenidos})
 
 def detalle_contenido(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     detalle = Contenido.objects.filter(estado = 1, cod_contenido = request.GET.get("codigo"))
     unidad = Contenido.objects.get(estado = 1, cod_contenido = request.GET.get("codigo")).cod_unidad_aprendizaje_id
     asignatura = Unidad_Aprendizaje.objects.get(cod_unidad_aprendizaje = unidad, estado = 1).cod_asignatura_id
@@ -652,6 +753,8 @@ def detalle_contenido(request):
 
 
 def actualizar_contenido(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     contenido_actualizar = Contenido.objects.get(estado = 1, cod_contenido = request.POST.get("codigo"))
     contenido_actualizar.descripcion = request.POST.get("descripcion")
     contenido_actualizar.cod_unidad_aprendizaje_id = request.POST.get("unidad_aprendizaje")
@@ -663,6 +766,8 @@ def actualizar_contenido(request):
 
 
 def agregar_contenido(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     nuevo_contenido = Contenido(
         descripcion = request.POST.get("descripcion"),
         cod_unidad_aprendizaje_id = request.POST.get("unidad_aprendizaje"),
@@ -676,6 +781,8 @@ def agregar_contenido(request):
 
 @csrf_exempt
 def eliminar_contenido(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == "POST":
         contenido_eliminar = Contenido.objects.get(cod_contenido=request.POST.get("codigo"))
         contenido_eliminar.estado = 0
@@ -685,6 +792,8 @@ def eliminar_contenido(request):
         return respuesta
 
 def tipo_clase(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     lista_tipo = Tipo_Clase.objects.filter(estado = 1)
     return render(request, "tipo_clase/tipo_clase.html", {"mensaje_bienvenida": generar_saludo(),
                                                           "usuario_conectado": request.session.get("usuario_conectado"),
@@ -693,6 +802,8 @@ def tipo_clase(request):
 
 
 def detalle_tipo_clase(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == 'GET':
         detalle = Tipo_Clase.objects.filter(cod_tipo_clase=request.GET.get("codigo"))
         detalle = serializers.serialize("json", detalle)
@@ -700,6 +811,8 @@ def detalle_tipo_clase(request):
 
 
 def agregar_tipo_clase(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == 'POST':
         nuevo_tipo = Tipo_Clase(
             descripcion = request.POST.get("descripcion"),
@@ -711,6 +824,8 @@ def agregar_tipo_clase(request):
         return respuesta
 
 def actualizar_tipo_clase(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == 'POST':
         actualizar_tipo = Tipo_Clase.objects.get(estado = 1, cod_tipo_clase = request.POST.get("codigo"))
         actualizar_tipo.descripcion = request.POST.get("descripcion")
@@ -722,6 +837,8 @@ def actualizar_tipo_clase(request):
 
 @csrf_exempt
 def eliminar_tipo_clase(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == "POST":
         tipo_clase_eliminar = Tipo_Clase.objects.get(cod_tipo_clase=request.POST.get("codigo"))
         tipo_clase_eliminar.estado = 0
@@ -732,6 +849,8 @@ def eliminar_tipo_clase(request):
         
 
 def instrumento_evaluacion(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     lista_instrumentos = Instrumento_Evaluacion.objects.filter(estado = 1)
     return render(request, "instrumento_evaluacion/instrumento_evaluacion.html", {"mensaje_bienvenida": generar_saludo(),
                                                                                   "usuario_conectado": request.session.get("usuario_conectado"),
@@ -740,6 +859,8 @@ def instrumento_evaluacion(request):
 
 
 def detalle_instrumento_evaluacion(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == 'GET':
         detalle = Instrumento_Evaluacion.objects.filter(cod_instrumento_evaluacion=request.GET.get("codigo"))
         detalle = serializers.serialize("json", detalle)
@@ -747,6 +868,8 @@ def detalle_instrumento_evaluacion(request):
 
 
 def agregar_instrumento_evaluacion(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == 'POST':
         nuevo_tipo = Instrumento_Evaluacion(
             descripcion = request.POST.get("descripcion"),
@@ -758,6 +881,8 @@ def agregar_instrumento_evaluacion(request):
         return respuesta
 
 def actualizar_instrumento_evaluacion(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == 'POST':
         actualizar_instrumento = Instrumento_Evaluacion.objects.get(estado = 1, cod_instrumento_evaluacion = request.POST.get("codigo"))
         actualizar_instrumento.descripcion = request.POST.get("descripcion")
@@ -769,6 +894,8 @@ def actualizar_instrumento_evaluacion(request):
 
 @csrf_exempt
 def eliminar_instrumento_evaluacion(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == "POST":
         instrumento_eliminar = Instrumento_Evaluacion.objects.get(cod_instrumento_evaluacion=request.POST.get("codigo"))
         instrumento_eliminar.estado = 0
@@ -777,11 +904,10 @@ def eliminar_instrumento_evaluacion(request):
         respuesta = JsonResponse({"mensaje": "Registro Eliminado con Éxito"})
         return respuesta
 
-def trabajo_autonomo(request):
-    return render(request, "trabajo_autonomo/trabajo_autonomo.html")
-
 
 def metodologia_enseñanza(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     lista_metodologias = Metodologia_Enseñanza.objects.filter(estado = 1)
     return render(request, "metodologia_enseñanza/metodologia_enseñanza.html", {"mensaje_bienvenida": generar_saludo(),
                                                                                 "usuario_conectado": request.session.get("usuario_conectado"),
@@ -789,6 +915,8 @@ def metodologia_enseñanza(request):
                                                                                 "lista_metodologias": lista_metodologias})
 
 def detalle_metodologia_enseñanza(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == 'GET':
         detalle = Metodologia_Enseñanza.objects.filter(cod_metodologia_enseñanza=request.GET.get("codigo"))
         detalle = serializers.serialize("json", detalle)
@@ -796,6 +924,8 @@ def detalle_metodologia_enseñanza(request):
 
 
 def agregar_metodologia_enseñanza(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == 'POST':
         nuevo_tipo = Metodologia_Enseñanza(
             descripcion = request.POST.get("descripcion"),
@@ -807,6 +937,8 @@ def agregar_metodologia_enseñanza(request):
         return respuesta
 
 def actualizar_metodologia_enseñanza(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == 'POST':
         actualizar_metodologia = Metodologia_Enseñanza.objects.get(estado = 1, cod_metodologia_enseñanza = request.POST.get("codigo"))
         actualizar_metodologia.descripcion = request.POST.get("descripcion")
@@ -818,6 +950,8 @@ def actualizar_metodologia_enseñanza(request):
 
 @csrf_exempt
 def eliminar_metodologia_enseñanza(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == "POST":
         instrumento_eliminar = Metodologia_Enseñanza.objects.get(cod_metodologia_enseñanza=request.POST.get("codigo"))
         instrumento_eliminar.estado = 0
@@ -827,6 +961,8 @@ def eliminar_metodologia_enseñanza(request):
         return respuesta
 
 def recurso_auxiliar(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     lista_recursos = Recursos_Auxiliar.objects.filter(estado = 1)
     return render(request, "recurso_auxiliar/recurso_auxiliar.html", {"mensaje_bienvenida": generar_saludo(),
                                                                       "usuario_conectado": request.session.get("usuario_conectado"),
@@ -834,6 +970,8 @@ def recurso_auxiliar(request):
                                                                       "lista_recursos": lista_recursos})
 
 def detalle_recurso_auxiliar(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == 'GET':
         detalle = Recursos_Auxiliar.objects.filter(cod_recurso_auxiliar=request.GET.get("codigo"))
         detalle = serializers.serialize("json", detalle)
@@ -841,6 +979,8 @@ def detalle_recurso_auxiliar(request):
 
 
 def agregar_recurso_auxiliar(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == 'POST':
         nuevo_tipo = Recursos_Auxiliar(
             descripcion = request.POST.get("descripcion"),
@@ -852,6 +992,8 @@ def agregar_recurso_auxiliar(request):
         return respuesta
 
 def actualizar_recurso_auxiliar(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == 'POST':
         actualizar_metodologia = Recursos_Auxiliar.objects.get(estado = 1, cod_recurso_auxiliar = request.POST.get("codigo"))
         actualizar_metodologia.descripcion = request.POST.get("descripcion")
@@ -863,6 +1005,8 @@ def actualizar_recurso_auxiliar(request):
 
 @csrf_exempt
 def eliminar_recurso_auxiliar(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == "POST":
         instrumento_eliminar = Recursos_Auxiliar.objects.get(cod_recurso_auxiliar=request.POST.get("codigo"))
         instrumento_eliminar.estado = 0
@@ -872,6 +1016,8 @@ def eliminar_recurso_auxiliar(request):
         return respuesta
 
 def tipo_eva(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     lista_tipo = Tipo_Eva.objects.filter(estado = 1)
     return render(request, "tipo_eva/tipo_eva.html", {"mensaje_bienvenida": generar_saludo(),
                                                       "usuario_conectado": request.session.get("usuario_conectado"),
@@ -879,6 +1025,8 @@ def tipo_eva(request):
                                                       "lista_tipo": lista_tipo})
 
 def detalle_tipo_eva(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == 'GET':
         detalle = Tipo_Eva.objects.filter(cod_tipo_eva=request.GET.get("codigo"))
         detalle = serializers.serialize("json", detalle)
@@ -886,6 +1034,8 @@ def detalle_tipo_eva(request):
 
 
 def agregar_tipo_eva(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == 'POST':
         nuevo_tipo = Tipo_Eva(
             descripcion = request.POST.get("descripcion"),
@@ -897,6 +1047,8 @@ def agregar_tipo_eva(request):
         return respuesta
 
 def actualizar_tipo_eva(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == 'POST':
         actualizar_tipo = Tipo_Eva.objects.get(estado = 1, cod_tipo_eva = request.POST.get("codigo"))
         actualizar_tipo.descripcion = request.POST.get("descripcion")
@@ -908,6 +1060,8 @@ def actualizar_tipo_eva(request):
 
 @csrf_exempt
 def eliminar_tipo_eva(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == "POST":
         tipo_clase_eliminar = Tipo_Eva.objects.get(cod_tipo_eva=request.POST.get("codigo"))
         tipo_clase_eliminar.estado = 0
@@ -917,6 +1071,8 @@ def eliminar_tipo_eva(request):
         return respuesta
 
 def trabajo_autonomo(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     lista_trabajos = Trabajo_Autonomo.objects.filter(estado = 1)
     return render(request, "trabajo_autonomo/trabajo_autonomo.html", {"mensaje_bienvenida": generar_saludo(),
                                                                       "usuario_conectado": request.session.get("usuario_conectado"),
@@ -924,6 +1080,8 @@ def trabajo_autonomo(request):
                                                                       "lista_trabajos": lista_trabajos})
 
 def detalle_trabajo_autonomo(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == 'GET':
         detalle = Trabajo_Autonomo.objects.filter(cod_trabajo_autonomo=request.GET.get("codigo"))
         detalle = serializers.serialize("json", detalle)
@@ -931,6 +1089,8 @@ def detalle_trabajo_autonomo(request):
 
 
 def agregar_trabajo_autonomo(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == 'POST':
         nuevo_trabajo = Trabajo_Autonomo(
             descripcion = request.POST.get("descripcion"),
@@ -942,6 +1102,8 @@ def agregar_trabajo_autonomo(request):
         return respuesta
 
 def actualizar_trabajo_autonomo(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == 'POST':
         actualizar_trabajo = Trabajo_Autonomo.objects.get(estado = 1, cod_trabajo_autonomo = request.POST.get("codigo"))
         actualizar_trabajo.descripcion = request.POST.get("descripcion")
@@ -953,6 +1115,8 @@ def actualizar_trabajo_autonomo(request):
 
 @csrf_exempt
 def eliminar_trabajo_autonomo(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     if request.method == "POST":
         trabajo_eliminar = Trabajo_Autonomo.objects.get(cod_trabajo_autonomo=request.POST.get("codigo"))
         trabajo_eliminar.estado = 0
@@ -962,10 +1126,16 @@ def eliminar_trabajo_autonomo(request):
         return respuesta
 
 def reporte(request):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     mensaje_bienvenida = generar_saludo()
     lista_registros = Cabecera_Planilla.objects.filter(estado = 1).order_by('-fecha_clase')
     lista_usuarios = Usuario.objects.filter(estado = 1)
     lista_asignaturas = Asignatura.objects.filter(estado = 1)
+    lista_facultades = Facultad.objects.filter(estado = 1)
+    lista_carreras = Carrera.objects.filter(estado = 1)
+    lista_unidad = Unidad_Aprendizaje.objects.filter(estado = 1)
+    lista_planes = Plan_Estudio.objects.filter(estado = 1)
     return render(request, "reporte.html", {"usuario_conectado": request.session.get("usuario_conectado"),
                                            "nombre_usuario": request.session.get("nombre_del_usuario"),
                                            "direccion_email": request.session.get("correo_usuario"),
@@ -973,10 +1143,16 @@ def reporte(request):
                                            "mensaje_bienvenida": mensaje_bienvenida,
                                            "lista_registros": lista_registros,
                                            "lista_usuarios": lista_usuarios,
-                                           "lista_asignaturas": lista_asignaturas})
+                                           "lista_asignaturas": lista_asignaturas,
+                                           "lista_facultades": lista_facultades,
+                                           "lista_carreras": lista_carreras,
+                                           "lista_unidad": lista_unidad,
+                                           "lista_planes": lista_planes})
 
 
 def registro_de_operaciones_diarias(request, cod_cabecera):
+    if sesion_verificar(request) == 0:
+        return redirect("./")
     datos_registro = Cabecera_Planilla.objects.get(estado = 1, cod_cabecera_planilla = cod_cabecera)
     datos_asignatura = Asignatura.objects.get(cod_asignatura = datos_registro.cod_asignatura_id)
     datos_carrera = Carrera.objects.get(cod_carrera = datos_asignatura.cod_carrera_id)
@@ -1001,17 +1177,16 @@ def registro_de_operaciones_diarias(request, cod_cabecera):
 																				"lista_recurso": lista_recurso,
 																				"lista_trabajo": lista_trabajo})
     else:
-		#Hacer for de lista_evaluaciones e ir enmascarando con lista de instrumentos y tipo evaluacion para la descripcion en el reporte.
-	    datos_clase = "Evaluación"
-	    lista_evaluaciones = Evaluaciones.objects.filter(estado = 1, cod_cabecera_planilla_id = cod_cabecera)
-	    lista_instrumentos = Instrumento_Evaluacion.objects.all()
-	    lista_tipo_eva = Tipo_Eva.objects.all()
-	    return render(request, "reportes/reporte_evaluacion_operacion_diaria.html", {"lista_evaluaciones": lista_evaluaciones,
-																					 "lista_instrumentos": lista_instrumentos,
-																					 "lista_tipo_eva": lista_tipo_eva,
-																					 "datos_asignatura": datos_asignatura,
-																					 "datos_carrera": datos_carrera,
-																					 "datos_semestre": datos_semestre,
-																					 "datos_registro": datos_registro,
-																					 "datos_usuario": datos_usuario,
-                                                                                     "datos_clase": datos_clase}) 
+        datos_clase = "Evaluación"
+        lista_evaluaciones = Evaluaciones.objects.filter(estado = 1, cod_cabecera_planilla_id = cod_cabecera)
+        lista_instrumentos = Instrumento_Evaluacion.objects.all()
+        lista_tipo_eva = Tipo_Eva.objects.all()
+        return render(request, "reportes/reporte_evaluacion_operacion_diaria.html", {"lista_evaluaciones": lista_evaluaciones,
+                                                                                        "lista_instrumentos": lista_instrumentos,
+                                                                                        "lista_tipo_eva": lista_tipo_eva,
+                                                                                        "datos_asignatura": datos_asignatura,
+                                                                                        "datos_carrera": datos_carrera,
+                                                                                        "datos_semestre": datos_semestre,
+                                                                                        "datos_registro": datos_registro,
+                                                                                        "datos_usuario": datos_usuario,
+                                                                                        "datos_clase": datos_clase}) 
