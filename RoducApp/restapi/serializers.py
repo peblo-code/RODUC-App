@@ -104,3 +104,47 @@ class Evaluaciones_Serializer(serializers.ModelSerializer):
             'estado',
             'alta_usuario',
         ]
+
+class Contenidos_DadosSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Contenidos_Dados
+        fields = [
+            'cod_contenidos_dados',
+            'cod_cabecera_planilla',
+            'cod_tipo_contenido',
+            'cod_estado',
+            'alta_usuario',
+        ]
+
+class Recursos_UtilizadosSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Recursos_Utilizados
+        fields = [
+            'cod_recursos_utilizados',
+            'cod_cabecera_planilla',
+            'cod_recurso_auxiliar',
+            'estado',
+            'alta_usuario',
+        ]
+
+class Trabajos_UtilizadosSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Trabajos_Utilizados
+        fields = [
+            'cod_trabajos_utilizados',
+            'cod_cabecera_planilla',
+            'cod_trabajo_autonomo',
+            'estado',
+            'alta_usuario',
+        ]
+
+class Metodologia_UtilizadaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Metodologia_Utilizada
+        fields = [
+            'cod_metodologia_utilizada',
+            'cod_cabecera_planilla',
+            'cod_metodologia_enseñanza',
+            'estado',
+            'alta_usuario',
+        ]
