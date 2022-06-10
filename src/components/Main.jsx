@@ -9,6 +9,7 @@ import TouchIcon from './TouchIcon.jsx';
 import useUserContext from '../hooks/useUserContext.js';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
+import DetailForm from './DetailForm.jsx';
 
 const Stack = createNativeStackNavigator();
 
@@ -58,6 +59,10 @@ const Main = () => {
                         <Stack.Screen
                             name='Nuevo Informe'
                             component={NewForm}
+                            options={styles} />
+                        <Stack.Screen
+                            name='Detalle Informe'
+                            component={DetailForm}
                             options={styles} />
                         <Stack.Screen
                             name='Historial'

@@ -54,10 +54,9 @@ const HistoryList = () => {
             const plan = planes.find(plan => plan.pk === asignatura.fields.cod_plan_estudio)
 
             const curso = asignatura.fields.curso
-            const fecha = reporte.fields.fecha_clase
+            const fecha = reporte.fields.fecha_clase.split('-').reverse().join('/')
             const horaInicio = reporte.fields.hora_entrada
             const horaFin = reporte.fields.hora_salida
-            console.log()
             return {
                 asignatura: asignatura.fields.descripcion,
                 carrera: carrera.fields.descripcion,

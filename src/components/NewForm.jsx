@@ -5,7 +5,6 @@ import PickerSelect from './PickerSelect';
 import useUserContext from '../hooks/useUserContext.js';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import axios from 'axios';
-import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 import { CheckBox } from '@rneui/themed';
 
 
@@ -22,6 +21,11 @@ const NewForm = ({ navigation }) => {
     const [unidades, setUnidades] = useState([]);
     const [contenidos, setContenidos] = useState([]);
     const [semestres, setSemestres] = useState([]);
+    const [instrumentos, setInstrumentos] = useState([]);
+    const [recursos, setRecursos] = useState([]);
+    const [tiposEvaluacion, setTiposEvaluacion] = useState([]);
+    const [trabajos, setTrabajos] = useState([]);
+    const [metodologias, setMetodologias] = useState([]);
 
     //Variable que contiene las listas de la API y su correspondiente estado
     const listsAndSetters = [
@@ -33,13 +37,17 @@ const NewForm = ({ navigation }) => {
         { list: 'lista_contenido', setter: setContenidos },
         { list: 'lista_tipo_clase', setter: setClases },
         { list: 'lista_semestre', setter: setSemestres },
+        { list: 'lista_instrumento_evaluacion', setter: setInstrumentos },
+        { list: 'lista_recurso', setter: setRecursos },
+        { list: 'lista_tipo_evaluacion', setter: setTiposEvaluacion },
+        { list: 'lista_trabajo', setter: setTrabajos },
+        { list: 'lista_metodologia', setter: setMetodologias },
     ]
 
     //Estados para cargar los datos del formulario
     const [asignaturaItems, setAsignaturaItems] = useState([]);
     const [carreraItems, setCarreraItems] = useState([]);
     const [planItems, setPlanItems] = useState([]);
-    const [unidadItems, setUnidadItems] = useState([]);
     const [contenidoItems, setContenidoItems] = useState([])
     const [semestreItems, setSemestresItems] = useState([]);
 
@@ -72,6 +80,18 @@ const NewForm = ({ navigation }) => {
     //Estados para determinar a donde se dirige el usuario
     const [check1, setCheck1] = useState(false)
     const [isDisabled, setIsDisabled] = useState(true)
+    const [codCabecera, setCodCabecera] = useState(0)
+
+    const detalleObj = {
+        codCabecera,
+        check1,
+        contenidoItems,
+        instrumentos,
+        recursos,
+        tiposEvaluacion,
+        trabajos,
+        metodologias,
+    }
 
     const submitForm = () => {
         axios.post(`${URL}/crear_cabecera`, {
@@ -87,13 +107,25 @@ const NewForm = ({ navigation }) => {
             alta_usuario: user.nombre_usuario,
         })
         .then(res => {
-            Alert.alert('Exito!', 'Informe de la Clase creada con exito!')
-            navigation.navigate('Inicio')
+            setCodCabecera(JSON.parse(res.request._response).cod_cabecera_planilla)
         })
         .catch(err => {
             Alert.alert('Error!', 'No se pudo crear informe de la clase')
         })
+        navigation.navigate('Detalle Informe', {
+            detalleObj,
+        })
     }
+
+    useEffect(() => {
+        codCabecera > 0 ? Alert.alert('Exito!', 'Informe de la Clase creada con exito!', [
+            { text: 'Ok', onPress: () => {
+                navigation.navigate('Detalle Informe', {
+                    detalleObj,
+                })
+            }
+        }]) : null
+    }, [codCabecera])
 
     //Funcion para obtener una lista especifica de la API
     const getAPIData = (response, list, setList) => {
@@ -139,7 +171,9 @@ const NewForm = ({ navigation }) => {
     useEffect(() => {
         axios.get(`${URL}/listaFacultades_Carreras/${user.cod_usuario}`)
         .then((response) => {
-            listsAndSetters.map(detail => getAPIData(response, detail.list, detail.setter))
+            listsAndSetters.map(detail => {
+                getAPIData(response, detail.list, detail.setter)
+            })
             
         })
         .catch((error) => {
@@ -299,6 +333,18 @@ const NewForm = ({ navigation }) => {
                     <StyledText align="center" fontWeight="bold" color="primary">Fecha de clase: {selectedDate.split('-').reverse().join('/')}</StyledText>
                         <StyledText align="center" fontWeight="bold" color="primary">Hora de Inicio: {selectedStartTime}</StyledText>
                         <StyledText align="center" fontWeight="bold" color="primary">Hora de Fin: {selectedEndTime}</StyledText>
+                        {show && (
+                            <DateTimePicker
+                                confirmTextIOS="Confirmar"
+                                cancelTextIOS="Cancelar"
+                                testID="dateTimePicker"
+                                value={ date }
+                                mode={ mode }
+                                is24Hour={ true }
+                                display="default"
+                                onChange={ onChange }
+                            />)
+                        }
                     </View>
                     <View style={{ marginLeft: 8, justifyContent:'space-between', height: 120 }}>
                         <Button title='Fecha de Clase' onPress={() => showMode('date')}/>
@@ -358,7 +404,7 @@ const NewForm = ({ navigation }) => {
                     onPress={ () => {
                         alertSubmit();
                     }}
-                    disabled={ isDisabled }
+                    disabled={ isDisabled  }
                 />
 
                 { isDisabled ? 
@@ -369,34 +415,6 @@ const NewForm = ({ navigation }) => {
                         color="red">
                             Todos los campos deben ser rellenados!
                     </StyledText> : null 
-                }
-
-                {/* <SectionedMultiSelect
-                    items={ contenidoItems }
-                    IconRenderer={ Icon }
-                    uniqueKey="id"
-                    subKey="children"
-                    selectText="Seleccione los contenidos"
-                    confirmText="Listo"
-                    searchPlaceholderText="Buscar contenidos"
-                    noItemsComponent={ () => <StyledText align="center" style={{marginTop:20}}>No hay contenidos</StyledText> }
-                    noResultsComponent={ () => <StyledText align="center" style={{marginTop:20}}>No hay resultados</StyledText> }
-                    selectedText=""
-                    showDropDowns={ true }
-                    readOnlyHeadings={ true }
-                    onSelectedItemsChange={ setSelectedItems }
-                    selectedItems={ selectedItems }
-                /> */}
-
-                {show && (
-                    <DateTimePicker
-                        testID="dateTimePicker"
-                        value={ date }
-                        mode={ mode }
-                        is24Hour={ true }
-                        display="default"
-                        onChange={ onChange }
-                    />)
                 }
             
             </View>

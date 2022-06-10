@@ -43,7 +43,7 @@ export default function UserView() {
                     align="center"
                     fontWeight="bold"
                 >
-                    Informática de la Universidad Católica - Campus Itapúa.
+                    Ingeniería Informática de la Universidad Católica - Campus Itapúa.
                     2022
                 </StyledText>
             </CardContainer>
