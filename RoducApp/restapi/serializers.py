@@ -111,8 +111,8 @@ class Contenidos_DadosSerializer(serializers.ModelSerializer):
         fields = [
             'cod_contenidos_dados',
             'cod_cabecera_planilla',
-            'cod_tipo_contenido',
-            'cod_estado',
+            'cod_contenido',
+            'estado',
             'alta_usuario',
         ]
 

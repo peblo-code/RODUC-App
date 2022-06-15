@@ -41,6 +41,36 @@ def sesion_verificar(request):
         return 1
     else:
         return 0
+
+#convertidor de fecha
+def convertirFecha(fecha):
+    año = fecha[:(fecha.find('-'))]
+    mes = fecha[(fecha.find('-') +1 ): (fecha.find('-') + 3)] 
+    dia = fecha[(fecha.find('-') + 4): (fecha.find('-') + 6)] 
+    if mes == '01':
+        return(dia + ' Enero de ' + año)
+    elif mes == '02':
+        return(dia + ' Febrero de ' + año)
+    elif mes == '03':
+        return(dia + ' Marzo de ' + año)
+    elif mes == '04':
+        return(dia + ' Abril de ' + año)
+    elif mes == '05':
+        return(dia + ' Mayo de ' + año)
+    elif mes == '06':
+        return(dia + ' Junio de ' + año)
+    elif mes == '07':
+        return(dia + ' Julio de ' + año)
+    elif mes == '08':
+        return(dia + ' Agosto de ' + año)
+    elif mes == '09':
+        return(dia + ' Septiembre de ' + año)
+    elif mes == '10':
+        return(dia + ' Octubre de ' + año)
+    elif mes == '11':
+        return(dia + ' Noviembre de ' + año)
+    elif mes == '12':
+        return(dia + ' Diciembre de ' + año)
     
 ###########################################################################################
 
@@ -1128,8 +1158,11 @@ def eliminar_trabajo_autonomo(request):
 def reporte(request):
     if sesion_verificar(request) == 0:
         return redirect("./")
+    fecha_actual = str(datetime.today())
+    año_actual = fecha_actual[:(fecha_actual.find('-'))]
+    print(año_actual + " Año actual")
     mensaje_bienvenida = generar_saludo()
-    lista_registros = Cabecera_Planilla.objects.filter(estado = 1).order_by('-fecha_clase')
+    lista_registros = Cabecera_Planilla.objects.raw('SELECT * FROM roducweb_cabecera_planilla as c WHERE c.estado = 1 ORDER BY c.fecha_clase desc')
     lista_usuarios = Usuario.objects.filter(estado = 1)
     lista_asignaturas = Asignatura.objects.filter(estado = 1)
     lista_facultades = Facultad.objects.filter(estado = 1)
@@ -1139,7 +1172,6 @@ def reporte(request):
     return render(request, "reporte.html", {"usuario_conectado": request.session.get("usuario_conectado"),
                                            "nombre_usuario": request.session.get("nombre_del_usuario"),
                                            "direccion_email": request.session.get("correo_usuario"),
-                                           "inicio": 'S',
                                            "mensaje_bienvenida": mensaje_bienvenida,
                                            "lista_registros": lista_registros,
                                            "lista_usuarios": lista_usuarios,
@@ -1164,7 +1196,7 @@ def registro_de_operaciones_diarias(request, cod_cabecera):
         contenidos = Contenido.objects.raw('SELECT c.cod_contenido, c.descripcion, c.cod_unidad_aprendizaje_id FROM roducweb_contenido AS c, roducweb_contenidos_dados AS cd WHERE c.cod_contenido = cd.cod_contenido_id AND cd.cod_cabecera_planilla_id = ' + str(cod_cabecera))
         lista_metodologia = Metodologia_Enseñanza.objects.raw('SELECT m.cod_metodologia_enseñanza, m.descripcion FROM roducweb_cabecera_planilla AS c, roducweb_metodologia_enseñanza AS m, roducweb_metodologia_utilizada AS mu WHERE c.cod_cabecera_planilla = mu.cod_cabecera_planilla_id AND mu.cod_metodologia_enseñanza_id = m.cod_metodologia_enseñanza AND c.cod_cabecera_planilla = ' + str(cod_cabecera))
         lista_recurso = Recursos_Auxiliar.objects.raw('SELECT ra.cod_recurso_auxiliar, ra.descripcion FROM roducweb_recursos_auxiliar AS ra, roducweb_recursos_utilizados AS ru, roducweb_cabecera_planilla AS c WHERE c.cod_cabecera_planilla = ru.cod_cabecera_planilla_id and ru.cod_recurso_auxiliar_id = ra.cod_recurso_auxiliar and c.cod_cabecera_planilla = ' + str(cod_cabecera))
-        lista_trabajo = Trabajo_Autonomo.objects.raw('SELECT t.cod_trabajo_autonomo, t.descripcion FROM roducweb_trabajo_autonomo AS t, roducweb_trabajos_utilizados AS tu, roducweb_cabecera_planilla AS c where c.cod_cabecera_planilla = tu.cod_trabajo_autonomo_id and tu.cod_trabajo_autonomo_id = t.cod_trabajo_autonomo and c.cod_cabecera_planilla = ' + str(cod_cabecera))
+        lista_trabajo = Trabajo_Autonomo.objects.raw('SELECT t.cod_trabajo_autonomo, t.descripcion FROM roducweb_trabajo_autonomo AS t, roducweb_trabajos_utilizados AS tu, roducweb_cabecera_planilla AS c where c.cod_cabecera_planilla = tu.cod_cabecera_planilla_id and tu.cod_trabajo_autonomo_id = t.cod_trabajo_autonomo and c.cod_cabecera_planilla = ' + str(cod_cabecera))
         return render(request, "reportes/registro_de_operaciones_diarias.html", {"datos_asignatura": datos_asignatura,
 																				"datos_carrera": datos_carrera,
 																				"datos_semestre": datos_semestre,
@@ -1190,3 +1222,60 @@ def registro_de_operaciones_diarias(request, cod_cabecera):
                                                                                         "datos_registro": datos_registro,
                                                                                         "datos_usuario": datos_usuario,
                                                                                         "datos_clase": datos_clase}) 
+
+
+
+def analisisAsignatura(request):
+    fecha_uno = request.POST.get("fecha_uno")
+    fecha_dos = request.POST.get("fecha_dos")
+    asignatura = request.POST.get("asignatura")
+
+    datos_asignatura = Asignatura.objects.get(cod_asignatura = asignatura)
+
+    #subcadena para sacar año de fecha uno
+    año_uno = fecha_uno[:(fecha_uno.find('-'))]
+    #subcadena para sacar año de fecha dos
+    año_dos = fecha_dos[:(fecha_dos.find('-'))]
+
+    convertirFecha(fecha_uno)
+
+    #consulta a cabeceras usando los años y fechas como filtro
+    cabeceras_fecha_uno = Cabecera_Planilla.objects.raw("SELECT * FROM roducweb_cabecera_planilla WHERE cod_asignatura_id = " + str(asignatura) + " and fecha_clase BETWEEN '" + str(año_uno) + "-01-01' AND '" + str(fecha_uno) + "' and estado = 1 and evaluacion = 0 ORDER BY fecha_clase")
+    cabeceras_fecha_dos = Cabecera_Planilla.objects.raw("SELECT * FROM roducweb_cabecera_planilla WHERE cod_asignatura_id = " + str(asignatura) + " and fecha_clase BETWEEN '" + str(año_dos) + "-01-01' AND '" + str(fecha_dos) + "' and estado = 1 and evaluacion = 0 ORDER BY fecha_clase")
+    
+    #consulta para traer las unidades que se dieron en las fechas
+    unidades_fecha_uno = Unidad_Aprendizaje.objects.raw("SELECT DISTINCT u.cod_unidad_aprendizaje, u.descripcion, cont.fecha FROM roducweb_unidad_aprendizaje AS u, (SELECT c.cod_contenido, c.descripcion, c.cod_unidad_aprendizaje_id, cau.fecha_clase AS fecha FROM roducweb_contenidos_dados AS cd, roducweb_contenido AS c, (SELECT * FROM roducweb_cabecera_planilla AS cp WHERE cp.cod_asignatura_id = " + str(asignatura) + " AND cp.fecha_clase BETWEEN '" + str(año_uno) + "-01-01' AND '" + str(fecha_uno) + "' AND cp.estado = 1) AS cau WHERE cau.cod_cabecera_planilla = cd.cod_cabecera_planilla_id AND cd.estado = 1 AND cd.cod_contenido_id = c.cod_contenido) AS cont WHERE u.cod_unidad_aprendizaje = cont.cod_unidad_aprendizaje_id ORDER BY cont.fecha")
+    unidades_fecha_dos = Unidad_Aprendizaje.objects.raw("SELECT DISTINCT u.cod_unidad_aprendizaje, u.descripcion, cont.fecha FROM roducweb_unidad_aprendizaje AS u, (SELECT c.cod_contenido, c.descripcion, c.cod_unidad_aprendizaje_id, cau.fecha_clase AS fecha FROM roducweb_contenidos_dados AS cd, roducweb_contenido AS c, (SELECT * FROM roducweb_cabecera_planilla AS cp WHERE cp.cod_asignatura_id = " + str(asignatura) + " AND cp.fecha_clase BETWEEN '" + str(año_dos) + "-01-01' AND '" + str(fecha_dos) + "' AND cp.estado = 1) AS cau WHERE cau.cod_cabecera_planilla = cd.cod_cabecera_planilla_id AND cd.estado = 1 AND cd.cod_contenido_id = c.cod_contenido) AS cont WHERE u.cod_unidad_aprendizaje = cont.cod_unidad_aprendizaje_id ORDER BY cont.fecha")
+    
+    #consulta para traer los contenidos que se dieron en las fechas 
+    contenidos_fecha_uno = Contenido.objects.raw("SELECT DISTINCT c.cod_contenido ,c.descripcion ,c.cod_unidad_aprendizaje_id ,cau.fecha_clase FROM roducweb_contenidos_dados AS cd ,roducweb_contenido AS c, (SELECT * FROM roducweb_cabecera_planilla AS cp WHERE cp.cod_asignatura_id = " + str(asignatura) + " AND cp.fecha_clase BETWEEN '" + str(año_uno) + "-01-01' AND '" + str(fecha_uno) + "' AND cp.estado = 1) AS cau WHERE cau.cod_cabecera_planilla = cd.cod_cabecera_planilla_id AND cd.estado = 1 AND cd.cod_contenido_id = c.cod_contenido")
+    contenidos_fecha_dos = Contenido.objects.raw("SELECT DISTINCT c.cod_contenido ,c.descripcion ,c.cod_unidad_aprendizaje_id ,cau.fecha_clase FROM roducweb_contenidos_dados AS cd ,roducweb_contenido AS c, (SELECT * FROM roducweb_cabecera_planilla AS cp WHERE cp.cod_asignatura_id = " + str(asignatura) + " AND cp.fecha_clase BETWEEN '" + str(año_dos) + "-01-01' AND '" + str(fecha_dos) + "' AND cp.estado = 1) AS cau WHERE cau.cod_cabecera_planilla = cd.cod_cabecera_planilla_id AND cd.estado = 1 AND cd.cod_contenido_id = c.cod_contenido")
+
+    #todos los contenidos de la materia
+    todos_contenidos = Contenido.objects.raw("SELECT c.cod_contenido FROM roducweb_unidad_aprendizaje as u, roducweb_contenido as c WHERE c.cod_unidad_aprendizaje_id = u.cod_unidad_aprendizaje AND u.cod_asignatura_id = " + str(asignatura))
+    todos_contenidos = len(list(todos_contenidos))
+
+    #total de contenidos dados
+    total_dado_uno = len(list(contenidos_fecha_uno))
+    total_dado_dos = len(list(contenidos_fecha_dos))
+
+    #promedios
+    promedio_uno = round((total_dado_uno * 100) / todos_contenidos)
+    promedio_dos = round((total_dado_dos * 100) / todos_contenidos)
+
+    return render(request, "reportes/analisis_asignatura.html", {"cabeceras_fecha_uno": cabeceras_fecha_uno,
+                                                                 "cabeceras_fecha_dos": cabeceras_fecha_dos,
+                                                                 "unidades_fecha_uno": unidades_fecha_uno,
+                                                                 "unidades_fecha_dos": unidades_fecha_dos,
+                                                                 "contenidos_fecha_uno": contenidos_fecha_uno,
+                                                                 "contenidos_fecha_dos": contenidos_fecha_dos,
+                                                                 "fecha_uno": convertirFecha(fecha_uno),
+                                                                 "fecha_dos": convertirFecha(fecha_dos),
+                                                                 "año_uno": año_uno,
+                                                                 "año_dos": año_dos,
+                                                                 "datos_asignatura": datos_asignatura,
+                                                                 "promedio_uno": promedio_uno,
+                                                                 "promedio_dos": promedio_dos,
+                                                                 "total_dado_uno": total_dado_uno,
+                                                                 "total_dado_dos": total_dado_dos,
+                                                                 "todos_contenidos": todos_contenidos})

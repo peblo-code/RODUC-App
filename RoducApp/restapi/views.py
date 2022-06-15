@@ -12,7 +12,6 @@ from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.utils.decorators import method_decorator
 
 # Create your views here.
-###########
 #Auditoria Sesion
 def auditar_sesion(request, user, info):
     nueva_sesion = Auditoria_Sesiones(
@@ -81,6 +80,9 @@ def auditoriaSesion(request, user, info):
 
 def listaFacultades_Carreras(request, user):
     if request.method == 'GET':
+        fecha_actual = str(datetime.today())
+        año_actual = fecha_actual[:(fecha_actual.find('-'))]
+        
         #FACULTADES DEL USUARIO
         lista_facultades = Facultad.objects.raw('SELECT DISTINCT f.cod_facultad, f.descripcion FROM roducweb_carrera as c, roducweb_facultad as f, roducweb_usuario_rol as u WHERE u.cod_carrera_id = c.cod_carrera AND c.cod_facultad_id = f.cod_facultad AND u.cod_usuario_id =' + str(user) + ' AND u.cod_rol_usuario_id = 2 AND u.estado = 1')
         lista_facultades = serializers.serialize('json', lista_facultades)
@@ -100,10 +102,10 @@ def listaFacultades_Carreras(request, user):
         lista_tipo_clase = Tipo_Clase.objects.filter(estado = 1)
         lista_tipo_clase = serializers.serialize('json', lista_tipo_clase)
         #LISTA DE UNIDADES
-        lista_unidad = Unidad_Aprendizaje.objects.filter(estado = 1)
+        lista_unidad = Unidad_Aprendizaje.objects.raw("SELECT DISTINCT u.cod_unidad_aprendizaje, u.descripcion FROM roducweb_unidad_aprendizaje AS u, (SELECT * FROM roducweb_contenido AS cont WHERE cont.cod_contenido NOT IN (SELECT co.cod_contenido FROM roducweb_contenido AS co, roducweb_contenidos_dados AS cd, roducweb_cabecera_planilla AS c WHERE c.cod_cabecera_planilla = cd.cod_cabecera_planilla_id AND cd.cod_contenido_id = co.cod_contenido AND c.fecha_clase BETWEEN '" + str(año_actual) + "/01/01' AND '" + str(año_actual) + "/12/01' AND c.estado = 1 AND co.estado = 1 AND cd.estado = 1) AND cont.estado = 1) as con WHERE u.cod_unidad_aprendizaje = con.cod_unidad_aprendizaje_id")
         lista_unidad = serializers.serialize('json', lista_unidad)
         #LISTA DE CONTENIDOS
-        lista_contenido = Contenido.objects.filter(estado = 1)
+        lista_contenido = Contenido.objects.raw("SELECT * FROM roducweb_contenido as cont WHERE cont.cod_contenido NOT IN (SELECT co.cod_contenido FROM roducweb_contenido as co ,roducweb_contenidos_dados as cd ,roducweb_cabecera_planilla as c WHERE c.cod_cabecera_planilla = cd.cod_cabecera_planilla_id and cd.cod_contenido_id = co.cod_contenido and c.fecha_clase BETWEEN '" + str(año_actual) + "/01/01' and '" + str(año_actual) + "/12/01'  and c.estado = 1 and co.estado = 1 and cd.estado = 1) and cont.estado = 1")
         lista_contenido = serializers.serialize('json', lista_contenido)
         #INSTRUMENTO DE EVALUACION
         lista_instrumento_evaluacion = Instrumento_Evaluacion.objects.filter(estado = 1)

@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+{% block titulo %}Reporte - Roduc{% endblock %}
+{% block extracss %}
+<style type="text/css">
+    html {
+        page-break-after: avoid;
+    }
+
+    table {
+        page-break-inside: auto
+    }
+
+    tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+    }
+
+    thead {
+        display: table-header-group
+    }
+
+    tfoot {
+        display: table-footer-group
+    }
+
+    div {
+        page-break-inside: avoid;
+    }
+
+    html,
+    body {
+        height: auto;
+    }
+
+    td {
+        display: column;
+    }
+
+    @media print {
+        .progress {
+            box-shadow: inset 0 1px 2px rgb(0 0 0 / 20%) !important;
+        }
+        .progress-bar {
+            border-bottom: 2rem solid #172b4d !important;
+        }
+    }
+</style>
+{% endblock %}
+{% block cuerpo %}
+
+{% load static %}
+
+<section class=" row py-3">
+    <section class="container"
+        style="display: flex; justify-content: center; flex-direction: column; align-items: center;">
+        <section class="row">
+            <section>
+                <img src="{%static 'assets/img/escudo_uni.png'%}" width="200" height="140">
+            </section>
+        </section>
+    </section>
+    <hr width=1500>
+</section>
+
+<section class="container card" style="border: solid; border-width: .5px; width: 100%">
+    <section class="card-header" style="text-align:center;">
+        <h3 class="">Análisis de Asignatura: {{datos_asignatura.descripcion}}</h6>
+    </section>
+    <section class="card-body" style="border-bottom: solid; border-width: .5px; padding: 0rem;">
+        <section class="row py-3"
+            style="border-bottom: solid; border-width: .5px; display: flex; justify-content: center; ">
+            <span class="heading"><strong>Desde el: 01 de Enero de {{año_uno}} al {{fecha_uno}}</strong></span>
+        </section>
+        <section class="container">
+            {% for cabecera in cabeceras_fecha_uno %}
+            <section class="row">
+                <span class=""><strong>Clase de la fecha: {{cabecera.fecha_clase}}</strong></span>
+            </section>
+            <section class="container" style="padding-bottom: 5px;">
+                {% for unidades in unidades_fecha_uno %}
+                    {% if unidades.fecha == cabecera.fecha_clase %}
+                    <section class="row">
+                        <span class="text-muted" style="padding-left: 20px;"><strong>Unidad:
+                                {{unidades.descripcion}}</strong></span>
+                    </section>
+                    {% endif %}
+
+                    {% for contenido in contenidos_fecha_uno %}
+                        {% if contenido.fecha_clase == cabecera.fecha_clase and contenido.cod_unidad_aprendizaje_id == unidades.cod_unidad_aprendizaje %}
+                        <section class="row">
+                            <li class="" style="padding-left: 40px;">{{contenido.descripcion}}</li>
+                        </section>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </section>
+            {% endfor %}
+        </section>
+    </section>
+    <section class="card-footer">
+        <span class="heading">Se concluye que:</span>
+        <p class="">En el rango de fechas del <strong>01 de Enero de {{año_uno}}</strong> al <strong>{{fecha_uno}}</strong>, de un total de <strong>{{todos_contenidos}} contenidos asociados a la materia {{datos_asignatura.descripcion}}</strong>, se desarrolló el <strong>{{promedio_uno}}%</strong>, correspondiente a <strong>{{total_dado_uno}} contenidos</strong></p>
+        <section class="progress-wrapper">
+            <section class="progress-info">
+                <section class="progress-label">
+                    <span>Progreso en la Asignatura</span>
+                </section>
+                <section class="progress-percentage">
+                    <span>{{promedio_uno}}%</span>
+                </section>
+            </section>
+            <section class="progress">
+                <section class="progress-bar bg-default" role="progressbar" aria-valuenow="{{promedio_uno}}" aria-valuemin="0" aria-valuemax="100" style="width: {{promedio_uno}}%;"></section>
+            </section>
+        </section>
+    </section>
+</section>
+
+<section class="container card" style="border: solid; border-width: .5px; width: 100%">
+    <section class="card-header" style="text-align:center;">
+        <h3 class="">Análisis de Asignatura: {{datos_asignatura.descripcion}}</h6>
+    </section>
+    <section class="card-body" style="border-bottom: solid; border-width: .5px; padding: 0rem;">
+        <section class="row py-3"
+            style="border-bottom: solid; border-width: .5px; display: flex; justify-content: center; ">
+            <span class="heading"><strong>Desde el: 01 de Enero de {{año_dos}} al {{fecha_dos}}</strong></span>
+        </section>
+        <section class="container">
+            {% for cabecera in cabeceras_fecha_dos %}
+            <section class="row">
+                <span class=""><strong>Clase de la fecha: {{cabecera.fecha_clase}}</strong></span>
+            </section>
+            <section class="container" style="padding-bottom: 5px;">
+                {% for unidades in unidades_fecha_dos %}
+                    {% if unidades.fecha == cabecera.fecha_clase %}
+                    <section class="row">
+                        <span class="text-muted" style="padding-left: 20px;"><strong>Unidad:
+                                {{unidades.descripcion}}</strong></span>
+                    </section>
+                    {% endif %}
+
+                    {% for contenido in contenidos_fecha_dos %}
+                        {% if contenido.fecha_clase == cabecera.fecha_clase and contenido.cod_unidad_aprendizaje_id == unidades.cod_unidad_aprendizaje %}
+                        <section class="row">
+                            <li class="" style="padding-left: 40px;">{{contenido.descripcion}}</li>
+                        </section>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </section>
+            {% endfor %}
+        </section>
+    </section>
+    <section class="card-footer">
+        <span class="heading">Se concluye que:</span>
+        <p class="">En el rango de fechas del <strong>01 de Enero de {{año_dos}}</strong> al <strong>{{fecha_dos}}</strong>, de un total de <strong>{{todos_contenidos}} contenidos asociados a la materia {{datos_asignatura.descripcion}}</strong>, se desarrolló el <strong>{{promedio_dos}}%</strong>, correspondiente a <strong>{{total_dado_dos}} contenidos</strong></p>
+        <section class="progress-wrapper">
+            <section class="progress-info">
+                <section class="progress-label">
+                    <span>Progreso en la Asignatura</span>
+                </section>
+                <section class="progress-percentage">
+                    <span>{{promedio_dos}}%</span>
+                </section>
+            </section>
+            <section class="progress">
+                <section class="progress-bar bg-default" role="progressbar" aria-valuenow="{{promedio_dos}}" aria-valuemin="0" aria-valuemax="100" style="width: {{promedio_dos}}%;"></section>
+            </section>
+        </section>
+    </section>
+</section>
+
+{% endblock %}
