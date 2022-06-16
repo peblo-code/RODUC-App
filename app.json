@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "RODUC-App",
+    "owner": "uci-proyecto",
     "slug": "RODUC-App",
     "version": "1.0.0",
     "orientation": "portrait",
