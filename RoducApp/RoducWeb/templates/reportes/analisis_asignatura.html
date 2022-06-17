@@ -86,7 +86,7 @@
                     {% endif %}
 
                     {% for contenido in contenidos_fecha_uno %}
-                        {% if contenido.fecha_clase == cabecera.fecha_clase and contenido.cod_unidad_aprendizaje_id == unidades.cod_unidad_aprendizaje %}
+                        {% if contenido.fecha == cabecera.fecha_clase and contenido.cod_unidad_aprendizaje_id == unidades.cod_unidad_aprendizaje %}
                         <section class="row">
                             <li class="" style="padding-left: 40px;">{{contenido.descripcion}}</li>
                         </section>
@@ -140,7 +140,7 @@
                     {% endif %}
 
                     {% for contenido in contenidos_fecha_dos %}
-                        {% if contenido.fecha_clase == cabecera.fecha_clase and contenido.cod_unidad_aprendizaje_id == unidades.cod_unidad_aprendizaje %}
+                        {% if contenido.fecha == cabecera.fecha_clase and contenido.cod_unidad_aprendizaje_id == unidades.cod_unidad_aprendizaje %}
                         <section class="row">
                             <li class="" style="padding-left: 40px;">{{contenido.descripcion}}</li>
                         </section>

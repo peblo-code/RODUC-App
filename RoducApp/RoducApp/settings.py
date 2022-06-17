@@ -79,14 +79,25 @@ WSGI_APPLICATION = 'RoducApp.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'roducdb',
+#         'USER' : 'juan',
+#         'PASSWORD': '123456',
+#         'HOST' : '26.247.235.244',
+#         'PORT' : '3306',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'roducdb',
-        'USER' : 'juan',
-        'PASSWORD': '123456',
-        'HOST' : '26.247.235.244',
-        'PORT' : '3306',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'd8coede4uas7qn',
+        'USER': 'fghoeptlecbllp',
+        'PASSWORD': 'aeefdc7d35c6ad0dd28c23f381fb40373a1834140fe61ca7cefce2dd3b661691',
+        'HOST': 'ec2-52-44-13-158.compute-1.amazonaws.com',
+        'PORT': '5432',
     }
 }
 
