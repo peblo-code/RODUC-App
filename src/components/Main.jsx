@@ -3,6 +3,7 @@ import Home from '../pages/Home.jsx';
 import LoginInPage from '../pages/LogIn.jsx';
 import NewForm from './NewForm.jsx';
 import HistoryList from './HistoryList.jsx';
+import HistoryDetail from './HistoryDetail.jsx';
 import About from '../pages/About.jsx';
 import UserView from '../pages/UserView.jsx';
 import TouchIcon from './TouchIcon.jsx';
@@ -67,6 +68,10 @@ const Main = () => {
                         <Stack.Screen
                             name='Historial'
                             component={HistoryList}
+                            options={styles} />
+                        <Stack.Screen
+                            name='Detalle del Registro'
+                            component={HistoryDetail}
                             options={styles} />
                         <Stack.Screen
                             name='Mi Perfil'

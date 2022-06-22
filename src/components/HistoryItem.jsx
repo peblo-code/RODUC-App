@@ -1,9 +1,9 @@
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import StyledText from './StyledText.jsx';
-import RepositoryStats from './HistoryStats.jsx';
+import HistoryStats from './HistoryStats.jsx';
 import theme from '../theme.js';
 
-const RepositoryItemHeader = ({ carrera, asignatura, curso, plan, tipo_clase }) => (
+const HistoryItemHeader = ({ carrera, asignatura, curso, plan, tipo_clase }) => (
     <View style={{ flexDirection: 'row', paddingBottom: 2 }}>
         <View style={{ flex: 1 }}>
             <StyledText fontWeight='bold' align="center">{carrera}</StyledText>
@@ -17,11 +17,11 @@ const RepositoryItemHeader = ({ carrera, asignatura, curso, plan, tipo_clase }) 
     </View>
 )
 
-const RepositoryItem = (props) => (
-    <View key={props.id} style={styles.container}>
-        <RepositoryItemHeader {...props} />
-        <RepositoryStats {...props} />
-    </View>
+const HistoryItem = (props, navigation) => (
+        <View key={props.id} style={styles.container}>
+            <HistoryItemHeader {...props} />
+            <HistoryStats {...props} />
+        </View>
 )
 
 
@@ -65,4 +65,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default RepositoryItem;
+export default HistoryItem;

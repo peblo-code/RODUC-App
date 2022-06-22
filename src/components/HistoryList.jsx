@@ -1,11 +1,10 @@
-import { Text, FlatList, View } from 'react-native';
+import { TouchableOpacity, FlatList, View } from 'react-native';
 import { useEffect, useState } from 'react';
 import HistoryItem from './HistoryItem';
 import useUserContext from '../hooks/useUserContext.js';
 import axios from 'axios';
 
-const HistoryList = () => {
-
+const HistoryList = ({ navigation }) => {
     const { URL, user } = useUserContext();
     const initialState = [{
         carrera: '',
@@ -57,7 +56,18 @@ const HistoryList = () => {
             const fecha = reporte.fields.fecha_clase.split('-').reverse().join('/')
             const horaInicio = reporte.fields.hora_entrada
             const horaFin = reporte.fields.hora_salida
+
             return {
+                editObj: {
+                    cod_facultad: carrera.fields.cod_facultad,
+                    cod_carrera: carrera.pk,
+                    cod_plan: plan.pk,
+                    cod_asignatura: asignatura.pk,
+                    cod_tipo_clase: tipo_clase.pk,
+                    fecha: fecha,
+                    horaInicio: horaInicio,
+                    horaFin: horaFin
+                },
                 asignatura: asignatura.fields.descripcion,
                 carrera: carrera.fields.descripcion,
                 plan: plan.fields.descripcion,
@@ -75,7 +85,11 @@ const HistoryList = () => {
             data={parsedReportes}
             ItemSeparatorComponent={() => <View style={{ borderColor: "gray", borderWidth: .5, marginHorizontal: 15 }}/>}
             renderItem={({ item: repo }) => (
-                <HistoryItem {...repo} />
+                <TouchableOpacity style={{flex: 1}} onPress={() => navigation.navigate('Detalle del Registro', {
+                    editObj: repo.editObj,
+                })}>
+                    <HistoryItem {...repo} />
+                </TouchableOpacity>
             )}
         >
         </FlatList>

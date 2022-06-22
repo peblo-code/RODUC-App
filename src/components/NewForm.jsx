@@ -8,7 +8,7 @@ import axios from 'axios';
 import { CheckBox } from '@rneui/themed';
 
 
-const NewForm = ({ navigation }) => {
+const NewForm = ({ navigation, editObj }) => {
     //Context
     const { user, URL } = useUserContext();
 
@@ -174,6 +174,15 @@ const NewForm = ({ navigation }) => {
             listsAndSetters.map(detail => {
                 getAPIData(response, detail.list, detail.setter)
             })
+            setSelectedDate(editObj.fecha)
+            setSelectedStartTime(editObj.horaInicio)
+            setSelectedEndTime(editObj.horaFin)
+            setSelectedFacultad(editObj.cod_facultad)
+            setCarreraPicker(editObj.cod_facultad)
+            setSelectedCarrera(editObj.cod_carrera)
+            setSelectedPlan(editObj.cod_plan)
+            setSelectedAsignatura(editObj.cod_asignatura)
+            editObj.cod_tipo_clase > 0 ? setSelectedClase(editObj.cod_tipo_clase) : setCheck1(true)
             
         })
         .catch((error) => {
