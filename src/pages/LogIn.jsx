@@ -26,7 +26,7 @@ const styles = StyleSheet.create({ //estilos
     },
     loginLogo: {
         alignSelf: 'center',
-        marginBottom: 80,
+        marginBottom: 50,
         width: 100,
         height: 100,
         resizeMode: 'contain',
@@ -45,6 +45,7 @@ const styles = StyleSheet.create({ //estilos
         height: 100,
         width: 100,
         resizeMode: 'contain',
+        marginBottom: 10
     }
 });
 
@@ -109,6 +110,11 @@ export default function LoginInPage() {
                     </ModalStyled>
                     <View style={styles.loginLogo}>
                         <Image style={styles.image} source={logoSimple} />
+                        <StyledText
+                            align='center'
+                            color='blue'
+                            fontWeight='bold'
+                            fontSize='heading'>RODUC</StyledText>
                     </View>
                     <FormikInputValue
                         name="username"
@@ -123,6 +129,13 @@ export default function LoginInPage() {
                         onPress={handleSubmit}
                         title="Iniciar Sesión"
                     />
+                    <StyledText
+                        style={{
+                            marginTop: 30
+                        }}
+                        align='center'
+                        color='black'
+                        fontSize='subheading'>Ingeniería Informática 2022</StyledText>
                 </View>
             )
         }}

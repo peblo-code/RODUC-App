@@ -20,6 +20,9 @@ const styles = StyleSheet.create({
     colorRed: {
         color: theme.colors.red,
     },
+    colorBlue: {
+        color: theme.colors.blue,
+    },
     colorSpeechBlue: {
         color: theme.colors.speechBlue,
     },
@@ -56,6 +59,7 @@ export default function StyledText ({children, align, color, fontSize, fontWeigh
         color === 'secondary' && styles.colorSecondary,
         color === 'white' && styles.colorWhite,
         color === 'red' && styles.colorRed,
+        color == 'blue' && styles.colorSpeechBlue,
         color === 'speechBlue' && styles.colorSpeechBlue,
         color === 'lightBlue' && styles.lightBlue,
         fontSize && 'minimal' && styles.minimal,

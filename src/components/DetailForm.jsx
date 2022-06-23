@@ -33,7 +33,72 @@ const styles = {
 export default function DetailForm({navigation, route}) {
     const { URL, user } = useUserContext();
     const { detalleObj } = route.params;
-    const { codCabecera, check1, contenidoItems, instrumentos, recursos, tiposEvaluacion, trabajos, metodologias } = detalleObj;
+    const { codCabecera, check1, instrumentos, recursos, tiposEvaluacion, trabajos, metodologias, unidadPicker } = detalleObj;
+    const [ unidades, setUnidades ] = useState([])
+    const [ contenidos, setContenidos ] = useState([])
+    const [contenidoItems, setContenidoItems ] = useState([])
+
+    const listsAndSetters = [
+        { list: 'lista_unidad', setter: setUnidades },
+        { list: 'lista_contenido', setter: setContenidos },
+    ]
+
+    //Funcion para obtener una lista especifica de la API
+    const getAPIData = (response, list, setList) => {
+        const res = JSON.parse(response.data[list])
+        setList(res.map(field => field))
+    }
+
+    useEffect(() => {
+        axios.get(`${URL}/listaUnidades_Contenidos/${codCabecera}`)
+        .then((response) => {
+            listsAndSetters.map(detail => {
+                getAPIData(response, detail.list, detail.setter)
+            })
+        })
+    }, [])
+
+    const getMultiItems = (items, cod, itemPicker) => {
+        //contenido de la unidad
+        const getSubItems = (subItemCod) => {
+            let arrItems = [];
+            items[1].forEach(subItem => {
+                if(subItem.fields[cod[1]] == subItemCod) {
+                    let obj1 = {
+                        name: subItem.fields.descripcion,
+                        id: subItem.pk,
+                    }
+                    arrItems.push(obj1);
+                }
+            })
+            return arrItems;
+        }
+
+        //titulo de la unidad
+        let arr = []
+        items[0].forEach(item => {
+            if(item.fields[cod[0]] == itemPicker) {
+                let obj = {
+                    name: item.fields.descripcion,
+                    id: item.fields.descripcion,
+                    children: getSubItems(item.pk)
+                }
+                arr.push(obj);
+                return arr;
+            }
+        })
+        return arr;
+    }
+
+
+    useEffect(() => {
+        if(contenidos != []) {
+            const items = [unidades, contenidos];
+            const cod = ['cod_asignatura', 'cod_unidad_aprendizaje']
+            setContenidoItems(getMultiItems(items, cod, unidadPicker))
+        }
+    }, [contenidos])
+
     //metodologia - recursos - trabajos
     const [instrumentosItems, setInstrumentosItems] = useState([]);
     const [tipoEvaluacionItems, setTipoEvaluacionItems] = useState([]);
@@ -68,6 +133,9 @@ export default function DetailForm({navigation, route}) {
     }
 
     const submitForm = () => {
+        axios.get(`${URL}/purga/${codCabecera}`)
+        .then(res => console.log("PURGA"))
+        .catch(error => console.log("Ups:", error))
         if(check1) {
             axios.post(`${URL}/crear_evaluaciones`, {
                 cod_cabecera_planilla: codCabecera,

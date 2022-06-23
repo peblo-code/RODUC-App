@@ -14,6 +14,7 @@ const theme = {
         secondary: '#586069',
         white: '#fefefe',
         red: '#ff0000',
+        blue: '#0000FF',
         speechBlue: '#3F48CC',
         lightBlue: '#027d9c'
     },

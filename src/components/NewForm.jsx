@@ -18,8 +18,6 @@ const NewForm = ({ navigation, editObj }) => {
     const [clases, setClases] = useState([]);
     const [planes, setPlanes] = useState([]);
     const [asignaturas, setAsignaturas] = useState([]);
-    const [unidades, setUnidades] = useState([]);
-    const [contenidos, setContenidos] = useState([]);
     const [semestres, setSemestres] = useState([]);
     const [instrumentos, setInstrumentos] = useState([]);
     const [recursos, setRecursos] = useState([]);
@@ -33,8 +31,6 @@ const NewForm = ({ navigation, editObj }) => {
         { list: 'lista_carreras', setter: setCarreras },
         { list: 'lista_planes', setter: setPlanes },
         { list: 'lista_asignaturas', setter: setAsignaturas },
-        { list: 'lista_unidad', setter: setUnidades },
-        { list: 'lista_contenido', setter: setContenidos },
         { list: 'lista_tipo_clase', setter: setClases },
         { list: 'lista_semestre', setter: setSemestres },
         { list: 'lista_instrumento_evaluacion', setter: setInstrumentos },
@@ -44,11 +40,11 @@ const NewForm = ({ navigation, editObj }) => {
         { list: 'lista_metodologia', setter: setMetodologias },
     ]
 
+
     //Estados para cargar los datos del formulario
     const [asignaturaItems, setAsignaturaItems] = useState([]);
     const [carreraItems, setCarreraItems] = useState([]);
     const [planItems, setPlanItems] = useState([]);
-    const [contenidoItems, setContenidoItems] = useState([])
     const [semestreItems, setSemestresItems] = useState([]);
 
     //Estados para almacenar los datos del formulario
@@ -66,7 +62,6 @@ const NewForm = ({ navigation, editObj }) => {
     const [carreraPicker, setCarreraPicker] = useState('');
     const [planPicker, setPlanPicker] = useState('');
     const [unidadPicker, setUnidadPicker] = useState('');
-    const [contenidoPicker, setContenidoPicker] = useState('')
 
     //Estados para almacenar horarios y fecha
     const [date, setDate] = useState(new Date());
@@ -81,44 +76,62 @@ const NewForm = ({ navigation, editObj }) => {
     const [check1, setCheck1] = useState(false)
     const [isDisabled, setIsDisabled] = useState(true)
     const [codCabecera, setCodCabecera] = useState(0)
+    const [isSubmit, setIsSubmit] = useState(false);
 
     const detalleObj = {
         codCabecera,
         check1,
-        contenidoItems,
         instrumentos,
         recursos,
         tiposEvaluacion,
         trabajos,
         metodologias,
+        unidadPicker
     }
 
     const submitForm = () => {
-        axios.post(`${URL}/crear_cabecera`, {
-            cod_tipo_clase: check1 ? null : selectedClase,
-            cod_asignatura: selectedAsignatura,
-            cod_usuario: user.cod_usuario,
-            fecha_clase: selectedDate,
-            hora_entrada: selectedStartTime,
-            hora_salida: selectedEndTime,
-            fecha_vencimiento: semestreItems,
-            evaluacion: check1 ? 1 : 0,
-            estado: 1,
-            alta_usuario: user.nombre_usuario,
-        })
-        .then(res => {
-            setCodCabecera(JSON.parse(res.request._response).cod_cabecera_planilla)
-        })
-        .catch(err => {
-            Alert.alert('Error!', 'No se pudo crear informe de la clase')
-        })
+        if(codCabecera == 0) {
+            axios.post(`${URL}/crear_cabecera`, {
+                cod_tipo_clase: check1 ? null : selectedClase,
+                cod_asignatura: selectedAsignatura,
+                cod_usuario: user.cod_usuario,
+                fecha_clase: selectedDate,
+                hora_entrada: selectedStartTime,
+                hora_salida: selectedEndTime,
+                fecha_vencimiento: semestreItems,
+                evaluacion: check1 ? 1 : 0,
+                estado: 1,
+                alta_usuario: user.nombre_usuario,
+            })
+            .then(res => {
+                setCodCabecera(JSON.parse(res.request._response).cod_cabecera_planilla)
+            })
+            .catch(err => {
+                Alert.alert('Error!', 'No se pudo crear informe de la clase')
+            })
+        } else {
+            axios.put(`${URL}/actualizar_cabecera/${codCabecera}`, {
+                cod_tipo_clase: check1 ? null : selectedClase,
+                cod_asignatura: selectedAsignatura,
+                cod_usuario: user.cod_usuario,
+                fecha_clase: selectedDate.split("/").reverse().join("-"),
+                hora_entrada: selectedStartTime,
+                hora_salida: selectedEndTime,
+                fecha_vencimiento: semestreItems,
+                evaluacion: check1 ? 1 : 0,
+                estado: 1,
+                modif_usuario: user.nombre_usuario,
+            })
+            .then(res => console.log(res))
+            .catch(err => console.log(err))
+        }
         navigation.navigate('Detalle Informe', {
             detalleObj,
         })
     }
 
     useEffect(() => {
-        codCabecera > 0 ? Alert.alert('Exito!', 'Informe de la Clase creada con exito!', [
+        isSubmit && codCabecera > 0 ? Alert.alert('Exito!', 'Informe de la Clase creada con exito!', [
             { text: 'Ok', onPress: () => {
                 navigation.navigate('Detalle Informe', {
                     detalleObj,
@@ -174,20 +187,23 @@ const NewForm = ({ navigation, editObj }) => {
             listsAndSetters.map(detail => {
                 getAPIData(response, detail.list, detail.setter)
             })
-            setSelectedDate(editObj.fecha)
-            setSelectedStartTime(editObj.horaInicio)
-            setSelectedEndTime(editObj.horaFin)
-            setSelectedFacultad(editObj.cod_facultad)
-            setCarreraPicker(editObj.cod_facultad)
-            setSelectedCarrera(editObj.cod_carrera)
-            setSelectedPlan(editObj.cod_plan)
-            setSelectedAsignatura(editObj.cod_asignatura)
-            editObj.cod_tipo_clase > 0 ? setSelectedClase(editObj.cod_tipo_clase) : setCheck1(true)
-            
+                if(editObj) {
+                    setSelectedDate(editObj.fecha)
+                    setSelectedStartTime(editObj.horaInicio)
+                    setSelectedEndTime(editObj.horaFin)
+                    setSelectedFacultad(editObj.cod_facultad)
+                    setCarreraPicker(editObj.cod_facultad)
+                    setSelectedCarrera(editObj.cod_carrera)
+                    setSelectedPlan(editObj.cod_plan)
+                    setSelectedAsignatura(editObj.cod_asignatura)
+                    editObj.cod_tipo_clase > 0 ? setSelectedClase(editObj.cod_tipo_clase) : setCheck1(true)
+                    setCodCabecera(editObj.cod_cabecera) 
+                }
         })
         .catch((error) => {
             console.log(error);
         });
+
     }, [])
 
     useEffect(() => {
@@ -213,12 +229,6 @@ const NewForm = ({ navigation, editObj }) => {
             })
         })
     }, [selectedAsignatura])
-
-    useEffect(() => {
-        const items = [unidades, contenidos];
-        const cod = ['cod_asignatura', 'cod_unidad_aprendizaje']
-        setContenidoItems(getMultiItems(items, cod, unidadPicker))
-    }, [unidadPicker])
 
     useEffect(() => {
         if(selectedDate != 'Completar!' && selectedStartTime != 'Completar!' && selectedEndTime != 'Completar!') {
@@ -264,38 +274,6 @@ const NewForm = ({ navigation, editObj }) => {
         return arr;
     }
 
-    //Funcion para carga de picker multiple
-    const getMultiItems = (items, cod, itemPicker) => {
-        //contenido de la unidad
-        const getSubItems = (subItemCod) => {
-            let arrItems = [];
-            items[1].forEach(subItem => {
-                if(subItem.fields[cod[1]] == subItemCod) {
-                    let obj1 = {
-                        name: subItem.fields.descripcion,
-                        id: subItem.pk,
-                    }
-                    arrItems.push(obj1);
-                }
-            })
-            return arrItems;
-        }
-
-        //titulo de la unidad
-        let arr = []
-        items[0].forEach(item => {
-            if(item.fields[cod[0]] == itemPicker) {
-                let obj = {
-                    name: item.fields.descripcion,
-                    id: item.fields.descripcion,
-                    children: getSubItems(item.pk)
-                }
-                arr.push(obj);
-                return arr;
-            }
-        })
-        return arr;
-    }
 
     //Alerta para activar o desactivar modo evaluacion
     const alertEvaluacion = () => {
@@ -321,6 +299,7 @@ const NewForm = ({ navigation, editObj }) => {
             },
             { text: 'Sí!', onPress: () => {
                 setIsDisabled(true);
+                setIsSubmit(true)
                 submitForm();
             }},
         ]);
@@ -394,12 +373,12 @@ const NewForm = ({ navigation, editObj }) => {
                     setSelected={ setSelectedAsignatura }
                 />
 
-                <CheckBox
+                { !codCabecera ? <CheckBox
                     center
                     title="¿Usar evaluación como tipo de clase?"
                     checked={ check1 }
                     onPress={ () => alertEvaluacion() }
-                />
+                /> : null }
 
                 { !check1 ? <PickerSelect 
                     title="Tipo de Clase"
