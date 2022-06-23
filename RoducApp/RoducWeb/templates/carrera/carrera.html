@@ -60,9 +60,10 @@
                   <label for="exampleFormControlSelect1" class="form-control-label">Facultad</label>
                   <select class="form-control" id="" name="facultad"
                     class="form-control">
-                    <option>Seleccione la facultad a la cual pertenece...</option>
                     {% for facultad in lista_facultades %}
-                    <option value="{{facultad.cod_facultad}}">{{facultad.descripcion}}</option>
+                      {% if facultad.cod_facultad == facultad_asignada %}
+                      <option value="{{facultad.cod_facultad}}">{{facultad.descripcion}}</option>
+                      {% endif %}
                     {% endfor %}
                   </select>
                 </div>
@@ -107,28 +108,30 @@
                 </tfoot>
                 <tbody class="list">
                   {% for carrera in lista_carreras %}
-                  <tr>
-                    <td class="id">{{carrera.cod_carrera}}</td>
-                    <td class="nombre">{{carrera.descripcion}}</td>
-                    <td>{{carrera.duracion}}</td>
-                    <td>{{carrera.titulo_obtenido}}</td>
-                    <td>
-                      {% for facultad in lista_facultades %}
-                        {% if facultad.cod_facultad == carrera.cod_facultad_id %}
-                          {{facultad.descripcion}}
-                        {% endif %}
-                      {% endfor %}
-                    </td>
-                    <!---BOTONES-->
-                    <td>
-                      <button type="button" class="btn btn-outline-success" onclick='obtenerCarrera("{{carrera.cod_carrera}}")'>
-                        <i class="far fa-edit"></i>
-                      </button>
-                      <button class="btn btn-outline-danger" onclick='eliminarCarrera("{{carrera.cod_carrera}}")'>
-                        <i class="fas fa-trash-alt"></i>
-                      </button>
-                    </td>
-                  </tr>
+                    {% if carrera.cod_facultad_id == facultad_asignada %}
+                    <tr>
+                      <td class="id">{{carrera.cod_carrera}}</td>
+                      <td class="nombre">{{carrera.descripcion}}</td>
+                      <td>{{carrera.duracion}}</td>
+                      <td>{{carrera.titulo_obtenido}}</td>
+                      <td>
+                        {% for facultad in lista_facultades %}
+                          {% if facultad.cod_facultad == carrera.cod_facultad_id %}
+                            {{facultad.descripcion}}
+                          {% endif %}
+                        {% endfor %}
+                      </td>
+                      <!---BOTONES-->
+                      <td>
+                        <button type="button" class="btn btn-outline-success" onclick='obtenerCarrera("{{carrera.cod_carrera}}")'>
+                          <i class="far fa-edit"></i>
+                        </button>
+                        <button class="btn btn-outline-danger" onclick='eliminarCarrera("{{carrera.cod_carrera}}")'>
+                          <i class="fas fa-trash-alt"></i>
+                        </button>
+                      </td>
+                    </tr>
+                    {% endif %}
                   {% endfor %}
                 </tbody>
               </table>

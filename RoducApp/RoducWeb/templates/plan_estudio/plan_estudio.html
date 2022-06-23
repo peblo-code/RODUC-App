@@ -43,7 +43,9 @@
                     <select class="form-control" name="facultad" id="facultad" class="form-control">
                       <option value="">Seleccione una facultad...</option>
                       {% for facultad in lista_facultades %}
+                      {% if facultad.cod_facultad == facultad_asignada %}
                       <option value="{{facultad.cod_facultad}}">{{facultad.descripcion}}</option>
+                      {% endif %}
                       {% endfor %}
                     </select>
                   </div>
@@ -63,7 +65,8 @@
               </div>
             </div>
             <span><button type="submit" class="btn btn-success">Guardar</button></span>
-            <span><button type="button" class="btn btn-warning" id="BT_Listar" onclick="mostrarPlanes()">Listar</button></span>
+            <span><button type="button" class="btn btn-warning" id="BT_Listar"
+                onclick="mostrarPlanes()">Listar</button></span>
           </form>
         </div>
       </div>
@@ -97,19 +100,16 @@
                 </tfoot>
                 <tbody class="list">
                   {% for plan in lista_planes %}
+                  {% for carrera in lista_carreras %}
+                  {% if carrera.cod_carrera == plan.cod_carrera_id and carrera.cod_facultad_id == facultad_asignada %}
                   <tr>
                     <td class="id">{{plan.cod_plan_estudio}}</td>
                     <td class="nombre">{{plan.descripcion}}</td>
-                    <td class="nombre">
-                      {% for carrera in lista_carreras %}
-                        {% if plan.cod_carrera_id == carrera.cod_carrera %}
-                          {{carrera.descripcion}}
-                        {% endif %}
-                      {% endfor %}
-                    </td>
+                    <td class="nombre">{{carrera.descripcion}}</td>
                     <!---BOTONES-->
                     <td>
-                      <button type="button" class="btn btn-outline-success" onclick='obtenerFacultad("{{plan.cod_plan_estudio}}")'>
+                      <button type="button" class="btn btn-outline-success"
+                        onclick='obtenerFacultad("{{plan.cod_plan_estudio}}")'>
                         <i class="far fa-edit"></i>
                       </button>
                       <button class="btn btn-outline-danger" onclick='eliminarPlan("{{plan.cod_plan_estudio}}")'>
@@ -117,6 +117,8 @@
                       </button>
                     </td>
                   </tr>
+                  {% endif %}
+                  {% endfor %}
                   {% endfor %}
                 </tbody>
               </table>
@@ -129,59 +131,63 @@
 </div>
 
 <!---Modal-->
-<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-      <div class="modal-content">
-          <div class="modal-header">
-              <h5 class="modal-title" id="tituloModal"></h5>
-              <button type="button" class="close" href="" aria-label="Close" data-dismiss="modal">
-                  <span aria-hidden="true">&times;</span>
-              </button>
-          </div>
-          <div class="modal-body">
-              <form role="formUpdate" action='' id="updateForm" onsubmit="updatePlan(this)" name = "update">
-                  {% csrf_token %}
-                  <h6 class="heading-small text-muted mb-4">Datos del Plan de Estudios</h6>
-                  <div class="pl-lg-0">
-                    <div class="row">
-                      <div class="col-lg-12">
-                        <div class="form-group">
-                          <label class="form-control-label" for="input-username">Descripción</label>
-                          <input type="text" name="codigo" id="updateCodigo" style="display: none;">
-                          <input required autocomplete="off" type="text" id="updateDescripcion" class="form-control" placeholder="Ingrese la descripción del Plan de Estudios..." name="descripcion" autofocus>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-lg-6">
-                        <div class="form-group">
-                          <label for="exampleFormControlSelect1" class="form-control-label">Facultad</label>
-                          <select class="form-control" name="facultad" id="updateFacultad" class="form-control">
-                            <option value="">Seleccione una facultad...</option>
-                            {% for facultad in lista_facultades %}
-                            <option value="{{facultad.cod_facultad}}">{{facultad.descripcion}}</option>
-                            {% endfor %}
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-lg-6">
-                        <div class="form-group">
-                          <label for="exampleFormControlSelect1" class="form-control-label">Carrera</label>
-                          <select class="form-control" name="carrera" id="updateCarrera" class="form-control">
-                            <option value="">Seleccione una carrera...</option>
-                            {% for carrera in lista_carreras %}
-                            <option value="{{carrera.cod_carrera}}" data-chained="{{carrera.cod_facultad_id}}">
-                              {{carrera.descripcion}}</option>
-                            {% endfor %}
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <span><button type="submit" class="btn btn-success">Guardar</button></span>
-              </form>
-          </div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="tituloModal"></h5>
+        <button type="button" class="close" href="" aria-label="Close" data-dismiss="modal">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
+      <div class="modal-body">
+        <form role="formUpdate" action='' id="updateForm" onsubmit="updatePlan(this)" name="update">
+          {% csrf_token %}
+          <h6 class="heading-small text-muted mb-4">Datos del Plan de Estudios</h6>
+          <div class="pl-lg-0">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="form-group">
+                  <label class="form-control-label" for="input-username">Descripción</label>
+                  <input type="text" name="codigo" id="updateCodigo" style="display: none;">
+                  <input required autocomplete="off" type="text" id="updateDescripcion" class="form-control"
+                    placeholder="Ingrese la descripción del Plan de Estudios..." name="descripcion" autofocus>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label for="exampleFormControlSelect1" class="form-control-label">Facultad</label>
+                  <select class="form-control" name="facultad" id="updateFacultad" class="form-control">
+                    <option value="">Seleccione una facultad...</option>
+                    {% for facultad in lista_facultades %}
+                    {% if facultad.cod_facultad == facultad_asignada %}
+                    <option value="{{facultad.cod_facultad}}">{{facultad.descripcion}}</option>
+                    {% endif %}
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label for="exampleFormControlSelect1" class="form-control-label">Carrera</label>
+                  <select class="form-control" name="carrera" id="updateCarrera" class="form-control">
+                    <option value="">Seleccione una carrera...</option>
+                    {% for carrera in lista_carreras %}
+                    <option value="{{carrera.cod_carrera}}" data-chained="{{carrera.cod_facultad_id}}">
+                      {{carrera.descripcion}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <span><button type="submit" class="btn btn-success">Guardar</button></span>
+        </form>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -232,36 +238,36 @@
 </script>
 
 <script>
-  function mostrarPlanes(){
-      if($("#listaplanes").is(":visible")){
-          $('#listaplanes').hide(500);
-          document.querySelector('#BT_Listar').innerHTML = 'Listar';
-      } else {
-          $('#listaplanes').show(500);
-          document.querySelector('#BT_Listar').innerHTML = 'Ocultar';
-      }
+  function mostrarPlanes() {
+    if ($("#listaplanes").is(":visible")) {
+      $('#listaplanes').hide(500);
+      document.querySelector('#BT_Listar').innerHTML = 'Listar';
+    } else {
+      $('#listaplanes').show(500);
+      document.querySelector('#BT_Listar').innerHTML = 'Ocultar';
+    }
   }
 </script>
 
 <script>
-  function obtenerFacultad(codigo){
-      $.ajax({
+  function obtenerFacultad(codigo) {
+    $.ajax({
       url: "{% url 'detalle_plan' %}",
       type: 'GET',
-      data: {"codigo": codigo},
-      success: 
-          function(data){
-              detalle = data.detalle;
-              $('#updateModal').modal('show');
-              detalle = JSON.parse(detalle);
-              document.querySelector('#tituloModal').innerHTML = 'Modificar Plan: ' + detalle[0].fields.descripcion;
-              document.getElementById("updateCodigo").value = detalle[0].pk;
-              document.getElementById("updateDescripcion").value = detalle[0].fields.descripcion;
-              document.getElementById("updateFacultad").value = data.facultad;
-              document.getElementById("updateCarrera").value = detalle[0].fields.cod_carrera;
-              $("#updateCarrera").chained("#updateFacultad");
-          }
-      })
+      data: { "codigo": codigo },
+      success:
+        function (data) {
+          detalle = data.detalle;
+          $('#updateModal').modal('show');
+          detalle = JSON.parse(detalle);
+          document.querySelector('#tituloModal').innerHTML = 'Modificar Plan: ' + detalle[0].fields.descripcion;
+          document.getElementById("updateCodigo").value = detalle[0].pk;
+          document.getElementById("updateDescripcion").value = detalle[0].fields.descripcion;
+          document.getElementById("updateFacultad").value = data.facultad;
+          document.getElementById("updateCarrera").value = detalle[0].fields.cod_carrera;
+          $("#updateCarrera").chained("#updateFacultad");
+        }
+    })
   }
 </script>
 
@@ -305,38 +311,38 @@
 </script>
 
 <script>
-  function eliminarPlan(codigo){
-      Swal.fire({
-          title: 'Eliminación de Plan',
-          text: '¿Está seguro de eliminar el registro?',
-          icon: 'question',
-          showCancelButton: true,
-          confirmButtonText: 'Confirmar',
-          cancelButtonText: "Cancelar",
-          confirmButtonColor: '#2dce89',
-          cancelButtonColor: '#d33',
-      }).then((result) => {
-          if (result.value) {
-              console.log(codigo)
-              $.ajax({
-                  url: "{% url 'eliminar_plan' %}",
-                  type: 'POST',
-                  data: {"codigo": codigo},
-                  success: 
-                  function(data){
-                      $('#updateModal').modal('hide');
-                      Swal.fire({
-                          icon: 'success',
-                          title: 'Aviso',
-                          text: data.mensaje,
-                          showConfirmButton: true
-                      }).then( () => {
-                          location.href = '{% url 'plan_estudio' %}'
-                      })
-                  }
+  function eliminarPlan(codigo) {
+    Swal.fire({
+      title: 'Eliminación de Plan',
+      text: '¿Está seguro de eliminar el registro?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: '#2dce89',
+      cancelButtonColor: '#d33',
+    }).then((result) => {
+      if (result.value) {
+        console.log(codigo)
+        $.ajax({
+          url: "{% url 'eliminar_plan' %}",
+          type: 'POST',
+          data: { "codigo": codigo },
+          success:
+            function (data) {
+              $('#updateModal').modal('hide');
+              Swal.fire({
+                icon: 'success',
+                title: 'Aviso',
+                text: data.mensaje,
+                showConfirmButton: true
+              }).then(() => {
+                location.href = '{% url 'plan_estudio' %}'
               })
-          }
-      })
+            }
+        })
+      }
+    })
   }
 </script>
 

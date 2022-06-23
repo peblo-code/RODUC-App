@@ -151,7 +151,9 @@
                                         class="form-control">
                                         <option value="">Seleccione la facultad a la cual pertenece...</option>
                                         {% for facultad in lista_facultades %}
-                                        <option value="{{facultad.cod_facultad}}">{{facultad.descripcion}}</option>
+                                            {% if facultad.cod_facultad == facultad_asignada %}
+                                            <option value="{{facultad.cod_facultad}}">{{facultad.descripcion}}</option>
+                                            {% endif %}
                                         {% endfor %}
                                     </select>
                                 </div>
@@ -162,9 +164,7 @@
                                     <select class="form-control" id="updateCarrera" name="carrera" class="form-control">
                                         <option value="">Seleccione la carrera a la cual pertenece...</option>
                                         {% for carrera in lista_carreras %}
-                                        <option value="{{carrera.cod_carrera}}"
-                                            data-chained="{{carrera.cod_facultad_id}}">
-                                            {{carrera.descripcion}}</option>
+                                        <option value="{{carrera.cod_carrera}}" data-chained="{{carrera.cod_facultad_id}}"> {{carrera.descripcion}}</option>
                                         {% endfor %}
                                     </select>
                                 </div>
@@ -233,6 +233,7 @@
         $('#registrosModal').modal('show');
     }
 </script>
+
 <script>
     function mostrarAnalisis() {
         $('#modalAnalisis').modal('show');

@@ -7,6 +7,8 @@ urlpatterns = [
     path('', views.login, name='login'),
     path('cerrar_sesion', views.cerrar_sesion, name='cerrar_sesion'),
     path('inicio', views.inicio, name='inicio'),
+    path('asignarFacultad', views.asignarFacultad, name='asignarFacultad'),
+    path('error_403', views.error_403, name='error_403'),
 
     # USUARIOS
     path('usuario', views.usuario, name='usuario'),

@@ -1,0 +1,29 @@
+{% load static %}
+<!--MENÚ DIRECTOR-->
+<div class="navbar-inner">
+    <!-- Collapse -->
+    <div class="collapse navbar-collapse" id="sidenav-collapse-main">
+        <!-- Nav items -->
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link " href={% url 'inicio' %} style="padding: 1rem;">
+                    <img src={% static 'assets/img/inicio.png' %} width="25" style="margin-right: 10px; ">
+                    <span class="nav-link-text">Inicio</span>
+                </a>
+            </li>
+        </ul>
+        <hr class="my-3">
+        <ul class="navbar-nav">
+            <h6 class="navbar-heading text-muted"
+                style="padding-left: 1.5rem; padding-bottom: 0; padding-top: 0;">
+                <span class="docs-normal">Reportes</span>
+            </h6>
+            <li class="nav-item">
+                <a class="nav-link " href={% url 'reporte' %} style="padding: 1rem;">
+                    <img src={% static 'assets/img/reporte.png' %} width="25" style="margin-right: 10px; ">
+                    <span class="nav-link-text">Reportes</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

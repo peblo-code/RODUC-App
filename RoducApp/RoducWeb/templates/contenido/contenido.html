@@ -40,9 +40,10 @@
                   <div class="form-group">
                     <label for="exampleFormControlSelect1" class="form-control-label">Facultad</label>
                     <select class="form-control" id="facultad" name="facultad" class="form-control">
-                      <option value="">Seleccione la facultad a la cual pertenece...</option>
                       {% for facultad in lista_facultades %}
-                      <option value="{{facultad.cod_facultad}}">{{facultad.descripcion}}</option>
+                        {% if facultad.cod_facultad == facultad_asignada %}
+                          <option value="{{facultad.cod_facultad}}">{{facultad.descripcion}}</option>
+                        {% endif %}
                       {% endfor %}
                     </select>
                   </div>
@@ -136,28 +137,38 @@
                 </tfoot>
                 <tbody class="list">
                   {% for contenido in lista_contenidos %}
-                  <tr>
-                    <td class="id">{{contenido.cod_contenido}}</td>
-                    <td class="nombre">{{contenido.descripcion}}</td>
-                    <td class="nombre">
-                      {% for unidad in lista_unidades %}
-                      {% if unidad.cod_unidad_aprendizaje == contenido.cod_unidad_aprendizaje_id %}
-                      {{unidad.descripcion}}
+                    {% for uni in lista_unidades %}
+                      {% if uni.cod_unidad_aprendizaje == contenido.cod_unidad_aprendizaje_id %}
+                        {% for asignatura in lista_asignaturas %}
+                          {% if asignatura.cod_asignatura == uni.cod_asignatura_id %}
+                            {% for carrera in lista_carreras %}
+                              {% if carrera.cod_carrera == asignatura.cod_carrera_id %}
+                                {% for facultad in lista_facultades %}
+                                  {% if facultad.cod_facultad == carrera.cod_facultad_id and facultad.cod_facultad == facultad_asignada %}
+                                  <tr>
+                                    <td class="id">{{contenido.cod_contenido}}</td>
+                                    <td class="nombre">{{contenido.descripcion}}</td>
+                                    <td class="nombre">{{uni.descripcion}}</td>
+                                    <!---BOTONES-->
+                                    <td>
+                                      <button type="button" class="btn btn-outline-success"
+                                        onclick='obtenerContenido("{{contenido.cod_contenido}}")'>
+                                        <i class="far fa-edit"></i>
+                                      </button>
+                                      <button class="btn btn-outline-danger"
+                                        onclick='eliminarContenido("{{contenido.cod_contenido}}")'>
+                                        <i class="fas fa-trash-alt"></i>
+                                      </button>
+                                    </td>
+                                  </tr>
+                                  {% endif %}
+                                {% endfor %}
+                              {% endif %}
+                            {% endfor %}
+                          {% endif %}
+                        {% endfor %}
                       {% endif %}
-                      {% endfor %}
-                    </td>
-                    <!---BOTONES-->
-                    <td>
-                      <button type="button" class="btn btn-outline-success"
-                        onclick='obtenerContenido("{{contenido.cod_contenido}}")'>
-                        <i class="far fa-edit"></i>
-                      </button>
-                      <button class="btn btn-outline-danger"
-                        onclick='eliminarContenido("{{contenido.cod_contenido}}")'>
-                        <i class="fas fa-trash-alt"></i>
-                      </button>
-                    </td>
-                  </tr>
+                    {% endfor %}
                   {% endfor %}
                 </tbody>
               </table>
@@ -200,9 +211,10 @@
                 <div class="form-group">
                   <label for="exampleFormControlSelect1" class="form-control-label">Facultad</label>
                   <select class="form-control" id="updateFacultad" name="facultad" class="form-control">
-                    <option value="">Seleccione la facultad a la cual pertenece...</option>
                     {% for facultad in lista_facultades %}
-                    <option value="{{facultad.cod_facultad}}">{{facultad.descripcion}}</option>
+                      {% if facultad.cod_facultad == facultad_asignada %}
+                      <option value="{{facultad.cod_facultad}}">{{facultad.descripcion}}</option>
+                      {% endif %}
                     {% endfor %}
                   </select>
                 </div>

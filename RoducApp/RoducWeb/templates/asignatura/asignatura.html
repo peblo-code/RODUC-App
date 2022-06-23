@@ -49,7 +49,9 @@
                     <select class="form-control" name="carrera" id="carrera" class="form-control">
                       <option value="">Seleccione la carrera...</option>
                       {% for carrera in lista_carreras %}
-                      <option value="{{carrera.cod_carrera}}">{{carrera.descripcion}}</option>
+                        {% if carrera.cod_facultad_id == facultad_asignada %}
+                        <option value="{{carrera.cod_carrera}}">{{carrera.descripcion}}</option>
+                        {% endif %}
                       {% endfor %}
                     </select>
                   </div>
@@ -133,54 +135,58 @@
                   </tfoot>
                   <tbody class="list">
                     {% for asignatura in lista_asignaturas %}
-                    <tr>
-                      <td class="id">{{asignatura.cod_asignatura}}</td>
-                      <td class="nombre">{{asignatura.descripcion}}</td>
-                      <td class="nombre">{{asignatura.horas_catedra}}</td>
-                      <td class="nombre">
-                        {% if asignatura.curso == 1 %}
-                          Primer Curso
-                        {% elif asignatura.curso == 2 %}
-                          Segundo Curso
-                        {% elif asignatura.curso == 3 %}
-                          Tercer Curso
-                        {% elif asignatura.curso == 4 %}
-                          Cuarto Curso
-                        {% elif asignatura.curso == 5 %}
-                          Quinto Curso
+                      {% for carrera in lista_carreras %}
+                        {% if carrera.cod_carrera == asignatura.cod_carrera_id and carrera.cod_facultad_id == facultad_asignada %}
+                        <tr>
+                          <td class="id">{{asignatura.cod_asignatura}}</td>
+                          <td class="nombre">{{asignatura.descripcion}}</td>
+                          <td class="nombre">{{asignatura.horas_catedra}}</td>
+                          <td class="nombre">
+                            {% if asignatura.curso == 1 %}
+                              Primer Curso
+                            {% elif asignatura.curso == 2 %}
+                              Segundo Curso
+                            {% elif asignatura.curso == 3 %}
+                              Tercer Curso
+                            {% elif asignatura.curso == 4 %}
+                              Cuarto Curso
+                            {% elif asignatura.curso == 5 %}
+                              Quinto Curso
+                            {% endif %}
+                          </td>
+                          <td class="nombre">
+                            {% for carrera in lista_carreras %}
+                              {% if carrera.cod_carrera == asignatura.cod_carrera_id %}
+                                {{carrera.descripcion}}
+                              {% endif %}
+                            {% endfor %}
+                          </td>
+                          <td class="nombre">
+                            {% for plan in lista_planes %}
+                              {% if plan.cod_plan_estudio == asignatura.cod_plan_estudio_id %}
+                                {{plan.descripcion}}
+                              {% endif %}
+                            {% endfor %}
+                          </td>
+                          <td class="nombre">
+                            {% for semestre in lista_semestres %}
+                              {% if semestre.cod_semestre == asignatura.cod_semestre_id %}
+                                {{semestre.descripcion}}
+                              {% endif %}
+                            {% endfor %}
+                          </td>
+                          <!---BOTONES-->
+                          <td>
+                            <button type="button" class="btn btn-outline-success" onclick='obtenerAsignatura("{{asignatura.cod_asignatura}}")'>
+                              <i class="far fa-edit"></i>
+                            </button>
+                            <button class="btn btn-outline-danger" onclick='eliminarAsignatura("{{asignatura.cod_asignatura}}")'>
+                              <i class="fas fa-trash-alt"></i>
+                            </button>
+                          </td>
+                        </tr>
                         {% endif %}
-                      </td>
-                      <td class="nombre">
-                        {% for carrera in lista_carreras %}
-                          {% if carrera.cod_carrera == asignatura.cod_carrera_id %}
-                            {{carrera.descripcion}}
-                          {% endif %}
-                        {% endfor %}
-                      </td>
-                      <td class="nombre">
-                        {% for plan in lista_planes %}
-                          {% if plan.cod_plan_estudio == asignatura.cod_plan_estudio_id %}
-                            {{plan.descripcion}}
-                          {% endif %}
-                        {% endfor %}
-                      </td>
-                      <td class="nombre">
-                        {% for semestre in lista_semestres %}
-                          {% if semestre.cod_semestre == asignatura.cod_semestre_id %}
-                            {{semestre.descripcion}}
-                          {% endif %}
-                        {% endfor %}
-                      </td>
-                      <!---BOTONES-->
-                      <td>
-                        <button type="button" class="btn btn-outline-success" onclick='obtenerAsignatura("{{asignatura.cod_asignatura}}")'>
-                          <i class="far fa-edit"></i>
-                        </button>
-                        <button class="btn btn-outline-danger" onclick='eliminarAsignatura("{{asignatura.cod_asignatura}}")'>
-                          <i class="fas fa-trash-alt"></i>
-                        </button>
-                      </td>
-                    </tr>
+                      {% endfor %}
                     {% endfor %}
                   </tbody>
                 </table>
@@ -192,6 +198,7 @@
     </div>
   </div>
 </div>
+
 
 
 <!---Modal-->
@@ -231,7 +238,9 @@
                   <select class="form-control" name="carrera" id="updateCarrera" class="form-control">
                     <option value="">Seleccione la carrera...</option>
                     {% for carrera in lista_carreras %}
-                    <option value="{{carrera.cod_carrera}}">{{carrera.descripcion}}</option>
+                      {% if carrera.cod_facultad_id == facultad_asignada %}
+                      <option value="{{carrera.cod_carrera}}">{{carrera.descripcion}}</option>
+                      {% endif %}
                     {% endfor %}
                   </select>
                 </div>

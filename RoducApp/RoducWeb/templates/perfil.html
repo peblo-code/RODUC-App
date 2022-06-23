@@ -43,9 +43,7 @@
         <div class="row justify-content-center">
           <div class="col-lg-3 order-lg-2">
             <div class="card-profile-image">
-              <a href="#">
-                <img src="{% static 'assets/img/user_profile.png' %}" class="rounded-circle">
-              </a>
+              <img src="{% static 'assets/img/user_profile.png' %}" class="rounded-circle">
             </div>
           </div>
         </div>
@@ -188,7 +186,9 @@
                   <select class="form-control" name="carrera" id="carrera">
                     <option value="">Seleccione una opcion...</option>
                     {% for carrera in lista_carreras %}
-                    <option value="{{carrera.cod_carrera}}">{{carrera.descripcion}}</option>
+                      {% if carrera.cod_facultad_id == facultad_asignada %}
+                      <option value="{{carrera.cod_carrera}}">{{carrera.descripcion}}</option>
+                      {% endif %}
                     {% endfor %}
                   </select>
                 </div>
@@ -351,6 +351,8 @@
       var rol = ''
       var carrera = ''
       var aux = ''
+      var facultad = ''
+      var facultad_asignada = '{{facultad_asignada}}'
 
       $('#tablaRoles').DataTable().clear()
       document.querySelector("#cuerpoTabla").innerHTML = "";
@@ -367,14 +369,17 @@
           aux = {{carreras.cod_carrera}};
           if(roles_user[x].fields.cod_carrera == aux){
             carrera = '{{carreras.descripcion}}';
+            facultad = '{{carreras.cod_facultad_id}}'
           }
         {% endfor %}
-
-        //CARGA DE TABLA
-        if(rol == 'Profesor'){
-          tabla.row.add([roles_user[x].pk, rol, carrera, `<button type="button" class = "btn btn-icon btn-outline-danger" onclick = "eliminar_rol(${roles_user[x].pk})"><span><i class = "fas fa-trash"></i></span></button><button type="button" onclick="materiasModal('${roles_user[x].fields.cod_carrera}')" class = "btn btn-icon btn-outline-primary"><span><i class = "fas fa-book"></i></span></button>`]).draw();
-        } else{
-          tabla.row.add([roles_user[x].pk, rol, carrera, `<button type="button" class = "btn btn-icon btn-outline-danger" onclick = "eliminar_rol(${roles_user[x].pk})"><span><i class = "fas fa-trash"></i></span></button>`]).draw();
+          
+        if (facultad == facultad_asignada){
+          //CARGA DE TABLA
+          if(rol == 'Profesor'){
+            tabla.row.add([roles_user[x].pk, rol, carrera, `<button type="button" class = "btn btn-icon btn-outline-danger" onclick = "eliminar_rol(${roles_user[x].pk})"><span><i class = "fas fa-trash"></i></span></button><button type="button" onclick="materiasModal('${roles_user[x].fields.cod_carrera}')" class = "btn btn-icon btn-outline-primary"><span><i class = "fas fa-book"></i></span></button>`]).draw();
+          } else{
+            tabla.row.add([roles_user[x].pk, rol, carrera, `<button type="button" class = "btn btn-icon btn-outline-danger" onclick = "eliminar_rol(${roles_user[x].pk})"><span><i class = "fas fa-trash"></i></span></button>`]).draw();
+          }
         }
       }
     }

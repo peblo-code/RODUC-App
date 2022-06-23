@@ -4,14 +4,63 @@
 
 {% load static %}
 
+<style>
+    .loader-page {
+    position: fixed;
+    z-index: 25000;
+    background: rgb(255, 255, 255);
+    left: 0px;
+    top: 0px;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition:all .3s ease;
+  }
+  .loader-page::before {
+    content: "";
+    position: absolute;
+    border: 2px solid rgb(50, 150, 176);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    box-sizing: border-box;
+    border-left: 2px solid rgba(50, 150, 176,0);
+    border-top: 2px solid rgba(50, 150, 176,0);
+    animation: rotarload 1s linear infinite;
+    transform: rotate(0deg);
+  }
+  @keyframes rotarload {
+      0%   {transform: rotate(0deg)}
+      100% {transform: rotate(360deg)}
+  }
+  .loader-page::after {
+    content: "";
+    position: absolute;
+    border: 2px solid rgba(50, 150, 176,.5);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    box-sizing: border-box;
+    border-left: 2px solid rgba(50, 150, 176, 0);
+    border-top: 2px solid rgba(50, 150, 176, 0);
+    animation: rotarload 1s ease-out infinite;
+    transform: rotate(0deg);
+  }
+</style>
+
+
 <body>
+  <div class="loader-page"></div>
   <!-- Sidenav -->
   <nav class="sidenav navbar navbar-vertical fixed-left navbar-expand-xs navbar-light bg-white" id="sidenav-main">
-    <div class="scrollbar-inner" >
+    <div class="scrollbar-inner">
       <!-- Brand -->
       <div class="sidenav-header d-flex align-items-center">
         <div class="navbar-brand">
-          <img src="{% static 'assets/img/catolica.png' %}" class="navbar-brand-img" style="max-height: 5rem; margin-left: 1rem; margin-top: .5rem;">
+          <img src="{% static 'assets/img/catolica.png' %}" class="navbar-brand-img"
+            style="max-height: 5rem; margin-left: 1rem; margin-top: .5rem;">
         </div>
         <div class="ml-auto">
           <!-- Sidenav toggler -->
@@ -26,145 +75,33 @@
       </div>
       <br>
       <hr class="my-0">
-
+      <center>
+        <h6 class="navbar-heading text-muted" style="padding-left: 1.5rem; padding-bottom: 0; padding-top: 1em;">
+          <span class="docs-normal">
+            {% for facultad in lista_facultades %}
+              {% if facultad.cod_facultad == facultad_asignada %}
+                {{facultad.descripcion}}
+              {% endif %}
+            {% endfor %}
+          </span>
+        </h6>
+      </center>
+      <hr class="my-0">
       <!--Menu-->
-      <div class="navbar-inner">
-        <!-- Collapse -->
-        <div class="collapse navbar-collapse" id="sidenav-collapse-main">
-          <!-- Nav items -->
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link " href={% url 'inicio' %} style="padding: 1rem;">
-                <img src={% static 'assets/img/inicio.png' %} width="25" style = "margin-right: 10px; ">
-                <span class="nav-link-text">Inicio</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link " href={% url 'usuario' %} style="padding: 1rem;">
-                <img src={% static 'assets/img/nuevo_usuario.png' %} width="25" style = "margin-right: 10px; ">
-                <span class="nav-link-text">Usuarios</span>
-              </a>
-            </li>
-          </ul>
-          <hr class="my-3">
-          <ul class="navbar-nav">
-            <h6 class="navbar-heading text-muted" style="padding-left: 1.5rem; padding-bottom: 0; padding-top: 0;">
-              <span class="docs-normal">Facultad</span>
-            </h6>
-            <li class="nav-item">
-              <a class="nav-link " href={% url 'facultad' %} style="padding: 1rem;">
-                <img src={% static 'assets/img/facultad.png' %} width="25" style = "margin-right: 10px; ">
-                <span class="nav-link-text">Facultad</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link " href={% url 'carrera' %} style="padding: 1rem;">
-                <img src={% static 'assets/img/carrera.png' %} width="25" style = "margin-right: 10px; ">
-                <span class="nav-link-text">Carreras</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link " href={% url 'plan_estudio' %} style="padding: 1rem;">
-                <img src={% static 'assets/img/plan_estudio.png' %} width="25" style = "margin-right: 10px; ">
-                <span class="nav-link-text">Planes de Estudio</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link " href={% url 'semestre' %} style="padding: 1rem;">
-                <img src={% static 'assets/img/semestre.png' %} width="25" style = "margin-right: 10px; ">
-                <span class="nav-link-text">Semestres</span>
-              </a>
-            </li>
-          </ul>
-          <hr class="my-3">
-          <ul class="navbar-nav">
-            <h6 class="navbar-heading text-muted" style="padding-left: 1.5rem; padding-bottom: 0; padding-top: 0;">
-              <span class="docs-normal">Asignaturas</span>
-            </h6>
-            <li class="nav-item">
-              <a class="nav-link " href={% url 'asignatura' %} style="padding: 1rem;">
-                <img src={% static 'assets/img/asignatura.png' %} width="25" style = "margin-right: 10px; ">
-                <span class="nav-link-text">Asignaturas</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link " href={% url 'unidad_aprendizaje' %} style="padding: 1rem;">
-                <img src={% static 'assets/img/unidad_aprendizaje.png' %} width="25" style = "margin-right: 10px; ">
-                <span class="nav-link-text">Unidades de Aprendizaje</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link " href={% url 'contenido' %} style="padding: 1rem;">
-                <img src={% static 'assets/img/contenido.png' %} width="25" style = "margin-right: 10px; ">
-                <span class="nav-link-text">Contenidos</span>
-              </a>
-            </li>
-          </ul>
-          <!-- Divider -->
-          <hr class="my-3">
-          <h6 class="navbar-heading p-0 text-muted">
-            <span class="docs-normal">Parámetros Varios</span>
-          </h6>
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link " href={% url 'instrumento_evaluacion' %} style="padding: 1rem;">
-                <img src={% static 'assets/img/instrumento_evaluacion.png' %} width="25" style = "margin-right: 10px; ">
-                <span class="nav-link-text">Instrumentos de Evaluación</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link " href={% url 'metodologia_enseñanza' %} style="padding: 1rem;">
-                <img src={% static 'assets/img/metodologia_enseñanza.png' %} width="25" style = "margin-right: 10px; ">
-                <span class="nav-link-text">Metodologías de Enseñanza</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link " href={% url 'recurso_auxiliar' %} style="padding: 1rem;">
-                <img src={% static 'assets/img/recurso_auxiliar.png' %} width="25" style = "margin-right: 10px; ">
-                <span class="nav-link-text">Recursos Auxiliares</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link " href={% url 'tipo_clase' %} style="padding: 1rem;">
-                <img src={% static 'assets/img/tipo_clase.png' %} width="25" style = "margin-right: 10px; ">
-                <span class="nav-link-text">Tipos de Clase</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link " href={% url 'tipo_eva' %} style="padding: 1rem;">
-                <img src={% static 'assets/img/tipo_eva.png' %} width="25" style = "margin-right: 10px; ">
-                <span class="nav-link-text">Tipos de Evaluación</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link " href={% url 'trabajo_autonomo' %} style="padding: 1rem;">
-                <img src={% static 'assets/img/trabajo_autonomo.png' %} width="25" style = "margin-right: 10px; ">
-                <span class="nav-link-text">Trabajos Autónomos</span>
-              </a>
-            </li>
-          </ul>
-          <hr class="my-3">
-          <ul class="navbar-nav">
-            <h6 class="navbar-heading text-muted" style="padding-left: 1.5rem; padding-bottom: 0; padding-top: 0;">
-              <span class="docs-normal">Reportes</span>
-            </h6>
-            <li class="nav-item">
-              <a class="nav-link " href={% url 'reporte' %} style="padding: 1rem;">
-                <img src={% static 'assets/img/reporte.png' %} width="25" style = "margin-right: 10px; ">
-                <span class="nav-link-text">Reportes</span>
-              </a>
-            </li>
-          </ul>
-          <!-- Navigation -->
-        </div>
-      </div>
+      {% if rol_usuario == 1 %}
+        {% include "menu/menu_admin.html" %}
+      {% elif rol_usuario == 3 %}
+        {% include "menu/menu_secretario.html" %}
+      {% elif rol_usuario == 4 %}
+        {% include "menu/menu_director.html" %}
+      {% endif %}
     </div>
 
   </nav>
   <!-- TOP -->
   <div class="main-content" id="panel">
     <!-- Topnav -->
-    <nav class="navbar navbar-top navbar-expand navbar-dark border-bottom"style="background-color:#0d3498;" >
+    <nav class="navbar navbar-top navbar-expand navbar-dark border-bottom" style="background-color:#0d3498;">
       <div class="container-fluid">
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <!-- Navbar links -->
@@ -198,6 +135,14 @@
                   <h6 class="text-overflow m-0">Bienvenido!</h6>
                 </div>
                 <div class="dropdown-divider"></div>
+                <a href={% url 'perfil' %} class="dropdown-item">
+                  <i class="ni ni-circle-08"></i>
+                  <span>Perfil</span>
+                </a>
+                <button onclick="cambiarRol()" class="dropdown-item">
+                  <i class="ni ni-user-run"></i>
+                  <span>Cambiar rol</span>
+                </button>
                 <a href={% url 'cerrar_sesion' %} class="dropdown-item">
                   <i class="ni ni-button-power"></i>
                   <span>Cerrar Sesión</span>
@@ -208,10 +153,70 @@
         </div>
       </div>
     </nav>
-  
+
     {% block formularios %}
 
     {% endblock %}
-</body>
 
+    </div>
+    <!---Modal-->
+    <div class="modal fade" id="rolesUserModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="tituloModal">Seleccion de Rol</h5>
+            <button type="button" class="close" href="" aria-label="Close" data-dismiss="modal">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="table-responsive py-2" style="overflow: hidden;">
+              <div class="dataTables_wrapper dt-bootrstrap4">
+                <table class="table table-flush dataTable align-items-center table-hover" id="roles_del_usuario">
+                  <thead class="thead-light">
+                    <tr>
+                      <th scope="col" class="sort" data-sort="id">ID</th>
+                      <th scope="col" class="sort" data-sort="rol">Rol</th>
+                      <th scope="col" class="sort" data-sort="curso">Facultad</th>
+                      <th scope="col">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tfoot class="thead-light">
+                    <tr>
+                      <th scope="col">ID</th>
+                      <th scope="col">Rol</th>
+                      <th scope="col">Facultad</th>
+                      <th scope="col">Acciones</th>
+                    </tr>
+                  </tfoot>
+                  <tbody class="list" id="cuerpoTabla">
+                    {% for roles in roles_del_usuario %}
+                    <tr>
+                      <td>{{roles.cod_usuario_rol}}</td>
+                      <td>
+                        {% if roles.cod_rol_usuario_id == 1 %}
+                        Administrador
+                        {% elif roles.cod_rol_usuario_id == 3 %}
+                        Secretario
+                        {% elif roles.cod_rol_usuario_id == 4 %}
+                        Director
+                        {% else %}
+                        Error al buscar rol
+                        {% endif %}
+                      </td>
+                      <td>{{roles.facultad}}</td>
+                      <td><button type="button" onclick="seleccionarRol('{{roles.cod_usuario_rol}}')"
+                          class="btn btn-success btn-sm">Seleccionar</button></td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</body>
 {% endblock %}

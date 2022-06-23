@@ -1,5 +1,25 @@
 from django.contrib import admin
 from RoducWeb.models import *
 # Register your models here.
-
 admin.site.register(Usuario)
+admin.site.register(Rol_Usuario)
+admin.site.register(Facultad)
+admin.site.register(Usuario_Rol)
+admin.site.register(Auditoria)
+admin.site.register(Auditoria_Sesiones)
+admin.site.register(Semestre)
+admin.site.register(Plan_Estudio)
+admin.site.register(Asignatura)
+admin.site.register(Asignatura_Usuario)
+admin.site.register(Tipo_Clase)
+admin.site.register(Unidad_Aprendizaje)
+admin.site.register(Instrumento_Evaluacion)
+admin.site.register(Metodologia_Enseñanza)
+admin.site.register(Recursos_Auxiliar)
+admin.site.register(Trabajo_Autonomo)
+admin.site.register(Cabecera_Planilla)
+admin.site.register(Contenidos_Dados)
+admin.site.register(Evaluaciones)
+admin.site.register(Trabajos_Utilizados)
+admin.site.register(Metodologia_Utilizada)
+admin.site.register(Recursos_Utilizados)

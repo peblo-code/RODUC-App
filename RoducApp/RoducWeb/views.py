@@ -1,5 +1,4 @@
 from datetime import datetime
-from doctest import debug_script
 import json
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
@@ -11,11 +10,11 @@ from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.utils.decorators import method_decorator
 
 
-# NOTAS
-# 1-Serializers solo se puede con metodo Filter, con get no funciona
-
-###########################################################################################
-# funciones varias
+#======================================== NOTAS ===========================================#
+# 1-Serializers solo se puede con metodo Filter, con get no funciona                       #
+#==========================================================================================#
+#                                                                                          #
+#==================================== FUNCIONES VARIAS ====================================#
 def generar_saludo():
     hora_actual = int((time.strftime('%H', time.localtime())))
     if (hora_actual >= 6 and hora_actual < 12):
@@ -25,8 +24,10 @@ def generar_saludo():
     else:
         mensaje_bienvenida = 'Buenas Noches'
     return mensaje_bienvenida
-
-# auditar sesiones
+#==========================================================================================#
+#                                                                                          #
+#                                                                                          #
+#==================================== AUDITAR SESIONES ====================================#
 def auditar_sesion(request, info):
     nueva_sesion = Auditoria_Sesiones(
         nombre_usuario=request.session.get("usuario_conectado"),
@@ -34,15 +35,19 @@ def auditar_sesion(request, info):
         informacion=info
     )
     nueva_sesion.save()
-
-#verificador de sesion
+#==========================================================================================#
+#                                                                                          #
+#                                                                                          #
+#================================== VERIFICADOR DE SESION =================================#
 def sesion_verificar(request):
     if request.session.get("usuario_conectado"):
         return 1
     else:
         return 0
-
-#convertidor de fecha
+#==========================================================================================#
+#                                                                                          #
+#                                                                                          #
+#================================== CONVERTIDOR DE FECHA ==================================#
 def convertirFecha(fecha):
     año = fecha[:(fecha.find('-'))]
     mes = fecha[(fecha.find('-') +1 ): (fecha.find('-') + 3)] 
@@ -71,11 +76,41 @@ def convertirFecha(fecha):
         return(dia + ' Noviembre de ' + año)
     elif mes == '12':
         return(dia + ' Diciembre de ' + año)
-    
-###########################################################################################
+#==========================================================================================#
+#                                                                                          #
+#                                                                                          #
+#============================ CONTROL DE PERMISOS EN FACULTADES ===========================#
+def rolesUsuario(request): # Agregado
+    roles_del_usuario = Usuario_Rol.objects.raw('SELECT u.cod_usuario_rol\
+                                                       ,u.cod_usuario_id\
+                                                       ,u.cod_carrera_id\
+                                                       ,c.descripcion as carrera\
+                                                       ,f.descripcion as facultad\
+                                                FROM "RoducWeb_usuario_rol" u\
+                                                    ,"RoducWeb_facultad" f\
+                                                    ,"RoducWeb_carrera" c\
+                                                WHERE u.cod_usuario_id = ' + str(request.session.get("cod_usuario")) +  
+                                                     'AND u.cod_carrera_id = c.cod_carrera\
+                                                      AND c.cod_facultad_id = f.cod_facultad\
+                                                      and (u.cod_rol_usuario_id = 1 or u.cod_rol_usuario_id = 3 or u.cod_rol_usuario_id = 4)\
+                                                      AND u.estado = 1') 
+    return roles_del_usuario
 
-# Create your views here.
-
+def asignarFacultad(request): 
+    if request.method == 'GET': 
+        id = request.GET.get('codigo') 
+        rol_seleccionado = Usuario_Rol.objects.get(cod_usuario_rol = id) 
+        facultad = Facultad.objects.get(cod_facultad = Carrera.objects.get(cod_carrera = rol_seleccionado.cod_carrera_id).cod_facultad_id).cod_facultad #Agregado
+        request.session["facultad_asignada"] = facultad 
+        request.session["rol_usuario"] = rol_seleccionado.cod_rol_usuario_id
+        respuesta = JsonResponse({'mensaje': 'Facultad seleccionada correctamente.'}) 
+        return respuesta
+#==========================================================================================#
+#                                                                                          #
+#                                                                                          #
+#========================================= VISTAS =========================================#
+def error_403(request):
+    return render(request, 'error403.html')
 
 def login(request):
     if request.method == 'GET':
@@ -86,17 +121,18 @@ def login(request):
     if request.method == 'POST':
         nom_usuario = request.POST.get('usuario')
         contraseña_usuario = request.POST.get('contraseña')
-        usuario_actual = Usuario.objects.filter(
-            nombre_usuario=nom_usuario).exists()
+        usuario_actual = Usuario.objects.filter(nombre_usuario=nom_usuario).exists()
         if usuario_actual == True:  # se verifica si el usuario existe
-            rol_usuario = Usuario_Rol.objects.filter(cod_usuario=Usuario.objects.get(
-                nombre_usuario=nom_usuario).cod_usuario, estado=1, cod_rol_usuario=1).exists()
             datos_usuario = Usuario.objects.get(nombre_usuario=nom_usuario)
+            rol_usuario = Usuario_Rol.objects.raw('SELECT * FROM "RoducWeb_usuario_rol" u WHERE u.cod_usuario_id = ' + str(datos_usuario.cod_usuario) + ' AND estado = 1 AND (cod_rol_usuario_id = 1 OR cod_rol_usuario_id = 3 OR cod_rol_usuario_id = 4)')
             if rol_usuario:
                 if (datos_usuario.contraseña == contraseña_usuario):
+                    request.session["cod_usuario"] = datos_usuario.cod_usuario
                     request.session["usuario_conectado"] = datos_usuario.nombre_usuario
                     request.session["nombre_del_usuario"] = datos_usuario.nombres_del_usuario
                     request.session["correo_usuario"] = datos_usuario.direccion_email
+                    request.session["facultad_asignada"] = 0
+                    request.session["rol_usuario"] = 0
                     auditar_sesion(request, 'Inicio de sesión en Web')
                     return redirect("inicio")
                 else:
@@ -105,7 +141,6 @@ def login(request):
                 return render(request, "login.html", {"mensaje_error": "El usuario no cuenta con los permisos necesarios para acceder."})
         else:
             return render(request, "login.html", {"mensaje_error": "El usuario ingresado no existe."})
-
 
 def cerrar_sesion(request):
     if request.session.get("usuario_conectado"):
@@ -119,16 +154,22 @@ def inicio(request):
     if sesion_verificar(request) == 0:
         return redirect("./")
     mensaje_bienvenida = generar_saludo()
+    lista_facultades = Facultad.objects.filter(estado = 1)
     return render(request, "inicio.html", {"usuario_conectado": request.session.get("usuario_conectado"),
                                            "nombre_usuario": request.session.get("nombre_del_usuario"),
                                            "direccion_email": request.session.get("correo_usuario"),
-                                           "inicio": 'S',
+                                           "facultad_asignada": request.session.get("facultad_asignada"),
+                                           "rol_usuario" : request.session.get("rol_usuario"),
+                                           "roles_del_usuario": rolesUsuario(request),
+                                           "lista_facultades": lista_facultades,
                                            "mensaje_bienvenida": mensaje_bienvenida})
 
 
 def usuario(request):
     if sesion_verificar(request) == 0:
         return redirect("./")
+    if request.session.get("rol_usuario") != 1:
+        return redirect("error_403")
     mensaje_bienvenida = generar_saludo()
     lista_usuarios = Usuario.objects.filter(estado=1)
     lista_roles = Rol_Usuario.objects.filter(estado=1)
@@ -139,7 +180,10 @@ def usuario(request):
                                                      "mensaje_bienvenida": mensaje_bienvenida,
                                                      "lista_usuarios": lista_usuarios,
                                                      "lista_roles": lista_roles,
-                                                     "lista_facultades": lista_facultades})
+                                                     "lista_facultades": lista_facultades,
+                                                     "facultad_asignada": request.session.get("facultad_asignada"),
+                                                     "rol_usuario" : request.session.get("rol_usuario"),
+                                                     "roles_del_usuario": rolesUsuario(request),})
 
 
 def agregar_usuario(request):
@@ -203,13 +247,18 @@ def eliminar_usuario(request):
 def facultad(request):
     if sesion_verificar(request) == 0:
         return redirect("./")
+    if request.session.get("rol_usuario") == 4:
+        return redirect("error_403")
     mensaje_bienvenida = generar_saludo()
-    lista_facultad = Facultad.objects.filter(estado=1)
+    lista_facultad = Facultad.objects.filter(estado = 1)
     return render(request, "facultad/facultad.html", {"usuario_conectado": request.session.get("usuario_conectado"),
                                                       "nombre_usuario": request.session.get("nombre_del_usuario"),
                                                       "direccion_email": request.session.get("correo_usuario"),
                                                       "mensaje_bienvenida": mensaje_bienvenida,
-                                                      "lista_facultad": lista_facultad})
+                                                      "lista_facultades": lista_facultad,
+                                                      "facultad_asignada": request.session.get("facultad_asignada"),
+                                                      "rol_usuario" : request.session.get("rol_usuario"),
+                                                      "roles_del_usuario": rolesUsuario(request),})
 
 
 def agregar_facultad(request):
@@ -267,6 +316,8 @@ def eliminar_facultad(request):
 def carrera(request):
     if sesion_verificar(request) == 0:
         return redirect("./")
+    if request.session.get("rol_usuario") == 4:
+        return redirect("error_403")
     lista_carreras = Carrera.objects.filter(estado = 1)
     lista_facultades = Facultad.objects.filter(estado = 1)
     return render(request, "carrera/carrera.html", {"usuario_conectado": request.session.get("usuario_conectado"),
@@ -274,7 +325,10 @@ def carrera(request):
                                                       "direccion_email": request.session.get("correo_usuario"),
                                                       "mensaje_bienvenida": generar_saludo(),
                                                       "lista_facultades": lista_facultades,
-                                                      "lista_carreras": lista_carreras})
+                                                      "lista_carreras": lista_carreras,
+                                                      "facultad_asignada": request.session.get("facultad_asignada"),
+                                                      "rol_usuario" : request.session.get("rol_usuario"),
+                                                      "roles_del_usuario": rolesUsuario(request),})
 
 
 def agregar_carrera(request):
@@ -332,6 +386,8 @@ def eliminar_carrera(request):
 def plan_estudio(request):
     if sesion_verificar(request) == 0:
         return redirect("./")
+    if request.session.get("rol_usuario") == 4:
+        return redirect("error_403")
     lista_carreras = Carrera.objects.filter(estado=1)
     lista_facultades = Facultad.objects.filter(estado=1)
     lista_planes = Plan_Estudio.objects.filter(estado=1)
@@ -341,7 +397,10 @@ def plan_estudio(request):
                                                               "direccion_email": request.session.get("correo_usuario"),
                                                               "lista_carreras": lista_carreras,
                                                               "lista_facultades": lista_facultades,
-                                                              "lista_planes": lista_planes})
+                                                              "lista_planes": lista_planes,
+                                                              "facultad_asignada": request.session.get("facultad_asignada"),
+                                                              "rol_usuario" : request.session.get("rol_usuario"),
+                                                              "roles_del_usuario": rolesUsuario(request),})
 
 
 def agregar_plan(request):
@@ -403,12 +462,19 @@ def eliminar_plan(request):
 def semestre(request):
     if sesion_verificar(request) == 0:
         return redirect("./")
+    if request.session.get("rol_usuario") == 4:
+        return redirect("error_403")
     lista_semestre = Semestre.objects.filter(estado=1)
+    lista_facultades = Facultad.objects.filter(estado = 1)
     return render(request, "semestre/semestre.html", {"lista_semestre": lista_semestre,
                                                       "mensaje_bienvenida": generar_saludo(),
                                                       "usuario_conectado": request.session.get("usuario_conectado"),
                                                       "nombre_usuario": request.session.get("nombre_del_usuario"),
-                                                      "direccion_email": request.session.get("correo_usuario")})
+                                                      "facultad_asignada": request.session.get("facultad_asignada"),
+                                                      "roles_del_usuario": rolesUsuario(request),
+                                                      "rol_usuario" : request.session.get("rol_usuario"),
+                                                      "direccion_email": request.session.get("correo_usuario"),
+                                                      "lista_facultades": lista_facultades})
 
 
 def agregar_semestre(request):
@@ -467,17 +533,24 @@ def eliminar_semestre(request):
 def asignatura(request):
     if sesion_verificar(request) == 0:
         return redirect("./")
+    if (request.session.get("rol_usuario") == 4):
+        return redirect("error_403")
     lista_carreras = Carrera.objects.filter(estado = 1)
     lista_planes = Plan_Estudio.objects.filter(estado = 1)
     lista_semestres = Semestre.objects.filter(estado = 1)
     lista_asignaturas = Asignatura.objects.filter(estado = 1)
+    lista_facultades = Facultad.objects.filter(estado = 1)
     return render(request, "asignatura/asignatura.html", {"mensaje_bienvenida": generar_saludo(),
                                                           "usuario_conectado": request.session.get("usuario_conectado"),
                                                           "nombre_usuario": request.session.get("nombre_del_usuario"),
                                                           "lista_carreras": lista_carreras,
                                                           "lista_planes": lista_planes,
                                                           "lista_semestres": lista_semestres,
-                                                          "lista_asignaturas": lista_asignaturas})
+                                                          "facultad_asignada": request.session.get("facultad_asignada"),
+                                                          "rol_usuario" : request.session.get("rol_usuario"),
+                                                          "roles_del_usuario": rolesUsuario(request),
+                                                          "lista_asignaturas": lista_asignaturas,
+                                                          "lista_facultades": lista_facultades})
 
 
 def agregar_asignatura(request):
@@ -541,18 +614,41 @@ def eliminar_asignatura(request):
 def perfil(request):
     if sesion_verificar(request) == 0:
         return redirect("./")
-    usuario = request.GET.get("codigoPerfil")
+    #usuario = request.GET.get("codigoPerfil")
+    if Usuario.objects.filter(cod_usuario = request.GET.get("codigoPerfil")).exists():
+        usuario = request.GET.get("codigoPerfil")
+    else:
+        usuario = request.session.get("cod_usuario")
     datos_usuario = Usuario.objects.get(cod_usuario=usuario)
     lista_roles = Rol_Usuario.objects.filter(estado=1)
-    lista_usuario_rol = Usuario_Rol.objects.filter(estado=1, cod_usuario=usuario)
-    lista_carreras = Carrera.objects.all()
+    lista_usuario_rol = Usuario_Rol.objects.raw('select\
+	                                                ur.cod_usuario_rol,\
+	                                                ur.cod_rol_usuario_id,\
+	                                                ur.cod_usuario_id,\
+	                                                ur.cod_carrera_id\
+                                                from\
+	                                                "RoducWeb_usuario_rol" ur,\
+	                                                "RoducWeb_carrera" c,\
+	                                                "RoducWeb_facultad" f\
+                                                where\
+	                                                ur.cod_usuario_id = ' + str(usuario) + '\
+	                                                and ur.estado = 1\
+	                                                and c.cod_carrera = ur.cod_carrera_id\
+	                                                and c.cod_facultad_id = f.cod_facultad\
+	                                                and f.cod_facultad = ' + str(request.session.get("facultad_asignada")))
+    lista_carreras = Carrera.objects.filter(estado = 1)
+    lista_facultades = Facultad.objects.filter(estado = 1)
     return render(request, "perfil.html", {"datos_usuario": datos_usuario,
                                            "lista_roles": lista_roles,
                                            "lista_usuario_rol": lista_usuario_rol,
                                            "lista_carreras": lista_carreras,
                                            "mensaje_bienvenida": generar_saludo(),
                                            "usuario_conectado": request.session.get("usuario_conectado"),
-                                           "nombre_usuario": request.session.get("nombre_del_usuario")})
+                                           "facultad_asignada": request.session.get("facultad_asignada"),
+                                           "rol_usuario" : request.session.get("rol_usuario"),
+                                           "roles_del_usuario": rolesUsuario(request),
+                                           "nombre_usuario": request.session.get("nombre_del_usuario"),
+                                           "lista_facultades": lista_facultades})
 
 
 def asignar_rol(request):
@@ -672,6 +768,8 @@ def cabecera(request):
 def unidad_aprendizaje(request):
     if sesion_verificar(request) == 0:
         return redirect("./")
+    if request.session.get("rol_usuario") == 4:
+        return redirect("error_403")
     lista_facultades = Facultad.objects.filter(estado = 1)
     lista_carreras = Carrera.objects.filter(estado = 1)
     lista_asignaturas = Asignatura.objects.filter(estado = 1)
@@ -684,6 +782,9 @@ def unidad_aprendizaje(request):
                                                                           "lista_planes": lista_planes,
                                                                           "mensaje_bienvenida": generar_saludo(),
                                                                           "usuario_conectado": request.session.get("usuario_conectado"),
+                                                                          "facultad_asignada": request.session.get("facultad_asignada"),
+                                                                          "rol_usuario" : request.session.get("rol_usuario"),
+                                                                          "roles_del_usuario": rolesUsuario(request),
                                                                           "nombre_usuario": request.session.get("nombre_del_usuario")})
 
 
@@ -748,6 +849,8 @@ def eliminar_unidad_aprendizaje(request):
 def contenido(request):
     if sesion_verificar(request) == 0:
         return redirect("./")
+    if request.session.get("rol_usuario") == 4:
+        return redirect("error_403")
     lista_facultades = Facultad.objects.filter(estado=1)
     lista_carreras = Carrera.objects.filter(estado=1)
     lista_asignaturas = Asignatura.objects.filter(estado=1)
@@ -762,6 +865,9 @@ def contenido(request):
                                                         "nombre_usuario": request.session.get("nombre_del_usuario"),
                                                         "lista_planes": lista_planes,
                                                         "lista_unidades": lista_unidades,
+                                                        "facultad_asignada": request.session.get("facultad_asignada"),
+                                                        "rol_usuario" : request.session.get("rol_usuario"),
+                                                        "roles_del_usuario": rolesUsuario(request),
                                                         "lista_contenidos": lista_contenidos})
 
 def detalle_contenido(request):
@@ -824,11 +930,18 @@ def eliminar_contenido(request):
 def tipo_clase(request):
     if sesion_verificar(request) == 0:
         return redirect("./")
+    if request.session.get("rol_usuario") != 1 or request.session.get("rol_usuario") != 3:
+        return redirect("error_403")
     lista_tipo = Tipo_Clase.objects.filter(estado = 1)
+    lista_facultades = Facultad.objects.filter(estado = 1)
     return render(request, "tipo_clase/tipo_clase.html", {"mensaje_bienvenida": generar_saludo(),
                                                           "usuario_conectado": request.session.get("usuario_conectado"),
                                                           "nombre_usuario": request.session.get("nombre_del_usuario"),
-                                                          "lista_tipo": lista_tipo})
+                                                          "facultad_asignada": request.session.get("facultad_asignada"),
+                                                          "rol_usuario" : request.session.get("rol_usuario"),
+                                                          "roles_del_usuario": rolesUsuario(request),
+                                                          "lista_tipo": lista_tipo,
+                                                          "lista_facultades": lista_facultades})
 
 
 def detalle_tipo_clase(request):
@@ -881,11 +994,18 @@ def eliminar_tipo_clase(request):
 def instrumento_evaluacion(request):
     if sesion_verificar(request) == 0:
         return redirect("./")
+    if request.session.get("rol_usuario") == 4:
+        return redirect("error_403")
     lista_instrumentos = Instrumento_Evaluacion.objects.filter(estado = 1)
+    lista_facultades = Facultad.objects.filter(estado = 1)
     return render(request, "instrumento_evaluacion/instrumento_evaluacion.html", {"mensaje_bienvenida": generar_saludo(),
                                                                                   "usuario_conectado": request.session.get("usuario_conectado"),
                                                                                   "nombre_usuario": request.session.get("nombre_del_usuario"),
-                                                                                  "lista_instrumentos": lista_instrumentos})
+                                                                                  "facultad_asignada": request.session.get("facultad_asignada"),
+                                                                                  "rol_usuario" : request.session.get("rol_usuario"),
+                                                                                  "roles_del_usuario": rolesUsuario(request),
+                                                                                  "lista_instrumentos": lista_instrumentos,
+                                                                                  "lista_facultades": lista_facultades})
 
 
 def detalle_instrumento_evaluacion(request):
@@ -938,11 +1058,18 @@ def eliminar_instrumento_evaluacion(request):
 def metodologia_enseñanza(request):
     if sesion_verificar(request) == 0:
         return redirect("./")
+    if request.session.get("rol_usuario") == 4:
+        return redirect("error_403")
     lista_metodologias = Metodologia_Enseñanza.objects.filter(estado = 1)
+    lista_facultades = Facultad.objects.filter(estado = 1)
     return render(request, "metodologia_enseñanza/metodologia_enseñanza.html", {"mensaje_bienvenida": generar_saludo(),
                                                                                 "usuario_conectado": request.session.get("usuario_conectado"),
                                                                                 "nombre_usuario": request.session.get("nombre_del_usuario"),
-                                                                                "lista_metodologias": lista_metodologias})
+                                                                                "facultad_asignada": request.session.get("facultad_asignada"),
+                                                                                "rol_usuario" : request.session.get("rol_usuario"),
+                                                                                "roles_del_usuario": rolesUsuario(request),
+                                                                                "lista_metodologias": lista_metodologias,
+                                                                                "lista_facultades": lista_facultades})
 
 def detalle_metodologia_enseñanza(request):
     if sesion_verificar(request) == 0:
@@ -993,11 +1120,18 @@ def eliminar_metodologia_enseñanza(request):
 def recurso_auxiliar(request):
     if sesion_verificar(request) == 0:
         return redirect("./")
+    if request.session.get("rol_usuario") == 4:
+        return redirect("error_403")
     lista_recursos = Recursos_Auxiliar.objects.filter(estado = 1)
+    lista_facultades = Facultad.objects.filter(estado = 1)
     return render(request, "recurso_auxiliar/recurso_auxiliar.html", {"mensaje_bienvenida": generar_saludo(),
                                                                       "usuario_conectado": request.session.get("usuario_conectado"),
                                                                       "nombre_usuario": request.session.get("nombre_del_usuario"),
-                                                                      "lista_recursos": lista_recursos})
+                                                                      "facultad_asignada": request.session.get("facultad_asignada"),
+                                                                      "rol_usuario" : request.session.get("rol_usuario"),
+                                                                      "roles_del_usuario": rolesUsuario(request),
+                                                                      "lista_recursos": lista_recursos,
+                                                                      "lista_facultades": lista_facultades})
 
 def detalle_recurso_auxiliar(request):
     if sesion_verificar(request) == 0:
@@ -1048,11 +1182,18 @@ def eliminar_recurso_auxiliar(request):
 def tipo_eva(request):
     if sesion_verificar(request) == 0:
         return redirect("./")
+    if request.session.get("rol_usuario") == 4:
+        return redirect("error_403")
     lista_tipo = Tipo_Eva.objects.filter(estado = 1)
+    lista_facultades = Facultad.objects.filter(estado = 1)
     return render(request, "tipo_eva/tipo_eva.html", {"mensaje_bienvenida": generar_saludo(),
                                                       "usuario_conectado": request.session.get("usuario_conectado"),
                                                       "nombre_usuario": request.session.get("nombre_del_usuario"),
-                                                      "lista_tipo": lista_tipo})
+                                                      "facultad_asignada": request.session.get("facultad_asignada"),
+                                                      "rol_usuario" : request.session.get("rol_usuario"),
+                                                      "roles_del_usuario": rolesUsuario(request),
+                                                      "lista_tipo": lista_tipo,
+                                                      "lista_facultades": lista_facultades})
 
 def detalle_tipo_eva(request):
     if sesion_verificar(request) == 0:
@@ -1103,11 +1244,18 @@ def eliminar_tipo_eva(request):
 def trabajo_autonomo(request):
     if sesion_verificar(request) == 0:
         return redirect("./")
+    if request.session.get("rol_usuario") == 4:
+        return redirect("error_403")
     lista_trabajos = Trabajo_Autonomo.objects.filter(estado = 1)
+    lista_facultades = Facultad.objects.filter(estado = 1)
     return render(request, "trabajo_autonomo/trabajo_autonomo.html", {"mensaje_bienvenida": generar_saludo(),
                                                                       "usuario_conectado": request.session.get("usuario_conectado"),
                                                                       "nombre_usuario": request.session.get("nombre_del_usuario"),
-                                                                      "lista_trabajos": lista_trabajos})
+                                                                      "facultad_asignada": request.session.get("facultad_asignada"),
+                                                                      "rol_usuario" : request.session.get("rol_usuario"),
+                                                                      "roles_del_usuario": rolesUsuario(request),
+                                                                      "lista_trabajos": lista_trabajos,
+                                                                      "lista_facultades": lista_facultades})
 
 def detalle_trabajo_autonomo(request):
     if sesion_verificar(request) == 0:
@@ -1158,6 +1306,8 @@ def eliminar_trabajo_autonomo(request):
 def reporte(request):
     if sesion_verificar(request) == 0:
         return redirect("./")
+    if request.session.get("rol_usuario") != 4:
+        return redirect("error_403")
     fecha_actual = str(datetime.today())
     año_actual = fecha_actual[:(fecha_actual.find('-'))]
     print(año_actual + " Año actual")
@@ -1172,6 +1322,9 @@ def reporte(request):
     return render(request, "reporte.html", {"usuario_conectado": request.session.get("usuario_conectado"),
                                            "nombre_usuario": request.session.get("nombre_del_usuario"),
                                            "direccion_email": request.session.get("correo_usuario"),
+                                           "facultad_asignada": request.session.get("facultad_asignada"),
+                                           "rol_usuario": request.session.get("rol_usuario"),
+                                           "roles_del_usuario": rolesUsuario(request),
                                            "mensaje_bienvenida": mensaje_bienvenida,
                                            "lista_registros": lista_registros,
                                            "lista_usuarios": lista_usuarios,
@@ -1229,6 +1382,7 @@ def analisisAsignatura(request):
     fecha_uno = request.POST.get("fecha_uno")
     fecha_dos = request.POST.get("fecha_dos")
     asignatura = request.POST.get("asignatura")
+    datos_facultad = Facultad.objects.get(estado = 1, cod_facultad = request.session.get("facultad_asignada"))
 
     datos_asignatura = Asignatura.objects.get(cod_asignatura = asignatura)
 
@@ -1236,8 +1390,6 @@ def analisisAsignatura(request):
     año_uno = fecha_uno[:(fecha_uno.find('-'))]
     #subcadena para sacar año de fecha dos
     año_dos = fecha_dos[:(fecha_dos.find('-'))]
-
-    convertirFecha(fecha_uno)
 
     #consulta a cabeceras usando los años y fechas como filtro
     cabeceras_fecha_uno = Cabecera_Planilla.objects.raw('SELECT * FROM "RoducWeb_cabecera_planilla" WHERE cod_asignatura_id = ' + str(asignatura) + " and fecha_clase BETWEEN '" + str(año_uno) + '-01-01\' AND \'' + str(fecha_uno) + '\' and estado = 1 and evaluacion = 0 ORDER BY fecha_clase')
@@ -1278,4 +1430,5 @@ def analisisAsignatura(request):
                                                                  "promedio_dos": promedio_dos,
                                                                  "total_dado_uno": total_dado_uno,
                                                                  "total_dado_dos": total_dado_dos,
-                                                                 "todos_contenidos": todos_contenidos})
+                                                                 "todos_contenidos": todos_contenidos,
+                                                                 "datos_facultad": datos_facultad})

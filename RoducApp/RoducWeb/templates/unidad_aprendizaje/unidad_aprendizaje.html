@@ -1,5 +1,5 @@
 {% extends "panel.html" %}
-{% block titulo %}Plan de Estudio - Roduc{% endblock %}
+{% block titulo %}Unidad de Aprendizaje - Roduc{% endblock %}
 {% block formularios %}
 {% load static %}
 <div class="header pb-9 d-flex align-items-center"
@@ -47,9 +47,10 @@
                   <div class="form-group">
                     <label for="exampleFormControlSelect1" class="form-control-label">Facultad</label>
                     <select class="form-control" id="facultad" name="facultad" class="form-control">
-                      <option value="">Seleccione la facultad a la cual pertenece...</option>
                       {% for facultad in lista_facultades %}
-                      <option value="{{facultad.cod_facultad}}">{{facultad.descripcion}}</option>
+                        {% if facultad.cod_facultad == facultad_asignada %}
+                        <option value="{{facultad.cod_facultad}}">{{facultad.descripcion}}</option>
+                        {% endif %}
                       {% endfor %}
                     </select>
                   </div>
@@ -127,28 +128,30 @@
                 </tfoot>
                 <tbody class="list">
                   {% for unidades in lista_unidad %}
-                  <tr>
-                    <td class="id">{{unidades.cod_unidad_aprendizaje}}</td>
-                    <td class="nombre">{{unidades.descripcion}}</td>
-                    <td class="nombre">
-                      {% for asignatura in lista_asignaturas %}
-                        {% if asignatura.cod_asignatura == unidades.cod_asignatura_id %}
-                          {{asignatura.descripcion}}
-                        {% endif %}
-                      {% endfor %}
-                    </td>
-                    <!---BOTONES-->
-                    <td>
-                      <button type="button" class="btn btn-outline-success"
-                        onclick='obtenerUnidad("{{unidades.cod_unidad_aprendizaje}}")'>
-                        <i class="far fa-edit"></i>
-                      </button>
-                      <button class="btn btn-outline-danger"
-                        onclick='eliminarUnidad("{{unidades.cod_unidad_aprendizaje}}")'>
-                        <i class="fas fa-trash-alt"></i>
-                      </button>
-                    </td>
-                  </tr>
+                    {% for asignatura in lista_asignaturas %}
+                      {% if asignatura.cod_asignatura == unidades.cod_asignatura_id %}
+                        {% for carrera in lista_carreras %}
+                          {% if carrera.cod_carrera == asignatura.cod_carrera_id and carrera.cod_facultad_id == facultad_asignada %}
+                          <tr>
+                            <td class="id">{{unidades.cod_unidad_aprendizaje}}</td>
+                            <td class="nombre">{{unidades.descripcion}}</td>
+                            <td class="nombre">{{asignatura.descripcion}}</td>
+                            <!---BOTONES-->
+                            <td>
+                              <button type="button" class="btn btn-outline-success"
+                                onclick='obtenerUnidad("{{unidades.cod_unidad_aprendizaje}}")'>
+                                <i class="far fa-edit"></i>
+                              </button>
+                              <button class="btn btn-outline-danger"
+                                onclick='eliminarUnidad("{{unidades.cod_unidad_aprendizaje}}")'>
+                                <i class="fas fa-trash-alt"></i>
+                              </button>
+                            </td>
+                          </tr>
+                          {% endif %}
+                        {% endfor %}
+                      {% endif %}
+                    {% endfor %}
                   {% endfor %}
                 </tbody>
               </table>
@@ -197,9 +200,10 @@
                 <div class="form-group">
                   <label for="exampleFormControlSelect1" class="form-control-label">Facultad</label>
                   <select class="form-control" id="updateFacultad" name="facultad" class="form-control">
-                    <option value="">Seleccione la facultad a la cual pertenece...</option>
                     {% for facultad in lista_facultades %}
-                    <option value="{{facultad.cod_facultad}}">{{facultad.descripcion}}</option>
+                      {% if facultad.cod_facultad == facultad_asignada %}
+                      <option value="{{facultad.cod_facultad}}">{{facultad.descripcion}}</option>
+                      {% endif %}
                     {% endfor %}
                   </select>
                 </div>
