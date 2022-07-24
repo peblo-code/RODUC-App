@@ -99,11 +99,14 @@
                 {% endfor %}
             </section>
         </section>
-        <section class="row py-2" style="display: flex; justify-content: center;">
-            <h4>ADECUACIONES REALIZADAS PARA EL DESARROLLO DE LA CLASE EN CASO DE ALUMNOS CON NECESIDADES EDUCATIVAS ESPECIALES</h4> 
-            <p>__________________________________________________________________________________________________________________________________________</p>           
-            <p>__________________________________________________________________________________________________________________________________________</p>           
-        </section>
+        {% if datos_registro.descripcion_adecuacion %}
+            <section class="row py-2" style="display: flex; justify-content: center;">
+                <h4>ADECUACIONES REALIZADAS PARA EL DESARROLLO DE LA CLASE EN CASO DE ALUMNOS CON NECESIDADES EDUCATIVAS ESPECIALES</h4>            
+            </section>
+            <section class="row col">
+                <span class="card-title">{{datos_registro.descripcion_adecuacion}}</span>
+            </section>
+        {% endif %}
     </section>
 </section>
 {% endblock %}
