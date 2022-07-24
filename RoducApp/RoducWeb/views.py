@@ -1314,7 +1314,17 @@ def reporte(request):
     año_actual = fecha_actual[:(fecha_actual.find('-'))]
     print(año_actual + " Año actual")
     mensaje_bienvenida = generar_saludo()
-    lista_registros = Cabecera_Planilla.objects.raw('SELECT * FROM "RoducWeb_cabecera_planilla" as c WHERE c.estado = 1 ORDER BY c.fecha_clase desc')
+    lista_registros = Cabecera_Planilla.objects.raw('select\
+                                                        *\
+                                                    from\
+                                                        "RoducWeb_cabecera_planilla" CP\
+                                                        ,"RoducWeb_carrera" C\
+                                                    where\
+                                                        CP.estado = 1\
+                                                        and CP.cod_asignatura_id = C.cod_carrera\
+                                                        and C.cod_facultad_id = ' + str(request.session.get('facultad_asignada')) + '\
+                                                    order by\
+                                                        CP.fecha_clase desc')
     lista_usuarios = Usuario.objects.filter(estado = 1)
     lista_asignaturas = Asignatura.objects.filter(estado = 1)
     lista_facultades = Facultad.objects.filter(estado = 1)
