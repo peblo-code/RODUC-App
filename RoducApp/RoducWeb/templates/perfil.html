@@ -85,9 +85,11 @@
             <div class="col-8">
               <h3 class="mb-0">Roles</h3>
             </div>
+            {% if rol_usuario == 1 %}
             <div class="col-4 text-right">
               <button class="btn btn-sm btn-primary" onclick="rolAgg()">Asignar Rol</button>
             </div>
+            {% endif %}
           </div>
         </div>
         <div class="card-body">
@@ -129,16 +131,24 @@
                       {% endfor %}
                     </td>
                     <!---BOTONES-->
+                    {% if rol_usuario == 1 %}
                     <td id="acciones">
+                      {% if cod_usuario_rol != usuario_rol.cod_usuario_rol %}
                       <button class="btn btn-outline-danger" onclick="eliminar_rol('{{usuario_rol.cod_usuario_rol}}')">
                         <i class="fas fa-trash-alt"></i>
                       </button>
+                      {% endif %}
                       {% if usuario_rol.cod_rol_usuario_id == 2 %}
                       <button class="btn btn-outline-primary" onclick="materiasModal('{{usuario_rol.cod_carrera_id}}', '{{usuario_rol.cod_usuario_rol}}')">
                         <i class="fas fa-regular fa-book"></i>
                       </button>
                       {% endif %}
                     </td>
+                    {% else %}
+                      <td>
+                        No existen acciones habilitadas para su rol.
+                      </td>
+                    {% endif %}
                   </tr>
                   {% endfor %}
                 </tbody>

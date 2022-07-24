@@ -103,6 +103,7 @@ def asignarFacultad(request):
         facultad = Facultad.objects.get(cod_facultad = Carrera.objects.get(cod_carrera = rol_seleccionado.cod_carrera_id).cod_facultad_id).cod_facultad #Agregado
         request.session["facultad_asignada"] = facultad 
         request.session["rol_usuario"] = rol_seleccionado.cod_rol_usuario_id
+        request.session["cod_usuario_rol"] = rol_seleccionado.cod_usuario_rol
         respuesta = JsonResponse({'mensaje': 'Facultad seleccionada correctamente.'}) 
         return respuesta
 #==========================================================================================#
@@ -646,6 +647,7 @@ def perfil(request):
                                            "usuario_conectado": request.session.get("usuario_conectado"),
                                            "facultad_asignada": request.session.get("facultad_asignada"),
                                            "rol_usuario" : request.session.get("rol_usuario"),
+                                           "cod_usuario_rol" : request.session.get("cod_usuario_rol"),
                                            "roles_del_usuario": rolesUsuario(request),
                                            "nombre_usuario": request.session.get("nombre_del_usuario"),
                                            "lista_facultades": lista_facultades})
